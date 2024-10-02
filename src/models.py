@@ -1,6 +1,7 @@
-from sqlalchemy import JSON, Column, DateTime, Float, ForeignKey, Integer, String, Text
+from sqlalchemy import (
+    JSON, Column, DateTime, Float, ForeignKey, Integer, String, Text)
 
-from .database import Base, engine
+from database import Base, init_db
 
 
 class RequestInfo(Base):
@@ -30,4 +31,12 @@ class QueryInfo(Base):
         'middleware_requests.id'), nullable=False, index=True)
 
 
-Base.metadata.create_all(bind=engine)
+# Base.metadata.create_all(bind=engine_sync)
+init_db()
+
+# async def init_db():
+#     async with engine.begin() as conn:
+#         # Create all tables in the database
+#         await conn.run_sync(Base.metadata.create_all)
+
+# asyncio.run(init_db())
