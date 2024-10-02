@@ -155,7 +155,7 @@ class SQLProfilerMiddleware(BaseHTTPMiddleware):
         else:
             requset_data = await self.add_request(request, raw_body, body)
             request_id = requset_data.id
-            session_handler = SessionHandler(self.engine.)
+            session_handler = SessionHandler(self.engine.sync_engine)
             session_handler.start()
             response = await call_next(request)
             session_handler.stop()
