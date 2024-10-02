@@ -1,7 +1,7 @@
 from sqlalchemy import (
     JSON, Column, DateTime, Float, ForeignKey, Integer, String, Text)
 
-from database import Base, init_db
+from src.database import Base, init_db
 
 
 class Items(Base):

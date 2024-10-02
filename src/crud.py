@@ -1,5 +1,5 @@
 from sqlalchemy import insert, select, update, delete
-from database import async_session_maker
+from src.database import async_session_maker
 
 
 async def add_one(model, data: dict) -> int:
@@ -9,3 +9,11 @@ async def add_one(model, data: dict) -> int:
         await session.commit()
 
         return res.scalar_one()
+
+
+async def add_db(model) -> int:
+    async with async_session_maker() as session:
+        res = session.add(model)
+        await session.commit()
+
+        return res
