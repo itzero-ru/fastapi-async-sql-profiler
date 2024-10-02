@@ -8,9 +8,8 @@ from starlette.middleware.base import BaseHTTPMiddleware, RequestResponseEndpoin
 import time
 import sqlalchemy.event
 
-from src.crud import add_db
-from src.models import Items, RequestInfo
-from src.database import engine_sync
+from src.crud import add_db, get_obj_by_id
+from src.models import Items, QueryInfo, RequestInfo
 
 queries = []
 
@@ -20,8 +19,8 @@ class SessionHandler(object):
     def __init__(self, engine=sqlalchemy.engine.Engine):
 
         self.started = False
-        # self.engine = engine
-        self.engine = engine_sync
+        self.engine = engine
+        # self.engine = engine_sync
 
         self.query_objs = []
 
@@ -106,35 +105,41 @@ class SQLProfilerMiddleware(BaseHTTPMiddleware):
         # session.refresh(request_info)
         return request_info
 
-    def store(self, session_handler, request_id):
+    async def store(self, session_handler, request_id):
 
         for query_obj in session_handler.query_objs:
             time_taken = query_obj['end_time'] - query_obj['start_time']
             mstimetaken = round(time_taken*1000, 3)
             query_data = QueryInfo(query=str(
-                query_obj['text']), request_id=request_id, time_taken=mstimetaken, traceback=query_obj['stack'])
-            session.add(query_data)
-            session.commit()
-            session.close()
+                query_obj['text']),
+                request_id=request_id, time_taken=mstimetaken,
+                traceback=query_obj['stack'])
+            await add_db(query_data)
+            # session.add(query_data)
+            # session.commit()
+            # session.close()
         end_time = datetime.datetime.utcnow()
-        request_obj = session.get(RequestInfo, request_id)
+        # request_obj = session.get(RequestInfo, request_id)
+        request_obj = await get_obj_by_id(RequestInfo, request_id)
         time_taken = end_time - request_obj.start_time
         time_taken_second = time_taken.total_seconds()
         time_taken_ms = round(time_taken_second*1000, 3)
         request_obj.end_time = end_time
         request_obj.time_taken = time_taken_ms
         request_obj.total_queries = len(session_handler.query_objs)
-        session.add(request_obj)
-        session.commit()
-        session.refresh(request_obj)
-        session.close()
+        await add_db(request_obj)
+        # session.add(request_obj)
+        # session.commit()
+        # session.refresh(request_obj)
+        # session.close()
 
     async def set_body(self, request: Request, body: bytes):
         async def receive():
             return {"type": "http.request", "body": body}
         request._receive = receive
 
-    async def dispatch(self, request: Request, call_next: RequestResponseEndpoint):
+    async def dispatch(self, request: Request,
+                       call_next: RequestResponseEndpoint):
 
         # print("Before Request")
         await self.set_body(request, await request.body())
@@ -155,12 +160,13 @@ class SQLProfilerMiddleware(BaseHTTPMiddleware):
         else:
             requset_data = await self.add_request(request, raw_body, body)
             request_id = requset_data.id
+            # Not support async engine to SQLAlchemy
             session_handler = SessionHandler(self.engine.sync_engine)
             session_handler.start()
             response = await call_next(request)
             session_handler.stop()
             # print("After Request")
-            self.store(session_handler, request_id)
+            await self.store(session_handler, request_id)
         return response
 
 

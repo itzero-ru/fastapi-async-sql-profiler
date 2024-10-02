@@ -17,3 +17,10 @@ async def add_db(model) -> int:
         await session.commit()
 
         return res
+
+
+async def get_obj_by_id(model, id: int) -> int:
+    async with async_session_maker() as session:
+        obj = await session.get(model, id)  # Получаем пользователя с ID = 1
+
+        return obj
