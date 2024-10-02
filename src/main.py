@@ -1,17 +1,13 @@
-import time
 from typing import Union
 
 from fastapi import FastAPI
 from contextlib import asynccontextmanager
 from datetime import datetime
 
-# from database import init_db
-# import models
-from src.models import QueryInfo, RequestInfo, Items
+from src.models import Items
 from src.crud import add_db, add_one
 
 from src.database import engine
-from sqlalchemy import event
 
 from src.sql_middleware import SQLProfilerMiddleware
 from src.start_debugger import start_debug_server
@@ -36,25 +32,6 @@ async def lifespan(app: FastAPI):
 
 app = FastAPI(lifespan=lifespan)
 
-
-# @event.listens_for(engine.sync_engine, "before_execute")
-# def before_execute(conn, clauseelement, multiparams, params):
-#     conn.info.setdefault('query_start_time', []).append(time.time())
-
-
-# @event.listens_for(engine.sync_engine, "after_execute")
-# def after_execute(
-#     conn, clauseelement, multiparams, params,
-#     execution_options=None, context=None,
-# ):
-#     total = time.time() - conn.info['query_start_time'].pop()
-
-#     # result = greenlet_spawn(sql_profiler.log_query(str(clauseelement), params, total), conn)
-#     sql_profiler.log_query(str(clauseelement), params, total)
-#     # logger.info(self.queries)
-
-
-# sql_profiler = SQLProfilerMiddleware(app)
 app.add_middleware(SQLProfilerMiddleware, engine=engine)
 
 start_debug_server()
