@@ -4,6 +4,13 @@ from sqlalchemy import (
 from database import Base, init_db
 
 
+class Items(Base):
+    __tablename__ = 'items'
+
+    id = Column(Integer, primary_key=True, index=True)
+    body = Column(Text, default='')
+
+
 class RequestInfo(Base):
     __tablename__ = 'middleware_requests'
 

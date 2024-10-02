@@ -4,6 +4,9 @@ from pydantic import BaseModel
 
 load_dotenv()
 
+SQL_PROFILER_DATABASE_NAME = str(
+    os.environ.get("SQL_PROFILER_DATABASE_URL", 'sql_profiler.sqlite'))
+
 FASTAPI_SECRET_KEY = str(
     os.environ.get("FASTAPI_SECRET_KEY", 'fb45dfg565t56h46'))
 
@@ -22,12 +25,12 @@ class Settings(BaseModel):
     @property
     def DATABASE_URL(self):
         # return "sqlite+aiosqlite:///./db.sqlite"
-        return "sqlite+aiosqlite:///db.sqlite"
+        return f"sqlite+aiosqlite:///{SQL_PROFILER_DATABASE_NAME}"
 
     @property
     def SYNC_DATABASE_URL(self):
         # return "sqlite+aiosqlite:///./db.sqlite"
-        return "sqlite:///db.sqlite"
+        return f"sqlite:///{SQL_PROFILER_DATABASE_NAME}"
 
 
 settings = Settings(

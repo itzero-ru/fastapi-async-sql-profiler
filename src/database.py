@@ -1,6 +1,4 @@
 # from typing import Optional
-import logging
-import time
 from sqlalchemy import create_engine
 from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker
 from sqlalchemy.orm import DeclarativeBase
