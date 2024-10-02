@@ -21,6 +21,19 @@ async def add_db(model) -> int:
 
 async def get_obj_by_id(model, id: int) -> int:
     async with async_session_maker() as session:
-        obj = await session.get(model, id)  # Получаем пользователя с ID = 1
+        obj = await session.get(model, id)
 
         return obj
+
+
+async def clear_table_bd(model):
+    async with async_session_maker() as session:
+        async with session.begin():
+            query = delete(model)
+            await session.execute(query)
+        # bbb = await session.commit()
+        # query = delete(model)
+        # aaa = await session.execute(query)
+        # res = await session.commit()
+
+        return

@@ -1,10 +1,9 @@
 import datetime
 import uuid
 from fastapi import FastAPI, Request
-# from fastapi.middleware.base import BaseHTTPMiddleware
 from starlette.middleware.base import BaseHTTPMiddleware
+from starlette.middleware.base import RequestResponseEndpoint
 import traceback
-from starlette.middleware.base import BaseHTTPMiddleware, RequestResponseEndpoint
 import time
 import sqlalchemy.event
 
@@ -158,8 +157,8 @@ class SQLProfilerMiddleware(BaseHTTPMiddleware):
         if request_path == '/all_request' or request_path.startswith(('/request_detail', '/request_query','/favicon','/clear_db')):
             response = await call_next(request)
         else:
-            requset_data = await self.add_request(request, raw_body, body)
-            request_id = requset_data.id
+            request_data = await self.add_request(request, raw_body, body)
+            request_id = request_data.id
             # Not support async engine to SQLAlchemy
             session_handler = SessionHandler(self.engine.sync_engine)
             session_handler.start()
@@ -192,7 +191,7 @@ class SQLProfilerMiddleware2(BaseHTTPMiddleware):
         request.state.request_id = request_id
         raw_body = await request.body()
         body = raw_body.decode()
-        requset_data = self.add_request(request, raw_body, body)
+        request_data = self.add_request(request, raw_body, body)
         self.queries = queries
         start_time = time.time()
 
