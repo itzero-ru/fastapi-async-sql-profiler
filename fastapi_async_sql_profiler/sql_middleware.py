@@ -7,8 +7,8 @@ import traceback
 import time
 import sqlalchemy.event
 
-from src.crud import add_db, get_obj_by_id
-from src.models import Items, QueryInfo, RequestInfo
+from fastapi_async_sql_profiler.crud import add_db, get_obj_by_id
+from fastapi_async_sql_profiler.models import Items, QueryInfo, RequestInfo
 
 queries = []
 

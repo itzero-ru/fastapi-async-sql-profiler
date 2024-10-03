@@ -1,5 +1,5 @@
 from sqlalchemy import insert, select, update, delete
-from src.database import async_session_maker
+from fastapi_async_sql_profiler.database import async_session_maker
 
 
 async def add_one(model, data: dict) -> int:

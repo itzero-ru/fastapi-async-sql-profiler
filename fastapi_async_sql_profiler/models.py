@@ -1,7 +1,7 @@
 from sqlalchemy import (
     JSON, Column, DateTime, Float, ForeignKey, Integer, String, Text)
 
-from src.database import Base, init_db
+from fastapi_async_sql_profiler.database import Base, init_db
 
 
 class Items(Base):

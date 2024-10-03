@@ -4,13 +4,13 @@ from fastapi import FastAPI, Request, Response, status
 from contextlib import asynccontextmanager
 from datetime import datetime
 
-from src.models import Items, QueryInfo, RequestInfo
-from src.crud import add_db, add_one, clear_table_bd
+from fastapi_async_sql_profiler.models import Items, QueryInfo, RequestInfo
+from fastapi_async_sql_profiler.crud import add_db, add_one, clear_table_bd
 
-from src.database import engine
+from fastapi_async_sql_profiler.database import engine
 
-from src.sql_middleware import SQLProfilerMiddleware
-from src.start_debugger import start_debug_server
+from fastapi_async_sql_profiler.sql_middleware import SQLProfilerMiddleware
+from fastapi_async_sql_profiler.start_debugger import start_debug_server
 
 
 @asynccontextmanager
