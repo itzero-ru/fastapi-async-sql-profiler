@@ -135,7 +135,16 @@ class SQLProfilerMiddleware(BaseHTTPMiddleware):
     async def set_body(self, request: Request, body: bytes):
         async def receive():
             return {"type": "http.request", "body": body}
-        request._receive = receive
+        """
+        File "/Users/set/projects/audio-books/backend/.venv/lib/python3.11/
+        site-packages/starlette/middleware/base.py",
+        line 58, in wrapped_receive
+
+        if msg["type"] != "http.disconnect":
+
+        raise RuntimeError(f"Unexpected message received: {msg['type']}")
+        RuntimeError: Unexpected message received: http.request"""
+        # request._receive = receive
 
     async def dispatch(self, request: Request,
                        call_next: RequestResponseEndpoint):
@@ -168,52 +177,50 @@ class SQLProfilerMiddleware(BaseHTTPMiddleware):
             await self.store(session_handler, request_id)
         return response
 
+# class SQLProfilerMiddleware2(BaseHTTPMiddleware):
+#     def __init__(self, app: FastAPI):
+#         super().__init__(app)
+#         self.queries = []
 
-class SQLProfilerMiddleware2(BaseHTTPMiddleware):
-    def __init__(self, app: FastAPI):
-        super().__init__(app)
-        self.queries = []
+#     def add_request(self, request, raw_body, body):
 
-    def add_request(self, request, raw_body, body):
+#         method = request.method
+#         path = request.url.path
+#         query_params = str(request.query_params)
+#         headers_json = dict(request.headers)
+#         request_info = {}
+#         return request_info
 
-        method = request.method
-        path = request.url.path
-        query_params = str(request.query_params)
-        headers_json = dict(request.headers)
-        request_info = {}
-        return request_info
+#     async def dispatch(self, request: Request, call_next):
 
-    async def dispatch(self, request: Request, call_next):
+#         # Генерация уникального идентификатора для запроса
+#         request_id = str(uuid.uuid4())
+#         # Сохранение идентификатора в состоянии запроса
+#         request.state.request_id = request_id
+#         raw_body = await request.body()
+#         body = raw_body.decode()
+#         request_data = self.add_request(request, raw_body, body)
+#         self.queries = queries
+#         start_time = time.time()
 
-        # Генерация уникального идентификатора для запроса
-        request_id = str(uuid.uuid4())
-        # Сохранение идентификатора в состоянии запроса
-        request.state.request_id = request_id
-        raw_body = await request.body()
-        body = raw_body.decode()
-        request_data = self.add_request(request, raw_body, body)
-        self.queries = queries
-        start_time = time.time()
+#         response = await call_next(request)
 
-        response = await call_next(request)
+#         duration = time.time() - start_time
+#         response.headers["X-Process-Time"] = str(duration)
 
-        duration = time.time() - start_time
-        response.headers["X-Process-Time"] = str(duration)
+#         if self.queries:
+#             response.headers["X-Query-Count"] = str(len(self.queries))
+#             response.headers["X-Query-Time"] = str(
+#                 sum(q["duration"] for q in self.queries))
 
-        if self.queries:
-            response.headers["X-Query-Count"] = str(len(self.queries))
-            response.headers["X-Query-Time"] = str(
-                sum(q["duration"] for q in self.queries))
+#         return response
 
-        return response
+#     def log_query(self, statement, parameters, duration):
+#         # self.queries
+#         queries.append({
+#             "statement": str(statement),
+#             "parameters": parameters,
+#             "duration": duration
+#         })
 
-    def log_query(self, statement, parameters, duration):
-        # self.queries
-        queries.append({
-            "statement": str(statement),
-            "parameters": parameters,
-            "duration": duration
-        })
-
-        print('Zzzzz')
-        print(self.queries)
+#         print(self.queries)
