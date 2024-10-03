@@ -35,7 +35,6 @@ async def lifespan(app: FastAPI):
     yield
     current_time = datetime.now().strftime("%H:%M:%S")
     print(f"✖️ Run on shutdown! {current_time}")
-# Base.metadata.create_all(bind=engine)
 
 app = FastAPI(lifespan=lifespan)
 
