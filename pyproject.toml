@@ -3,6 +3,7 @@ name = "src"
 version = "0.1.0"
 description = ""
 authors = ["itzero-ru <paw100d@gmail.com>"]
+license = "MIT"
 readme = "README.md"
 
 [tool.poetry.dependencies]
