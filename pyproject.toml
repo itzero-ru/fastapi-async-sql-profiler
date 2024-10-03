@@ -1,7 +1,7 @@
 [tool.poetry]
 name = "src"
 version = "0.1.0"
-description = ""
+description = "fastapi async sqlalchemy profiler"
 authors = ["itzero-ru <paw100d@gmail.com>"]
 license = "MIT"
 readme = "README.md"
