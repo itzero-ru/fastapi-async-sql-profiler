@@ -1,1 +1,4 @@
-from .sql_middleware import SQLProfilerMiddleware  # noqa: F401
+from .sql_middleware import SQLProfilerMiddleware
+from .routers import router
+
+__all__ = ("router", "SQLProfilerMiddleware")

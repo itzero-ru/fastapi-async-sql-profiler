@@ -1,6 +1,6 @@
 import datetime
-import uuid
-from fastapi import FastAPI, Request
+# import uuid
+from fastapi import Request
 from starlette.middleware.base import BaseHTTPMiddleware
 from starlette.middleware.base import RequestResponseEndpoint
 import traceback
@@ -9,8 +9,6 @@ import sqlalchemy.event
 
 from fastapi_async_sql_profiler.crud import add_db, get_obj_by_id
 from fastapi_async_sql_profiler.models import Items, QueryInfo, RequestInfo
-
-queries = []
 
 
 class SessionHandler(object):
@@ -33,7 +31,12 @@ class SessionHandler(object):
         start_time = getattr(conn, '_sqltap_query_start_time', end_time)
 
         try:
-            text = clause.compile(dialect=conn.engine.dialect)
+            # text = clause.bindparams(**params).compile(
+            #     dialect=conn.engine.dialect)
+            text = clause.compile(
+                dialect=conn.engine.dialect,
+                compile_kwargs={"literal_binds": True}  # add params value
+            )
         except AttributeError:
             text = clause
         stack = traceback.extract_stack()
@@ -58,6 +61,8 @@ class SessionHandler(object):
         self.started = True
         sqlalchemy.event.listen(self.engine, "before_execute",
                                 self._before_exec)
+        # sqlalchemy.event.listen(
+        #     self.engine, "after_cursor_execute", self._after_exec)
         sqlalchemy.event.listen(self.engine, "after_execute", self._after_exec)
 
     def stop(self):
@@ -73,6 +78,8 @@ class SessionHandler(object):
         self.started = False
         sqlalchemy.event.remove(self.engine, "before_execute",
                                 self._before_exec)
+        # sqlalchemy.event.remove(
+        #     self.engine, "after_cursor_execute", self._after_exec)
         sqlalchemy.event.remove(self.engine, "after_execute", self._after_exec)
 
 
@@ -163,7 +170,9 @@ class SQLProfilerMiddleware(BaseHTTPMiddleware):
             raw_body = ''
             body = ''
         request_path = request.url.path
-        if request_path == '/all_request' or request_path.startswith(('/request_detail', '/request_query','/favicon','/clear_db')):
+        if request_path == '/all_request' or request_path.startswith((
+            '/request_detail', '/request_query', '/favicon', '/clear_db'
+        )):
             response = await call_next(request)
         else:
             request_data = await self.add_request(request, raw_body, body)

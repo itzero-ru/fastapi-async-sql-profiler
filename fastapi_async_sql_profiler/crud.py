@@ -26,6 +26,18 @@ async def get_obj_by_id(model, id: int) -> int:
         return obj
 
 
+async def filter_obj(model, **kwargs) -> list:
+    async with async_session_maker() as session:
+        # stmt = select(model).where(model.id == kwargs['id'])
+        stmt = select(model).filter_by(**kwargs)
+        res = await session.execute(stmt)
+
+        return res.scalars().all()
+    # def filter(self, **kwargs):
+    #     query = self.session.query(Offer)
+    #     return query.filter_by(**kwargs).all()
+
+
 async def clear_table_bd(model):
     async with async_session_maker() as session:
         async with session.begin():

@@ -12,6 +12,8 @@ from fastapi_async_sql_profiler.database import engine
 from fastapi_async_sql_profiler.sql_middleware import SQLProfilerMiddleware
 from fastapi_async_sql_profiler.start_debugger import start_debug_server
 
+from fastapi_async_sql_profiler.routers import router
+
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -36,34 +38,12 @@ app.add_middleware(SQLProfilerMiddleware, engine=engine)
 
 start_debug_server()
 
+app.include_router(router, prefix='', tags=['SQL Profiler'])
+
 
 @app.post("/")
 async def post_item():
 
-    await add_one(Items, {'body': 'fddtsg'})
+    await add_one(Items, {'body': '11111'})
+    await add_one(Items, {'body': '22222'})
     return {"Hello": "World"}
-
-
-@app.get("/")
-async def read_root():
-    item = Items(body='ZZZZZ')
-    await add_one(Items, {'body': '1221'})
-    await add_db(item)
-    return {"Hello": "World"}
-
-
-@app.get("/items/{item_id}")
-def read_item(item_id: int, q: Union[str, None] = None):
-    return {"item_id": item_id, "q": q}
-
-
-@app.delete('/clear_db')
-async def destory(requset: Request, response: Response):
-    """Clear DB."""
-    # session.query(RequestInfo).delete()
-    # session.query(QueryInfo).delete()
-    # session.commit()
-    await clear_table_bd(RequestInfo)
-    await clear_table_bd(QueryInfo)
-    response.status_code = status.HTTP_200_OK
-    return {"message": "Clear Db Successfully"},
