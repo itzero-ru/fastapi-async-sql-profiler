@@ -35,5 +35,5 @@ async def get_async_session():
         yield session
 
 
-def init_db():
-    Base.metadata.create_all(engine_sync)
+# def init_db():
+#     Base.metadata.create_all(engine_sync)

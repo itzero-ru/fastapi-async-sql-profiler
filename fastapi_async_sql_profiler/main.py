@@ -1,10 +1,12 @@
+import asyncio
 from typing import Union
 
 from fastapi import FastAPI, Request, Response, status
 from contextlib import asynccontextmanager
 from datetime import datetime
 
-from fastapi_async_sql_profiler.models import Items, QueryInfo, RequestInfo
+from fastapi_async_sql_profiler.models import (
+    Items, QueryInfo, RequestInfo, init_db)
 from fastapi_async_sql_profiler.crud import add_db, add_one, clear_table_bd
 
 from fastapi_async_sql_profiler.database import engine
@@ -26,6 +28,9 @@ async def lifespan(app: FastAPI):
     print(message)
     print('API docs: http://127.0.0.1:8000/docs')
     # init_db()
+    # await init_db()
+    # task = asyncio.create_task(create_items_table())
+    # await task 
 
     yield
     current_time = datetime.now().strftime("%H:%M:%S")
@@ -39,6 +44,7 @@ app.add_middleware(SQLProfilerMiddleware, engine=engine)
 start_debug_server()
 
 app.include_router(router, prefix='', tags=['SQL Profiler'])
+task = asyncio.create_task(init_db(engine_async=engine))
 
 
 @app.post("/")

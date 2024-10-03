@@ -6,7 +6,7 @@ from fastapi.responses import HTMLResponse, JSONResponse
 
 from fastapi_async_sql_profiler.schemas import QueryInfoDetail, QueryInfoDetailListResponse, RequestInfoDetail
 
-from .models import QueryInfo, RequestInfo
+from .models import Items, QueryInfo, RequestInfo
 from .crud import add_db, add_one, clear_table_bd, filter_obj, get_obj_by_id
 
 
@@ -51,3 +51,11 @@ async def request_show(id: int, request: Request):
         "sum_on_query": sum_on_query,
     }
     return context
+
+
+@router.post("/111")
+async def post_item():
+
+    await add_one(Items, {'body': '44444'})
+    await add_one(Items, {'body': '55555'})
+    return {"Hello": "World"}

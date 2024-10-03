@@ -1,7 +1,14 @@
+import asyncio
 from sqlalchemy import (
     JSON, Column, DateTime, Float, ForeignKey, Integer, String, Text)
+# import sqlalchemy
+# import sqlalchemy.event
 
-from fastapi_async_sql_profiler.database import Base, init_db
+from fastapi_async_sql_profiler.database import (
+    Base, )  # init_db
+from fastapi_async_sql_profiler.database import engine
+
+from sqlalchemy.ext.asyncio import AsyncEngine
 
 
 class Items(Base):
@@ -39,11 +46,18 @@ class QueryInfo(Base):
 
 
 # Base.metadata.create_all(bind=engine_sync)
-init_db()
+# def init_db():
+#     # Base.metadata.create_all(engine_sync)
+#     # Items.metadata.create_all(engine_sync)
+#     Items.__table__.create(engine_sync, checkfirst=True)
+#     RequestInfo.__table__.create(engine_sync, checkfirst=True)
+#     QueryInfo.__table__.create(engine_sync, checkfirst=True)
 
-# async def init_db():
-#     async with engine.begin() as conn:
-#         # Create all tables in the database
-#         await conn.run_sync(Base.metadata.create_all)
 
-# asyncio.run(init_db())
+async def init_db(*, engine_async: AsyncEngine):
+    async with engine_async.begin() as conn:
+        await conn.run_sync(Items.__table__.create, checkfirst=True)
+        await conn.run_sync(RequestInfo.__table__.create, checkfirst=True)
+        await conn.run_sync(QueryInfo.__table__.create, checkfirst=True)
+
+# task = asyncio.create_task(init_db())
