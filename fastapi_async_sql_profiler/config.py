@@ -4,6 +4,13 @@ from pydantic import BaseModel
 
 load_dotenv()
 
+SQL_PROFILER_DATABASE_URL = str(
+    os.environ.get(
+        "SQL_PROFILER_DATABASE_URL",
+        'sqlite+aiosqlite:///sql_profiler.sqlite'
+    )
+)
+
 SQL_PROFILER_DATABASE_NAME = str(
     os.environ.get("SQL_PROFILER_DATABASE_URL", 'sql_profiler.sqlite'))
 
@@ -25,12 +32,13 @@ class Settings(BaseModel):
     @property
     def DATABASE_URL(self):
         # return "sqlite+aiosqlite:///./db.sqlite"
-        return f"sqlite+aiosqlite:///{SQL_PROFILER_DATABASE_NAME}"
+        # return "sqlite+aiosqlite:///sql_profiler.sqlite"
+        return SQL_PROFILER_DATABASE_URL
 
-    @property
-    def SYNC_DATABASE_URL(self):
-        # return "sqlite+aiosqlite:///./db.sqlite"
-        return f"sqlite:///{SQL_PROFILER_DATABASE_NAME}"
+    # @property
+    # def SYNC_DATABASE_URL(self):
+    #     # return "sqlite+aiosqlite:///./db.sqlite"
+    #     return f"sqlite:///{SQL_PROFILER_DATABASE_NAME}"
 
 
 settings = Settings(

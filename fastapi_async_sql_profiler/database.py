@@ -11,11 +11,11 @@ engine = create_async_engine(
     # "sqlite+aiosqlite:///db.sqlite"
 )
 
-engine_sync = create_engine(
-    settings.SYNC_DATABASE_URL,
-    # echo=True,
-    # "sqlite+aiosqlite:///db.sqlite"
-)
+# engine_sync = create_engine(
+#     settings.SYNC_DATABASE_URL,
+#     # echo=True,
+#     # "sqlite+aiosqlite:///db.sqlite"
+# )
 
 # Фабрика создания сессий
 async_session_maker = async_sessionmaker(
