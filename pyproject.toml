@@ -8,11 +8,30 @@ readme = "README.md"
 
 [tool.poetry.dependencies]
 python = ">=3.10"
-fastapi = {extras = ["standard"], version = ">=0.95.0"}
 sqlalchemy = {extras = ["asyncio"], version = ">=2.0.16"}
-aiosqlite = ">=0.18.0"
-debugpy = ">=1.6.0"
+fastapi = "^0.115.0"
 
+[tool.poetry.group.dev.dependencies]
+uvicorn = {extras = ["standard"], version = "^0.31.0"}
+debugpy = ">=1.6.0"
+aiosqlite = ">=0.18.0"
+# pytest = "^6.0.0"
+# pytest-mock = "*"
+
+
+# [tool.poetry.group.dev.dependencies]
+# uvicorn = {extras = ["standard"], version = "^0.31.0"}
+
+
+[tool.poetry.extras]
+# mysql = ["mysqlclient"]
+pdf = ["reportlab"] 
+# develop = ["uvicorn[standart]"]
+
+# [project.optional-dependencies]
+# mysql = ["mysqlclient>=1.3,<2.0"]
+# pgsql = ["psycopg2>=2.9,<3.0"]
+# databases = ["mysqlclient>=1.3,<2.0", "psycopg2>=2.9,<3.0"]
 
 [build-system]
 requires = ["poetry-core"]
