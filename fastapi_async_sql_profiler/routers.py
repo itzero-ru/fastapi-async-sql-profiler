@@ -5,15 +5,18 @@ from fastapi import APIRouter, Request, Response, status
 from fastapi.responses import HTMLResponse, JSONResponse
 from fastapi.templating import Jinja2Templates
 
+from fastapi_async_sql_profiler.config import APP_ROUTER_PREFIX
 from fastapi_async_sql_profiler.schemas import QueryInfoDetail, QueryInfoDetailListResponse, RequestInfoDetail
 
 from .models import Items, QueryInfo, RequestInfo
-from .crud import add_db, add_one, clear_table_bd, filter_obj, get_obj_by_id
+from .crud import add_db, add_one, clear_table_bd, filter_obj, get_obj_by_id, get_requests_with_query_count
 
 from .pages import router as router_pages
 
 
-router = APIRouter()
+router = APIRouter(
+    prefix=APP_ROUTER_PREFIX,
+)
 
 
 # Добавляем роуты из другого файла
@@ -37,6 +40,7 @@ async def requests_show(request: Request):
     """Get all requests."""
 
     all_requests = await filter_obj(RequestInfo)
+    # r = await get_requests_with_query_count()
     return all_requests
     query_validated_data = [
         QueryInfoDetail.model_validate(item) for item in query_detail]

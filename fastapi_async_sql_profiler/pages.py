@@ -3,7 +3,7 @@ from fastapi import APIRouter, Request, Response, status
 from fastapi.responses import HTMLResponse, JSONResponse
 from fastapi.templating import Jinja2Templates
 
-from fastapi_async_sql_profiler.crud import filter_obj
+from fastapi_async_sql_profiler.crud import filter_obj, get_requests_with_query_count
 from fastapi_async_sql_profiler.models import RequestInfo
 
 # from .models import Items, QueryInfo, RequestInfo
@@ -23,9 +23,10 @@ print('templates', str(BASE_PATH / "templates"))
 print()
 
 
-@router.get("/base", response_class=HTMLResponse)
+@router.get("/requests", response_class=HTMLResponse)
 async def all_request(request: Request):
     """Get all request."""
+    # r = await get_requests_with_query_count()
     all_requests = await filter_obj(RequestInfo)
     # return all_requests
     context = {

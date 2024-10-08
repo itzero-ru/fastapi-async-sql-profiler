@@ -7,6 +7,7 @@ import traceback
 import time
 import sqlalchemy.event
 
+from fastapi_async_sql_profiler.config import APP_ROUTER_PREFIX
 from fastapi_async_sql_profiler.crud import add_db, get_obj_by_id
 from fastapi_async_sql_profiler.models import Items, QueryInfo, RequestInfo
 
@@ -103,8 +104,8 @@ class SQLProfilerMiddleware(BaseHTTPMiddleware):
                                    body=body, method=method,
                                    start_time=datetime.datetime.utcnow(),
                                    headers=headers_json)
-        item = Items(body='ZZZZZ')
-        await add_db(item)
+        # item = Items(body='ZZZZZ')
+        # await add_db(item)
         await add_db(request_info)
         # session.add(request_info)
         # session.commit()
@@ -113,9 +114,11 @@ class SQLProfilerMiddleware(BaseHTTPMiddleware):
 
     async def store(self, session_handler, request_id):
 
+        all_query_time_taken = 0
         for query_obj in session_handler.query_objs:
             time_taken = query_obj['end_time'] - query_obj['start_time']
             mstimetaken = round(time_taken*1000, 3)
+            all_query_time_taken += mstimetaken
             query_data = QueryInfo(query=str(
                 query_obj['text']),
                 request_id=request_id, time_taken=mstimetaken,
@@ -124,6 +127,7 @@ class SQLProfilerMiddleware(BaseHTTPMiddleware):
             # session.add(query_data)
             # session.commit()
             # session.close()
+        print('all_query_time_taken', all_query_time_taken)
         end_time = datetime.datetime.utcnow()
         # request_obj = session.get(RequestInfo, request_id)
         request_obj = await get_obj_by_id(RequestInfo, request_id)
@@ -133,6 +137,8 @@ class SQLProfilerMiddleware(BaseHTTPMiddleware):
         request_obj.end_time = end_time
         request_obj.time_taken = time_taken_ms
         request_obj.total_queries = len(session_handler.query_objs)
+        if all_query_time_taken:
+            request_obj.time_spent_queries = all_query_time_taken
         await add_db(request_obj)
         # session.add(request_obj)
         # session.commit()
@@ -157,6 +163,9 @@ class SQLProfilerMiddleware(BaseHTTPMiddleware):
                        call_next: RequestResponseEndpoint):
 
         # print("Before Request")
+        # Step 1: Capture start time
+        # start_time = datetime.datetime.utcnow()
+
         await self.set_body(request, await request.body())
         content_type = request.headers.get("Content-Type", "")
         if "multipart/form-data" in content_type:
@@ -170,8 +179,12 @@ class SQLProfilerMiddleware(BaseHTTPMiddleware):
             raw_body = ''
             body = ''
         request_path = request.url.path
-        if request_path == '/all_request' or request_path.startswith((
-            '/request_detail', '/request_query', '/favicon', '/clear_db'
+        if request_path == f'{APP_ROUTER_PREFIX}/all_request' or request_path.startswith((
+            f'{APP_ROUTER_PREFIX}/request_detail',
+            f'{APP_ROUTER_PREFIX}/request_query',
+            '/favicon',
+            f'{APP_ROUTER_PREFIX}/clear_db',
+            f'{APP_ROUTER_PREFIX}/pages',
         )):
             response = await call_next(request)
         else:
@@ -183,6 +196,10 @@ class SQLProfilerMiddleware(BaseHTTPMiddleware):
             response = await call_next(request)
             session_handler.stop()
             # print("After Request")
+            # Step 3: Capture end time and calculate duration
+            # end_time = datetime.datetime.utcnow()
+            # total_time_taken = (end_time - start_time).total_seconds() * 1000  # Convert to milliseconds
+            # print(f"Total execution time for request {request_id}: {total_time_taken} ms")
             await self.store(session_handler, request_id)
         return response
 

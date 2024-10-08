@@ -1,5 +1,9 @@
 from sqlalchemy import insert, select, update, delete
 from fastapi_async_sql_profiler.database import async_session_maker
+from sqlalchemy import func
+from sqlalchemy.orm import aliased
+
+from fastapi_async_sql_profiler.models import QueryInfo, RequestInfo
 
 
 async def add_one(model, data: dict) -> int:
@@ -19,7 +23,7 @@ async def add_db(model) -> int:
         return res
 
 
-async def get_obj_by_id(model, id: int) -> int:
+async def get_obj_by_id(model, id: int) -> RequestInfo:
     async with async_session_maker() as session:
         obj = await session.get(model, id)
 
@@ -49,3 +53,27 @@ async def clear_table_bd(model):
         # res = await session.commit()
 
         return
+
+
+async def get_requests_with_query_count():
+
+    async with async_session_maker() as session:
+        async with session.begin():
+            # Создаем псевдоним для подзапроса
+            query_count = aliased(QueryInfo)
+            # Формируем запрос
+            stmt = (
+                select(
+                    RequestInfo,
+                    func.count(query_count.id).label('query_count')
+                )
+                .outerjoin(
+                    query_count, RequestInfo.id == query_count.request_id)
+                .group_by(RequestInfo.id)
+            )
+            # Выполняем запрос асинхронно
+            result = await session.execute(stmt)
+
+            # Возвращаем результат
+            return result.scalars().all()
+

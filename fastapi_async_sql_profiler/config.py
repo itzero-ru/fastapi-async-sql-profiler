@@ -21,6 +21,8 @@ ADMIN_PANEL_LOGIN = str(os.environ.get("ADMIN_PANEL_LOGIN", 'admin'))
 ADMIN_PANEL_PASSWORD = str(
     os.environ.get("ADMIN_PANEL_PASSWORD", 'adminRpZZs12'))
 
+APP_ROUTER_PREFIX = '/profiler'
+
 
 class Settings(BaseModel):
     DB_ECHO: bool

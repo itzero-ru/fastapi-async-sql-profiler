@@ -31,6 +31,7 @@ class RequestInfo(Base):
     end_time = Column(DateTime, nullable=True)
     time_taken = Column(Float, nullable=True)
     total_queries = Column(Integer)
+    time_spent_queries = Column(Float, nullable=True)
     headers = Column(JSON)
 
 
