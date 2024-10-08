@@ -38,4 +38,5 @@ async def all_request(request: Request):
         # "total_pages": total_pages,
         # "total_request_info": total_request_info,
     }
-    return templates.TemplateResponse("base.html", context)
+    return templates.TemplateResponse("request_show.html", context)
+    # return templates.TemplateResponse("base.html", context)
