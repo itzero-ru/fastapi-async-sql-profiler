@@ -298,11 +298,11 @@
     <div id="content">
         {% for request in request_info %}
             <div class="item">
-                <div class="start_time"> {{request.start_time}} </div>
+                <div class="start_time">{{ request.start_time.strftime('%d.%m.%Y, %H:%M:%S') }}.{{ '%03d' % (request.start_time.microsecond // 1000) }} </div>
                 <div class="method"> {{request.method}} </div>
                 <div class="path"> {{request.path}} </div>
-                <div> {{request.time_taken}} ms request </div>
-                <div> {{request.time_spent_queries}} on queries </div>
+                <div> {{request.time_taken}} ms overall </div>
+                <div> {{request.time_spent_queries}} ms on queries </div>
                 <div> {{request.total_queries}} queries</div>
             </div>
            
