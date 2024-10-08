@@ -3,11 +3,309 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {% block head %}{%endblock%}
     <title>Document</title>
+    <style>
+        body {
+            font-family: FiraSans, "Helvetica Neue", Arial, sans-serif;
+            background-color: #f3f3f3;
+            margin: 0;
+            font-weight: lighter;
+            font-weight: normal;
+        }
+
+        pre {
+            font-family: Fantasque;
+            background-color: white !important;
+            padding: 0.5em !important;
+            margin: 0 !important;
+            font-size: 14px;
+            text-align: left;
+        }
+
+        code {
+            font-family: Fantasque;
+            background-color: white !important;
+            padding: 0 !important;
+            margin: 0 !important;
+            font-size: 14px;
+
+        }
+
+        html {
+            margin: 0;
+        }
+
+        #header {
+            height: 50px;
+            background-color: rgb(51, 51, 68);
+            width: 100%;
+            position: relative;
+            padding: 0;
+
+
+        }
+
+        #header div {
+            display: inline-block;
+        }
+
+        .menu {
+            height: 50px;
+            padding: 0;
+            margin: 0;
+
+        }
+
+        .menu-item {
+            height: 50px;
+            padding-left: 10px;
+            padding-right: 10px;
+            margin: 0;
+            margin-right: -4px;
+            color: white;
+            font-weight: bolder;
+
+        }
+
+        .menu-item a {
+            color: white !important;
+        }
+
+        #filter .menu-item {
+            margin-right: 0px;
+        }
+
+        .selectable-menu-item {
+            transition: background-color 0.15s ease, color 0.15s ease;
+
+        }
+
+        .selectable-menu-item:hover {
+            background-color: #f3f3f3;
+            cursor: pointer;
+            color: black !important;
+        }
+
+        .selectable-menu-item:hover a {
+            color: black !important;
+        }
+
+        .menu-item-selected {
+            background-color: #f3f3f3;
+            color: black !important;
+        }
+
+        .menu-item-selected a {
+            color: black !important;
+        }
+
+        .menu-item-outer {
+            display: table !important;
+            height: 100%;
+            width: 100%;
+        }
+
+        .menu-item-inner {
+            display: table-cell !important;
+            vertical-align: middle;
+            width: 100%;
+        }
+
+        a:visited {
+            color: black;
+        }
+
+        a {
+            color: black;
+            text-decoration: none;
+        }
+
+        #filter {
+            height: 50px;
+            position: absolute;
+            right: 0;
+        }
+
+        .description {
+            font-style: italic;
+            font-size: 14px;
+            margin-bottom: 5px;
+        }
+
+        .start_time{
+            margin-bottom: 15px;
+            font-size: 13px;
+        }
+        .item{
+            text-align: center;
+            border: 1px solid gainsboro;
+
+            display: inline-block;
+            background-color: transparent;
+            padding: 10px;
+            margin-left: 10px;
+            margin-top: 10px;
+            border-radius: 4px;
+            transition: background-color 0.15s ease, color 0.15s ease;
+        }
+        .item:hover {
+            background-color: rgb(51, 51, 68);
+            color: white;
+            cursor: pointer;
+          }
+        .method{
+            font-weight: bold;
+            font-size: 18px;
+        }
+
+
+    </style>
 </head>
 <body>
 
-    <h1>BASE</h1>
+    <h1>FASTAPI ASYNC SQL PROFILER</h1>
+
+    <!-- <nav>
+        <ul>
+            <li><button>Requests</button> </li>
+            <li><button>Clear DB</button></li>
+        </ul>
+    </nav> -->
+    <div id="header">
+        <div class="menu">
+            
+    
+<!-- <div class="menu-item selectable-menu-item ">
+    <a href="/api/silk/">
+        <div class="menu-item-outer">
+            <div class="menu-item-inner">Summary</div>
+        </div>
+    </a>
+</div> -->
+<div class="menu-item selectable-menu-item menu-item-selected">
+    <a href="/requests/">
+        <div class="menu-item-outer">
+            <div class="menu-item-inner">Requests</div>
+        </div>
+    </a>
+</div>
+<div class="menu-item selectable-menu-item ">
+    <a href="/api/silk/profiling/">
+        <div class="menu-item-outer">
+            <div class="menu-item-inner">Profiling</div>
+        </div>
+    </a>
+</div>
+<div class="menu-item selectable-menu-item ">
+    <a href="/api/silk/cleardb/">
+        <div class="menu-item-outer">
+            <div class="menu-item-inner">Clear DB</div>
+        </div>
+    </a>
+</div>
+
+
+        </div>
+        <div id="filter" class="menu">
+            
+    <form id="filter-form" action="." method="get"></form>
+    <div class="menu-item ">
+        <div class="menu-item-outer">
+            <div class="menu-item-inner">
+                <label>View:
+                    <select name="view_style" form="filter-form" onchange="this.form.submit();">
+                        
+                            <option value="card" selected="">Cards</option>
+                        
+                            <option value="row">Rows</option>
+                        
+                    </select>
+                </label>
+            </div>
+        </div>
+    </div>
+    <div class="menu-item ">
+        <div class="menu-item-outer">
+            <div class="menu-item-inner">
+                <label>Show:
+                    <select name="show" form="filter-form" onchange="this.form.submit();">
+                        
+                            <option value="5">5</option>
+                        
+                            <option value="10">10</option>
+                        
+                            <option value="25" selected="">25</option>
+                        
+                            <option value="100">100</option>
+                        
+                            <option value="250">250</option>
+                        
+                    </select>
+                </label>
+            </div>
+        </div>
+    </div>
+    <div class="menu-item">
+        <div class="menu-item-outer">
+            <div class="menu-item-inner">
+                <label>Order:
+                    <select name="order_by" form="filter-form" onchange="this.form.submit();">
+                        
+                            <option value="start_time" selected="">Recent</option>
+                        
+                            <option value="path">Path</option>
+                        
+                            <option value="num_sql_queries">Num. Queries</option>
+                        
+                            <option value="time_taken">Time</option>
+                        
+                            <option value="db_time">Time on queries</option>
+                        
+                    </select>
+                </label>
+            </div>
+        </div>
+    </div>
+    <div class="menu-item">
+        <div class="menu-item-outer">
+            <div class="menu-item-inner">
+                <label>Order:
+                    <select name="order_dir" form="filter-form" onchange="this.form.submit();">
+                        
+                            <option value="ASC">Ascending</option>
+                        
+                            <option value="DESC" selected="">Descending</option>
+                        
+                    </select>
+                </label>
+            </div>
+        </div>
+    </div>
+    
+    <div id="filter-button" class="menu-item selectable-menu-item">
+        <div class="menu-item-outer">
+            <div class="menu-item-inner">
+                <div id="filter-item"><span id="num-filters"><sub>0</sub></span></div>
+            </div>
+        </div>
+    </div>
+
+
+        </div>
+    </div>
+    
+    <div id="content">
+        {% for request in request_info %}
+            <div class="item">
+                <div class="start_time"> {{request.start_time}} </div>
+                <div class="method"> {{request.method}} </div>
+                <div class="path"> {{request.path}} </div>
+                <div> {{request.time_taken}} all </div>
+            </div>
+           
+        {% endfor %}
+    </div>
     
 </body>
 </html>

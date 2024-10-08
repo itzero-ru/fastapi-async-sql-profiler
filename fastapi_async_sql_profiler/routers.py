@@ -32,6 +32,31 @@ async def destroy(request: Request, response: Response):
     return {"message": "Clear Db Successfully"}
 
 
+@router.get("/requests")
+async def requests_show(request: Request):
+    """Get all requests."""
+
+    all_requests = await filter_obj(RequestInfo)
+    return all_requests
+    query_validated_data = [
+        QueryInfoDetail.model_validate(item) for item in query_detail]
+
+    # return {'ok': {'request': request_query_validated_data, 'query': query_validated_data}}
+
+    sum_on_query = 0
+    for query_details in query_detail:
+        sum_on_query = sum_on_query + query_details.time_taken
+
+    context = {
+        "current_id": id,
+        # "request": request,
+        "request_query": request_query_validated_data,
+        "query_details": query_validated_data,
+        "sum_on_query": sum_on_query,
+    }
+    return context
+
+
 @router.get("/request_detail/{id}")
 async def request_show(id: int, request: Request):
     """Get single request."""

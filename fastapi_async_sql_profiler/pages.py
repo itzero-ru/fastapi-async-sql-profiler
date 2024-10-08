@@ -3,6 +3,9 @@ from fastapi import APIRouter, Request, Response, status
 from fastapi.responses import HTMLResponse, JSONResponse
 from fastapi.templating import Jinja2Templates
 
+from fastapi_async_sql_profiler.crud import filter_obj
+from fastapi_async_sql_profiler.models import RequestInfo
+
 # from .models import Items, QueryInfo, RequestInfo
 # from .crud import add_db, add_one, clear_table_bd, filter_obj, get_obj_by_id
 
@@ -21,6 +24,17 @@ print()
 
 
 @router.get("/base", response_class=HTMLResponse)
-def all_request(request: Request):
+async def all_request(request: Request):
     """Get all request."""
-    return templates.TemplateResponse("base.html", {"request": request})
+    all_requests = await filter_obj(RequestInfo)
+    # return all_requests
+    context = {
+        "request": request,
+        "request_info": all_requests,
+        "current_api": "all_request",
+        # "page": page,
+        # "limit": limit,
+        # "total_pages": total_pages,
+        # "total_request_info": total_request_info,
+    }
+    return templates.TemplateResponse("base.html", context)
