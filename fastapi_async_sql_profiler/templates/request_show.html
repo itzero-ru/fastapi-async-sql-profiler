@@ -1,5 +1,9 @@
 {% extends 'base.html' %}
 
+{% block menu %}
+{% include 'root_menu.html' %}
+{% endblock %}
+
 {% block content %}
 <div id="content">
     {% for request in request_info %}

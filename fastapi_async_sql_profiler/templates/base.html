@@ -1,14 +1,16 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     {% block head %}{%endblock%}
     <title>Document</title>
     <style>
-        h1{
+        h1 {
             text-align: center;
         }
+
         body {
             font-family: FiraSans, "Helvetica Neue", Arial, sans-serif;
             background-color: #f3f3f3;
@@ -136,11 +138,12 @@
             margin-bottom: 5px;
         }
 
-        .start_time{
+        .start_time {
             margin-bottom: 15px;
             font-size: 13px;
         }
-        .item{
+
+        .item {
             text-align: center;
             border: 1px solid gainsboro;
 
@@ -152,19 +155,20 @@
             border-radius: 4px;
             transition: background-color 0.15s ease, color 0.15s ease;
         }
+
         .item:hover {
             background-color: rgb(51, 51, 68);
             color: white;
             cursor: pointer;
-          }
-        .method{
+        }
+
+        .method {
             font-weight: bold;
             font-size: 18px;
         }
-
-
     </style>
 </head>
+
 <body>
 
     <h1>FASTAPI ASYNC SQL PROFILER</h1>
@@ -176,123 +180,91 @@
         </ul>
     </nav> -->
     <div id="header">
-        <div class="menu">
-            
-    
-<!-- <div class="menu-item selectable-menu-item ">
-    <a href="/api/silk/">
-        <div class="menu-item-outer">
-            <div class="menu-item-inner">Summary</div>
-        </div>
-    </a>
-</div> -->
-<div class="menu-item selectable-menu-item menu-item-selected">
-    <a href="/profiler/requests/">
-        <div class="menu-item-outer">
-            <div class="menu-item-inner">Requests</div>
-        </div>
-    </a>
-</div>
-<div class="menu-item selectable-menu-item ">
-    <a href="/api/silk/profiling/">
-        <div class="menu-item-outer">
-            <div class="menu-item-inner">Profiling</div>
-        </div>
-    </a>
-</div>
-<div class="menu-item selectable-menu-item ">
-    <a href="/api/silk/cleardb/">
-        <div class="menu-item-outer">
-            <div class="menu-item-inner">Clear DB</div>
-        </div>
-    </a>
-</div>
-
-
-        </div>
+        {% block menu %}
+        {% endblock %}
         <div id="filter" class="menu">
-            
-    <form id="filter-form" action="." method="get"></form>
-    <div class="menu-item ">
-        <div class="menu-item-outer">
-            <div class="menu-item-inner">
-                <label>View:
-                    <select name="view_style" form="filter-form" onchange="this.form.submit();">
-                        
-                            <option value="card" selected="">Cards</option>
-                        
-                            <option value="row">Rows</option>
-                        
-                    </select>
-                </label>
+
+            <form id="filter-form" action="." method="get"></form>
+            <div class="menu-item ">
+                <div class="menu-item-outer">
+                    <div class="menu-item-inner">
+                        <label>View:
+                            <select name="view_style" form="filter-form" onchange="this.form.submit();">
+
+                                <option value="card" selected="">Cards</option>
+
+                                <option value="row">Rows</option>
+
+                            </select>
+                        </label>
+                    </div>
+                </div>
             </div>
-        </div>
-    </div>
-    <div class="menu-item ">
-        <div class="menu-item-outer">
-            <div class="menu-item-inner">
-                <label>Show:
-                    <select name="show" form="filter-form" onchange="this.form.submit();">
-                        
-                            <option value="5">5</option>
-                        
-                            <option value="10">10</option>
-                        
-                            <option value="25" selected="">25</option>
-                        
-                            <option value="100">100</option>
-                        
-                            <option value="250">250</option>
-                        
-                    </select>
-                </label>
+            <div class="menu-item ">
+                <div class="menu-item-outer">
+                    <div class="menu-item-inner">
+                        <label>Show:
+                            <select name="show" form="filter-form" onchange="this.form.submit();">
+
+                                <option value="5">5</option>
+
+                                <option value="10">10</option>
+
+                                <option value="25" selected="">25</option>
+
+                                <option value="100">100</option>
+
+                                <option value="250">250</option>
+
+                            </select>
+                        </label>
+                    </div>
+                </div>
             </div>
-        </div>
-    </div>
-    <div class="menu-item">
-        <div class="menu-item-outer">
-            <div class="menu-item-inner">
-                <label>Order:
-                    <select name="order_by" form="filter-form" onchange="this.form.submit();">
-                        
-                            <option value="start_time" selected="">Recent</option>
-                        
-                            <option value="path">Path</option>
-                        
-                            <option value="num_sql_queries">Num. Queries</option>
-                        
-                            <option value="time_taken">Time</option>
-                        
-                            <option value="db_time">Time on queries</option>
-                        
-                    </select>
-                </label>
+            <div class="menu-item">
+                <div class="menu-item-outer">
+                    <div class="menu-item-inner">
+                        <label>Order:
+                            <select name="order_by" form="filter-form" onchange="this.form.submit();">
+
+                                <option value="start_time" selected="">Recent</option>
+
+                                <option value="path">Path</option>
+
+                                <option value="num_sql_queries">Num. Queries</option>
+
+                                <option value="time_taken">Time</option>
+
+                                <option value="db_time">Time on queries</option>
+
+                            </select>
+                        </label>
+                    </div>
+                </div>
             </div>
-        </div>
-    </div>
-    <div class="menu-item">
-        <div class="menu-item-outer">
-            <div class="menu-item-inner">
-                <label>Order:
-                    <select name="order_dir" form="filter-form" onchange="this.form.submit();">
-                        
-                            <option value="ASC">Ascending</option>
-                        
-                            <option value="DESC" selected="">Descending</option>
-                        
-                    </select>
-                </label>
+            <div class="menu-item">
+                <div class="menu-item-outer">
+                    <div class="menu-item-inner">
+                        <label>Order:
+                            <select name="order_dir" form="filter-form" onchange="this.form.submit();">
+
+                                <option value="ASC">Ascending</option>
+
+                                <option value="DESC" selected="">Descending</option>
+
+                            </select>
+                        </label>
+                    </div>
+                </div>
             </div>
-        </div>
-    </div>
-    
-    <div id="filter-button" class="menu-item selectable-menu-item">
-        <div class="menu-item-outer">
-            <div class="menu-item-inner">
-                <div id="filter-item"><span id="num-filters"><sub>0</sub></span></div>
+
+            <div id="filter-button" class="menu-item selectable-menu-item">
+                <div class="menu-item-outer">
+                    <div class="menu-item-inner">
+                        <div id="filter-item"><span id="num-filters"><sub>0</sub></span></div>
+                    </div>
+                </div>
             </div>
-        </div>
-    </div>
 
 
         </div>
@@ -315,6 +287,7 @@
            
         {% endfor %}
     </div> -->
-    
+
 </body>
+
 </html>
