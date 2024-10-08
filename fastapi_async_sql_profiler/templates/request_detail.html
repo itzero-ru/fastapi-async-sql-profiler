@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+
+{% block style %}
+<style>
+    #request-summary {
+        margin: auto;
+        text-align: center;
+        width: 100%;
+    }
+    .item{
+        border: 0;
+    }
+    .item:hover {
+        background-color: initial;
+        color: initial;
+        cursor: initial;
+    }
+</style>
+{% endblock %}
+{% block menu %}
+{% include 'inclusion/request_detail_menu.html' %}
+{% endblock %}
+
+{% block content %}
+<div id="content">
+
+    <div id="request-summary">
+        <div class="item">
+            <div class="start_time">{{ request_query.start_time.strftime('%d.%m.%Y, %H:%M:%S') }}.{{ '%03d' %
+                (request_query.start_time.microsecond // 1000) }} </div>
+            <div class="method"> {{request_query.method}} </div>
+            <div class="path"> {{request_query.path}} </div>
+            <div> {{request_query.time_taken}} ms overall </div>
+            <div> {{request_query.time_spent_queries}} ms on queries </div>
+            <div> {{request_query.total_queries}} queries</div>
+        </div>
+    </div>
+
+
+
+</div>
+{% endblock %}

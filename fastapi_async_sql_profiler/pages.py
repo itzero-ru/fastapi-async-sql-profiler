@@ -60,4 +60,4 @@ async def one_request(id: int, request: Request):
         # "total_pages": total_pages,
         # "total_request_info": total_request_info,
     }
-    return templates.TemplateResponse("request_show.html", context)
+    return templates.TemplateResponse("request_detail.html", context)

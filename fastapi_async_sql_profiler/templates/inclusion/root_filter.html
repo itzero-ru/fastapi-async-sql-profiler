@@ -1,0 +1,86 @@
+<div id="filter" class="menu">
+
+    <form id="filter-form" action="." method="get"></form>
+    <div class="menu-item ">
+        <div class="menu-item-outer">
+            <div class="menu-item-inner">
+                <label>View:
+                    <select name="view_style" form="filter-form" onchange="this.form.submit();">
+
+                        <option value="card" selected="">Cards</option>
+
+                        <option value="row">Rows</option>
+
+                    </select>
+                </label>
+            </div>
+        </div>
+    </div>
+    <div class="menu-item ">
+        <div class="menu-item-outer">
+            <div class="menu-item-inner">
+                <label>Show:
+                    <select name="show" form="filter-form" onchange="this.form.submit();">
+
+                        <option value="5">5</option>
+
+                        <option value="10">10</option>
+
+                        <option value="25" selected="">25</option>
+
+                        <option value="100">100</option>
+
+                        <option value="250">250</option>
+
+                    </select>
+                </label>
+            </div>
+        </div>
+    </div>
+    <div class="menu-item">
+        <div class="menu-item-outer">
+            <div class="menu-item-inner">
+                <label>Order:
+                    <select name="order_by" form="filter-form" onchange="this.form.submit();">
+
+                        <option value="start_time" selected="">Recent</option>
+
+                        <option value="path">Path</option>
+
+                        <option value="num_sql_queries">Num. Queries</option>
+
+                        <option value="time_taken">Time</option>
+
+                        <option value="db_time">Time on queries</option>
+
+                    </select>
+                </label>
+            </div>
+        </div>
+    </div>
+    <div class="menu-item">
+        <div class="menu-item-outer">
+            <div class="menu-item-inner">
+                <label>Order:
+                    <select name="order_dir" form="filter-form" onchange="this.form.submit();">
+
+                        <option value="ASC">Ascending</option>
+
+                        <option value="DESC" selected="">Descending</option>
+
+                    </select>
+                </label>
+            </div>
+        </div>
+    </div>
+
+    <div id="filter-button" class="menu-item selectable-menu-item">
+        <div class="menu-item-outer">
+            <div class="menu-item-inner">
+                <div id="filter-item"><span id="num-filters"><sub>0</sub></span></div>
+            </div>
+        </div>
+    </div>
+
+
+</div>

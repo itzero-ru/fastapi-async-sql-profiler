@@ -1,12 +1,17 @@
 {% extends 'base.html' %}
 
 {% block menu %}
-{% include 'root_menu.html' %}
+{% include 'inclusion/root_menu.html' %}
+{% endblock %}
+
+{% block filter %}
+{% include 'inclusion/root_filter.html' %}
 {% endblock %}
 
 {% block content %}
 <div id="content">
     {% for request in request_info %}
+
         <div class="item">
             <div class="start_time">{{ request.start_time.strftime('%d.%m.%Y, %H:%M:%S') }}.{{ '%03d' % (request.start_time.microsecond // 1000) }} </div>
             <div class="method"> {{request.method}} </div>
