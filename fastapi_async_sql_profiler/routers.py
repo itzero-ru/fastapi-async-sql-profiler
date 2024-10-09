@@ -42,23 +42,6 @@ async def requests_show(request: Request):
     all_requests = await filter_obj(RequestInfo)
     # r = await get_requests_with_query_count()
     return all_requests
-    query_validated_data = [
-        QueryInfoDetail.model_validate(item) for item in query_detail]
-
-    # return {'ok': {'request': request_query_validated_data, 'query': query_validated_data}}
-
-    sum_on_query = 0
-    for query_details in query_detail:
-        sum_on_query = sum_on_query + query_details.time_taken
-
-    context = {
-        "current_id": id,
-        # "request": request,
-        "request_query": request_query_validated_data,
-        "query_details": query_validated_data,
-        "sum_on_query": sum_on_query,
-    }
-    return context
 
 
 @router.get("/request_detail/{id}")

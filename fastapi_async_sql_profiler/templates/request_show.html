@@ -11,15 +11,16 @@
 {% block content %}
 <div id="content">
     {% for request in request_info %}
-
-        <div class="item">
+        <!-- <a class="item" onclick="window.open('https://example.com')" > -->
+        <a class="item" href="/profiler/pages/request/{{request.id}}" target="_blank">
             <div class="start_time">{{ request.start_time.strftime('%d.%m.%Y, %H:%M:%S') }}.{{ '%03d' % (request.start_time.microsecond // 1000) }} </div>
             <div class="method"> {{request.method}} </div>
             <div class="path"> {{request.path}} </div>
             <div> {{request.time_taken}} ms overall </div>
             <div> {{request.time_spent_queries}} ms on queries </div>
             <div> {{request.total_queries}} queries</div>
-        </div>
+            <!-- <div><button onclick="window.open('https://example.com')">Открыть новую страницу</button></div> -->
+        </a>
        
     {% endfor %}
 </div>
