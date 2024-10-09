@@ -1,4 +1,4 @@
-from sqlalchemy import insert, select, update, delete
+from sqlalchemy import desc, insert, select, update, delete
 from fastapi_async_sql_profiler.database import async_session_maker
 from sqlalchemy import func
 from sqlalchemy.orm import aliased
@@ -34,6 +34,7 @@ async def filter_obj(model, **kwargs) -> list:
     async with async_session_maker() as session:
         # stmt = select(model).where(model.id == kwargs['id'])
         stmt = select(model).filter_by(**kwargs)
+        stmt = stmt.order_by(desc(model.id))
         res = await session.execute(stmt)
 
         return res.scalars().all()

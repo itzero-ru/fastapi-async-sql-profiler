@@ -105,7 +105,8 @@ class SQLProfilerMiddleware(BaseHTTPMiddleware):
         request_info = RequestInfo(path=path, query_params=query_params,
                                    raw_body=raw_body,
                                    body=body, method=method,
-                                   start_time=datetime.datetime.utcnow(),
+                                   start_time=datetime.datetime.now(
+                                       datetime.timezone.utc),
                                    headers=headers_json)
         # item = Items(body='ZZZZZ')
         # await add_db(item)
@@ -147,14 +148,18 @@ class SQLProfilerMiddleware(BaseHTTPMiddleware):
                 request_id=request_id, time_taken=mstimetaken,
                 traceback=query_obj['stack'])
             await add_db(query_data)
-            # session.add(query_data)
-            # session.commit()
-            # session.close()
+
         print('all_query_time_taken', all_query_time_taken)
-        end_time = datetime.datetime.utcnow()
-        # request_obj = session.get(RequestInfo, request_id)
+        end_time = datetime.datetime.now(datetime.timezone.utc)
+
         request_obj = await get_obj_by_id(RequestInfo, request_id)
-        time_taken = end_time - request_obj.start_time
+
+        request_obj_start_time = request_obj.start_time
+
+        if not request_obj_start_time.tzinfo:
+            # fix SQLite DateTime [UTC unsupported]
+            end_time = end_time.replace(tzinfo=None)
+        time_taken = end_time - request_obj_start_time
         time_taken_second = time_taken.total_seconds()
         time_taken_ms = round(time_taken_second*1000, 3)
         request_obj.end_time = end_time
@@ -163,10 +168,6 @@ class SQLProfilerMiddleware(BaseHTTPMiddleware):
         if all_query_time_taken:
             request_obj.time_spent_queries = all_query_time_taken
         await add_db(request_obj)
-        # session.add(request_obj)
-        # session.commit()
-        # session.refresh(request_obj)
-        # session.close()
 
     async def set_body(self, request: Request, body: bytes):
         async def receive():
