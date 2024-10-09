@@ -1,9 +1,10 @@
 import asyncio
+from typing import Optional
 from sqlalchemy import (
     JSON, Column, DateTime, Float, ForeignKey, Integer, String, Text)
 # import sqlalchemy
 # import sqlalchemy.event
-
+from sqlalchemy.orm import relationship
 from fastapi_async_sql_profiler.database import (
     Base, )  # init_db
 from fastapi_async_sql_profiler.database import engine
@@ -33,6 +34,26 @@ class RequestInfo(Base):
     total_queries = Column(Integer)
     time_spent_queries = Column(Float, nullable=True)
     headers = Column(JSON)
+    response_info = relationship(
+        "ResponseInfo", back_populates="request_info",
+        uselist=False)
+
+
+class ResponseInfo(Base):
+    __tablename__ = 'middleware_response'
+    id = Column(Integer, primary_key=True, index=True)
+    status_code = Column(Integer, nullable=True)
+    raw_body = Column(Text, default='')
+    body = Column(Text, default='')
+    headers = Column(JSON)
+
+    # Add a foreign key that references RequestInfo
+    request_info_id = Column(
+        Integer, ForeignKey('middleware_requests.id'), nullable=False)
+    request_info = relationship(
+        RequestInfo, back_populates="response_info",
+        uselist=False)
+    # encoded_headers = Column(Text, default='')
 
 
 class QueryInfo(Base):
@@ -60,5 +81,6 @@ async def init_db(*, engine_async: AsyncEngine):
         await conn.run_sync(Items.__table__.create, checkfirst=True)
         await conn.run_sync(RequestInfo.__table__.create, checkfirst=True)
         await conn.run_sync(QueryInfo.__table__.create, checkfirst=True)
+        await conn.run_sync(ResponseInfo.__table__.create, checkfirst=True) 
 
 # task = asyncio.create_task(init_db())

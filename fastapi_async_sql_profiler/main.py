@@ -38,9 +38,17 @@ async def lifespan(app: FastAPI):
 
 app = FastAPI(lifespan=lifespan)
 
-app.add_middleware(SQLProfilerMiddleware, engine=engine)
+SQL_PROFILER_PASS_ROUTE_STARTSWITH = [
+    '/docs',
+    '/openapi.json',
+]
+app.add_middleware(
+    SQLProfilerMiddleware, engine=engine,
+    skip_route_startswith=SQL_PROFILER_PASS_ROUTE_STARTSWITH,
+)
 
 start_debug_server()
+
 
 app.include_router(router, prefix='', tags=['SQL Profiler'])
 task = asyncio.create_task(init_db(engine_async=engine))

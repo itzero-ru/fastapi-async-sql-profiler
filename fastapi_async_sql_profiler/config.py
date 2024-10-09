@@ -23,6 +23,16 @@ ADMIN_PANEL_PASSWORD = str(
 
 APP_ROUTER_PREFIX = '/profiler'
 
+SQL_PROFILER_PASS_ROUTE_STARTSWITH = [
+    f'{APP_ROUTER_PREFIX}/request_detail',
+    f'{APP_ROUTER_PREFIX}/request_query',
+    '/favicon',
+    f'{APP_ROUTER_PREFIX}/clear_db',
+    f'{APP_ROUTER_PREFIX}/pages',
+    # '/docs',
+    # '/openapi.json',
+]
+
 
 class Settings(BaseModel):
     DB_ECHO: bool

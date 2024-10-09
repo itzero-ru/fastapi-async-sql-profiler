@@ -1,15 +1,17 @@
 import datetime
+import json
 # import uuid
-from fastapi import Request
+from fastapi import Request, Response
 from starlette.middleware.base import BaseHTTPMiddleware
 from starlette.middleware.base import RequestResponseEndpoint
 import traceback
 import time
 import sqlalchemy.event
 
-from fastapi_async_sql_profiler.config import APP_ROUTER_PREFIX
+from fastapi_async_sql_profiler.config import APP_ROUTER_PREFIX, SQL_PROFILER_PASS_ROUTE_STARTSWITH
 from fastapi_async_sql_profiler.crud import add_db, get_obj_by_id
-from fastapi_async_sql_profiler.models import Items, QueryInfo, RequestInfo
+from fastapi_async_sql_profiler.models import Items, QueryInfo, RequestInfo, ResponseInfo
+import copy
 
 
 class SessionHandler(object):
@@ -86,12 +88,13 @@ class SessionHandler(object):
 
 class SQLProfilerMiddleware(BaseHTTPMiddleware):
 
-    def __init__(self, app, engine) -> None:
+    def __init__(self, app, engine, skip_route_startswith: list = []) -> None:
 
         self.app = app
         self.engine = engine
         self.dispatch_func = self.dispatch
         self.queries = []
+        self.skip_route_startswith = skip_route_startswith
 
     async def add_request(self, request, raw_body, body):
 
@@ -111,6 +114,26 @@ class SQLProfilerMiddleware(BaseHTTPMiddleware):
         # session.commit()
         # session.refresh(request_info)
         return request_info
+
+    async def add_response(self, *, request_id: int,
+                           status_code: int, headers, raw_body, body):
+
+        # method = request.method
+        # path = request.url.path
+        # query_params = str(request.query_params)
+        # headers_json = dict(request.headers)
+        # body_list = list(body)
+        # data = json.loads(body)
+        # data_json = json.dumps(data)
+        response_info = ResponseInfo(
+            request_info_id=request_id,
+            status_code=status_code,
+            raw_body=raw_body,
+            body=body, headers=headers,
+        )
+        await add_db(response_info)
+
+        return response_info
 
     async def store(self, session_handler, request_id):
 
@@ -162,12 +185,11 @@ class SQLProfilerMiddleware(BaseHTTPMiddleware):
     async def dispatch(self, request: Request,
                        call_next: RequestResponseEndpoint):
 
-        # print("Before Request")
-        # Step 1: Capture start time
-        # start_time = datetime.datetime.utcnow()
-
         await self.set_body(request, await request.body())
         content_type = request.headers.get("Content-Type", "")
+
+        request_id = None
+
         if "multipart/form-data" in content_type:
             raw_body = await request.form()
             body = str(dict(raw_body))
@@ -179,12 +201,12 @@ class SQLProfilerMiddleware(BaseHTTPMiddleware):
             raw_body = ''
             body = ''
         request_path = request.url.path
-        if request_path == f'{APP_ROUTER_PREFIX}/all_request' or request_path.startswith((
-            f'{APP_ROUTER_PREFIX}/request_detail',
-            f'{APP_ROUTER_PREFIX}/request_query',
-            '/favicon',
-            f'{APP_ROUTER_PREFIX}/clear_db',
-            f'{APP_ROUTER_PREFIX}/pages',
+        if (
+            request_path == f'{APP_ROUTER_PREFIX}/all_request'
+        ) or request_path.startswith(tuple(
+            SQL_PROFILER_PASS_ROUTE_STARTSWITH
+        )) or request_path.startswith(tuple(
+            self.skip_route_startswith
         )):
             response = await call_next(request)
         else:
@@ -195,12 +217,26 @@ class SQLProfilerMiddleware(BaseHTTPMiddleware):
             session_handler.start()
             response = await call_next(request)
             session_handler.stop()
-            # print("After Request")
-            # Step 3: Capture end time and calculate duration
-            # end_time = datetime.datetime.utcnow()
-            # total_time_taken = (end_time - start_time).total_seconds() * 1000  # Convert to milliseconds
-            # print(f"Total execution time for request {request_id}: {total_time_taken} ms")
             await self.store(session_handler, request_id)
+        # Логируем или выводим информацию о response
+        headers_dict_response = dict(response.headers)
+        print("Response headers:", headers_dict_response)
+
+        if request_id:
+            response_body = [section async for section in response.body_iterator]
+            response_body = b"".join(response_body)
+            # print(f"Response body: {response_body.decode()}")
+            await self.add_response(
+                request_id=request_id,
+                status_code=response.status_code,
+                headers=headers_dict_response,
+                raw_body=response_body,
+                body=response_body.decode(),
+            )
+            # Воссоздаем response, так как мы уже прочитали его содержимое
+            response = Response(
+                content=response_body, status_code=response.status_code,
+                headers=dict(response.headers), media_type=response.media_type)
         return response
 
 # class SQLProfilerMiddleware2(BaseHTTPMiddleware):
