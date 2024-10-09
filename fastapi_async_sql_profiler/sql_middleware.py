@@ -1,6 +1,4 @@
 import datetime
-import json
-# import uuid
 from fastapi import Request, Response
 from starlette.middleware.base import BaseHTTPMiddleware
 from starlette.middleware.base import RequestResponseEndpoint
@@ -8,10 +6,11 @@ import traceback
 import time
 import sqlalchemy.event
 
-from fastapi_async_sql_profiler.config import APP_ROUTER_PREFIX, SQL_PROFILER_PASS_ROUTE_STARTSWITH
+from fastapi_async_sql_profiler.config import (
+    APP_ROUTER_PREFIX, SQL_PROFILER_PASS_ROUTE_STARTSWITH)
 from fastapi_async_sql_profiler.crud import add_db, get_obj_by_id
-from fastapi_async_sql_profiler.models import Items, QueryInfo, RequestInfo, ResponseInfo
-import copy
+from fastapi_async_sql_profiler.models import (
+    QueryInfo, RequestInfo, ResponseInfo)
 
 
 class SessionHandler(object):
@@ -108,8 +107,7 @@ class SQLProfilerMiddleware(BaseHTTPMiddleware):
                                    start_time=datetime.datetime.now(
                                        datetime.timezone.utc),
                                    headers=headers_json)
-        # item = Items(body='ZZZZZ')
-        # await add_db(item)
+
         await add_db(request_info)
         # session.add(request_info)
         # session.commit()
