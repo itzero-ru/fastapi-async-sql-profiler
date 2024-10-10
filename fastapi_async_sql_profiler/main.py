@@ -11,6 +11,7 @@ from fastapi_async_sql_profiler.crud import add_db, add_one, clear_table_bd
 
 from fastapi_async_sql_profiler.database import engine
 
+from fastapi_async_sql_profiler.schemas import ItemAdd, ItemDetails
 from fastapi_async_sql_profiler.sql_middleware import SQLProfilerMiddleware
 from fastapi_async_sql_profiler.start_debugger import start_debug_server
 
@@ -60,3 +61,19 @@ async def post_item():
     await add_one(Items, {'body': '11111'})
     await add_one(Items, {'body': '22222'})
     return {"Hello": "World"}
+
+
+@app.post(
+    "/item",
+    response_model=ItemDetails,
+)
+async def add_item(
+    item: ItemAdd,
+    # session: Annotated[AsyncSession, Depends(get_async_session)]
+):
+    item_dict = item.model_dump()
+    # item = await add_one(Items, item_dict)
+    item_a = Items(**item_dict)
+    item = await add_db(item_a)
+
+    return item

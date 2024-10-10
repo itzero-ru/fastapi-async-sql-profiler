@@ -3,6 +3,25 @@ from typing import List
 from pydantic import BaseModel
 
 
+class ItemDetails(BaseModel):
+
+    id: int
+    body: str
+    # chap: Optional[list[int]]
+    # a_id: Optional[int]
+
+    class Config:
+        from_attributes = True
+
+
+class ItemAdd(BaseModel):
+
+    body: str
+
+    class Config:
+        from_attributes = True
+
+
 class RequestInfoDetail(BaseModel):
 
     id: int

@@ -1,5 +1,5 @@
 from sqlalchemy import desc, insert, select, update, delete
-from fastapi_async_sql_profiler.database import async_session_maker
+from fastapi_async_sql_profiler.database import Base, async_session_maker
 from sqlalchemy import func
 from sqlalchemy.orm import aliased
 
@@ -15,12 +15,13 @@ async def add_one(model, data: dict) -> int:
         return res.scalar_one()
 
 
-async def add_db(model) -> int:
+async def add_db(model) -> Base:
     async with async_session_maker() as session:
         res = session.add(model)
+        await session.flush()
         await session.commit()
 
-        return res
+        return model
 
 
 async def get_obj_by_id(model, id: int) -> RequestInfo:
