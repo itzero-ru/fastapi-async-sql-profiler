@@ -2,7 +2,7 @@ from sqlalchemy import desc, insert, select, update, delete
 from fastapi_async_sql_profiler.database import Base, async_session_maker
 from sqlalchemy import func
 from sqlalchemy.orm import aliased
-
+from sqlalchemy.exc import SQLAlchemyError
 from fastapi_async_sql_profiler.models import QueryInfo, RequestInfo
 
 
@@ -16,12 +16,16 @@ async def add_one(model, data: dict) -> int:
 
 
 async def add_db(model) -> Base:
-    async with async_session_maker() as session:
-        res = session.add(model)
-        await session.flush()
-        await session.commit()
-
-        return model
+    try:
+        async with async_session_maker() as session:
+            res = session.add(model)
+            await session.flush()
+            await session.commit()
+            return model
+    except SQLAlchemyError as e:
+        # Log the error or handle it as appropriate for your application
+        print(f"An error occurred: {e}")
+        return None
 
 
 async def get_obj_by_id(model, id: int) -> RequestInfo:

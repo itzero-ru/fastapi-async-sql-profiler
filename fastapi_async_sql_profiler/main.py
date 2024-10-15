@@ -1,17 +1,17 @@
 import asyncio
 from typing import Union
 
-from fastapi import FastAPI, Request, Response, status
+from fastapi import Depends, FastAPI, Request, Response, status
 from contextlib import asynccontextmanager
 from datetime import datetime
 
 from fastapi_async_sql_profiler.models import (
     Items, QueryInfo, RequestInfo, init_db)
-from fastapi_async_sql_profiler.crud import add_db, add_one, clear_table_bd
+from fastapi_async_sql_profiler.crud import add_db, add_one, clear_table_bd, filter_obj
 
 from fastapi_async_sql_profiler.database import engine
 
-from fastapi_async_sql_profiler.schemas import ItemAdd, ItemDetails
+from fastapi_async_sql_profiler.schemas import ItemAdd, ItemDetails, ItemFilter
 from fastapi_async_sql_profiler.sql_middleware import SQLProfilerMiddleware
 from fastapi_async_sql_profiler.start_debugger import start_debug_server
 
@@ -69,6 +69,9 @@ async def post_item():
 )
 async def add_item(
     item: ItemAdd,
+    # limit: int = 10,
+    # desc: bool = True,
+    filters: ItemFilter = Depends()
     # session: Annotated[AsyncSession, Depends(get_async_session)]
 ):
     item_dict = item.model_dump()
@@ -77,3 +80,14 @@ async def add_item(
     item = await add_db(item_a)
 
     return item
+
+
+@app.get("/items")
+async def get_items(
+    filters: ItemFilter = Depends(),
+):
+
+    all = await filter_obj(Items, body='string')
+    # await add_one(Items, {'body': '11111'})
+    # await add_one(Items, {'body': '22222'})
+    return all

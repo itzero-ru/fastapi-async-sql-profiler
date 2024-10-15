@@ -1,6 +1,12 @@
 from datetime import datetime
-from typing import List
+from typing import List, Optional
 from pydantic import BaseModel
+
+
+class ItemFilter(BaseModel):
+    body: Optional[str] = None
+    price_min: Optional[float] = None
+    price_max: Optional[float] = None
 
 
 class ItemDetails(BaseModel):

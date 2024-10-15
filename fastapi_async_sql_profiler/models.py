@@ -1,4 +1,4 @@
-import asyncio
+
 from typing import Optional
 from sqlalchemy import (
     JSON, Column, DateTime, Float, ForeignKey, Integer, String, Text)
@@ -7,8 +7,6 @@ from sqlalchemy import (
 from sqlalchemy.orm import relationship
 from fastapi_async_sql_profiler.database import (
     Base, )  # init_db
-from fastapi_async_sql_profiler.database import engine
-
 from sqlalchemy.ext.asyncio import AsyncEngine
 
 

@@ -69,6 +69,175 @@
     </div>
 
 
-    
+    <div id="request-info">
+
+        <div class="heading">
+            <div class="inner-heading">
+                Query Parameters
+            </div>
+        </div>
+
+        <!-- <pre><code class=" hljs json">{
+"<span class="hljs-attribute">client_order_id</span>": <span class="hljs-value"><span class="hljs-string">"22733"</span>
+</span>}</code></pre> -->
+
+        <pre>
+            {{request_query.query_params}}
+        </pre>
+
+        <div class="heading">
+            <div class="inner-heading">
+                Request Headers
+            </div>
+        </div>
+
+        <table class="headers">
+            <!-- {{request_query.headers}} -->
+            <tbody>
+                {% if request_query.headers %}
+                    {% for key, val in request_query.headers.items() %}
+                        <tr>
+                            <td class="key">{{ key|upper }}</td>
+                            <td class="value">{{ val }}</td>
+                        </tr>
+                    {% endfor %}
+                {% else %}
+                    <tr>
+                        <td colspan="2">No headers found.</td>
+                    </tr>
+                {% endif %}
+            </tbody>
+        </table>
+
+
+
+        <div class="heading">
+            <div class="inner-heading">
+                Response Headers
+            </div>
+        </div>
+
+        <table class="headers">
+
+            <tbody>
+                <tr>
+                    <td class="key">CONTENT-TYPE</td>
+                    <td class="value">application/json</td>
+                </tr>
+
+                <tr>
+                    <td class="key">VARY</td>
+                    <td class="value">Accept, Origin</td>
+                </tr>
+
+                <tr>
+                    <td class="key">ALLOW</td>
+                    <td class="value">GET, HEAD, OPTIONS</td>
+                </tr>
+
+                <tr>
+                    <td class="key">X-FRAME-OPTIONS</td>
+                    <td class="value">DENY</td>
+                </tr>
+
+                <tr>
+                    <td class="key">CONTENT-LENGTH</td>
+                    <td class="value">3438</td>
+                </tr>
+
+                <tr>
+                    <td class="key">ACCESS-CONTROL-ALLOW-CREDENTIALS</td>
+                    <td class="value">true</td>
+                </tr>
+
+                <tr>
+                    <td class="key">ACCESS-CONTROL-ALLOW-ORIGIN</td>
+                    <td class="value">http://crm.loft.test</td>
+                </tr>
+
+                <tr>
+                    <td class="key">X-CONTENT-TYPE-OPTIONS</td>
+                    <td class="value">nosniff</td>
+                </tr>
+
+                <tr>
+                    <td class="key">REFERRER-POLICY</td>
+                    <td class="value">same-origin</td>
+                </tr>
+
+                <tr>
+                    <td class="key">CROSS-ORIGIN-OPENER-POLICY</td>
+                    <td class="value">same-origin</td>
+                </tr>
+
+            </tbody>
+        </table>
+
+
+        <div class="heading">
+            <div class="inner-heading">
+                Raw Response Body
+            </div>
+        </div>
+
+
+
+        The raw response body is <b>3438</b> characters long
+        and hence is <b>too big</b> to show here.
+        Click <a href="/api/silk/request/19b43c23-968c-4ac3-8f80-88863e58ad4f/raw/?typ=response&amp;subtyp=raw">here</a>
+        to view the raw response body.
+
+
+
+
+        <div class="heading">
+            <div class="inner-heading">
+                Response Body
+            </div>
+        </div>
+
+        <div class="description">
+            This is the body of the HTTP response represented as JSON for easier reading.
+        </div>
+
+        The response body is <b>8402</b> characters long
+        and hence is <b>too big</b> to show here.
+        Click <a
+            href="/api/silk/request/19b43c23-968c-4ac3-8f80-88863e58ad4f/raw/?typ=response&amp;subtyp=processed">here</a>
+        to view the response body.
+
+
+
+        <div class="heading">
+            <div class="inner-heading">
+                Curl
+            </div>
+        </div>
+
+        <div class="description">
+            Curl is a command-line utility for transferring data from servers. Paste the following into
+            a terminal to repeat this request via command line.
+        </div>
+        <pre
+            id="pre-curl"><code class=" hljs ">curl -X GET   http://loft.test/api/chronology/history_events?client_order_id=22733</code></pre>
+
+
+        <div class="heading">
+            <div class="inner-heading">
+                Django Test Client
+            </div>
+        </div>
+
+        <div class="description">
+            The following is working python code that makes use of the Django test client. It can be used to
+            replicate this request from within a Django unit test, or simply as standalone Python.
+        </div>
+        <pre id="pre-curl"><code class=" hljs python"><span class="hljs-keyword">from</span> django.test <span class="hljs-keyword">import</span> Client
+c = Client()
+response = c.get(path=<span class="hljs-string">'/api/chronology/history_events'</span>,
+data={&amp;<span class="hljs-comment">#x27;client_order_id&amp;#x27;: &amp;#x27;22733&amp;#x27;},</span>
+content_type=<span class="hljs-string">'text/plain'</span>)</code></pre>
+
+    </div>
 </div>
 {% endblock %}
