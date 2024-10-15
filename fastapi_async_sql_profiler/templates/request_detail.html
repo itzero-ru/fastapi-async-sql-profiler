@@ -32,6 +32,14 @@
         font-weight: bold;
         margin-top: 20px;
     }
+    pre {
+        white-space: pre-wrap; /* css-3 */
+        white-space: -moz-pre-wrap; /* Mozilla, since 1999 */
+        /*noinspection CssInvalidElement*/
+        white-space: -pre-wrap; /* Opera 4-6 */
+        white-space: -o-pre-wrap; /* Opera 7 */
+        word-wrap: break-word; /* Internet Explorer 5.5+ */
+    }
 
     code {
         font-family: Fantasque;
@@ -47,8 +55,13 @@
         background-color: white;
         width: 100%;
     }
+    .headers td {
+        padding-bottom: 5px;
+        padding-left: 5px;
+    }
 </style>
 {% endblock %}
+
 {% block menu %}
 {% include 'inclusion/request_detail_menu.html' %}
 {% endblock %}
@@ -60,7 +73,7 @@
         <div class="item">
             <div class="start_time">{{ request_query.start_time.strftime('%d.%m.%Y, %H:%M:%S') }}.{{ '%03d' %
                 (request_query.start_time.microsecond // 1000) }} </div>
-            <div class="method"> {{request_query.method}} </div>
+            <div class="method"> {{response_info.status_code}} {{request_query.method}} </div>
             <div class="path"> {{request_query.path}} </div>
             <div> {{request_query.time_taken}} ms overall </div>
             <div> {{request_query.time_spent_queries}} ms on queries </div>
@@ -116,60 +129,21 @@
                 Response Headers
             </div>
         </div>
-
+        <!-- {{response_info.body}} -->
         <table class="headers">
-
             <tbody>
-                <tr>
-                    <td class="key">CONTENT-TYPE</td>
-                    <td class="value">application/json</td>
-                </tr>
-
-                <tr>
-                    <td class="key">VARY</td>
-                    <td class="value">Accept, Origin</td>
-                </tr>
-
-                <tr>
-                    <td class="key">ALLOW</td>
-                    <td class="value">GET, HEAD, OPTIONS</td>
-                </tr>
-
-                <tr>
-                    <td class="key">X-FRAME-OPTIONS</td>
-                    <td class="value">DENY</td>
-                </tr>
-
-                <tr>
-                    <td class="key">CONTENT-LENGTH</td>
-                    <td class="value">3438</td>
-                </tr>
-
-                <tr>
-                    <td class="key">ACCESS-CONTROL-ALLOW-CREDENTIALS</td>
-                    <td class="value">true</td>
-                </tr>
-
-                <tr>
-                    <td class="key">ACCESS-CONTROL-ALLOW-ORIGIN</td>
-                    <td class="value">http://crm.loft.test</td>
-                </tr>
-
-                <tr>
-                    <td class="key">X-CONTENT-TYPE-OPTIONS</td>
-                    <td class="value">nosniff</td>
-                </tr>
-
-                <tr>
-                    <td class="key">REFERRER-POLICY</td>
-                    <td class="value">same-origin</td>
-                </tr>
-
-                <tr>
-                    <td class="key">CROSS-ORIGIN-OPENER-POLICY</td>
-                    <td class="value">same-origin</td>
-                </tr>
-
+                {% if response_info.headers %}
+                    {% for key, val in response_info.headers.items() %}
+                        <tr>
+                            <td class="key">{{ key|upper }}</td>
+                            <td class="value">{{ val }}</td>
+                        </tr>
+                    {% endfor %}
+                {% else %}
+                    <tr>
+                        <td colspan="2">No headers found.</td>
+                    </tr>
+                {% endif %}
             </tbody>
         </table>
 
@@ -182,10 +156,9 @@
 
 
 
-        The raw response body is <b>3438</b> characters long
-        and hence is <b>too big</b> to show here.
-        Click <a href="/api/silk/request/19b43c23-968c-4ac3-8f80-88863e58ad4f/raw/?typ=response&amp;subtyp=raw">here</a>
-        to view the raw response body.
+        <pre>
+            {{response_info.raw_body}}
+        </pre>
 
 
 
@@ -196,7 +169,13 @@
             </div>
         </div>
 
-        <div class="description">
+        <pre>
+            <code  id="jsonResponseBody" class555=" hljs json" class="language-json hljs3 json3">
+                {{response_info.body}}
+            </code>
+        </pre>
+
+        <!-- <div class="description">
             This is the body of the HTTP response represented as JSON for easier reading.
         </div>
 
@@ -204,7 +183,7 @@
         and hence is <b>too big</b> to show here.
         Click <a
             href="/api/silk/request/19b43c23-968c-4ac3-8f80-88863e58ad4f/raw/?typ=response&amp;subtyp=processed">here</a>
-        to view the response body.
+        to view the response body. -->
 
 
 
@@ -239,5 +218,20 @@ data={&amp;<span class="hljs-comment">#x27;client_order_id&amp;#x27;: &amp;#x27;
 content_type=<span class="hljs-string">'text/plain'</span>)</code></pre>
 
     </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+    <script>
+
+        function formatAndHighlight(elementId) {
+            const codeElement = document.getElementById(elementId);
+            const jsonObj = JSON.parse(codeElement.textContent);
+            const formattedJson = JSON.stringify(jsonObj, null, 2);
+            codeElement.textContent = formattedJson;
+            hljs.highlightBlock(codeElement);
+        }
+        // Форматируем и подсвечиваем все JSON-блоки
+        formatAndHighlight('jsonResponseBody');
+
+        hljs.initHighlightingOnLoad();
+    </script>
 </div>
 {% endblock %}

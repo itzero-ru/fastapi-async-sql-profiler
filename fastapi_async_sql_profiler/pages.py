@@ -54,6 +54,7 @@ async def one_request(id: int, request: Request):
     context = {
         "request": request,
         "request_query": request_query,
+        "response_info": request_query.response_info,
         "current_api": "all_request",
         # "page": page,
         # "limit": limit,

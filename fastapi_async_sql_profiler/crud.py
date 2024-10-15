@@ -2,6 +2,7 @@ from sqlalchemy import desc, insert, select, update, delete
 from fastapi_async_sql_profiler.database import Base, async_session_maker
 from sqlalchemy import func
 from sqlalchemy.orm import aliased
+from sqlalchemy.orm import joinedload
 from sqlalchemy.exc import SQLAlchemyError
 from fastapi_async_sql_profiler.models import QueryInfo, RequestInfo
 
@@ -28,17 +29,54 @@ async def add_db(model) -> Base:
         return None
 
 
-async def get_obj_by_id(model, id: int) -> RequestInfo:
+async def get_obj_by_id(
+    model, id: int,
+    joinedload_names: list = None,
+) -> RequestInfo:
     async with async_session_maker() as session:
-        obj = await session.get(model, id)
+        # obj = await session.get(model, id)
+        stmt = select(model).where(model.id == id)
+
+        # Применяем joinedload
+        if joinedload_names:
+            for name in joinedload_names:
+                if isinstance(name, str):
+                    # Если передано строковое имя, преобразуем его в атрибут модели
+                    attr = getattr(model, name, None)
+                    if attr is not None:
+                        stmt = stmt.options(joinedload(attr))
+                else:
+                    # Если передан атрибут модели, используем его напрямую
+                    stmt = stmt.options(joinedload(name))
+
+        obj = await session.execute(stmt)
+        obj = obj.scalar_one()
 
         return obj
 
 
-async def filter_obj(model, **kwargs) -> list:
+async def filter_obj(
+    model,
+    joinedload_names: list = ['response_info', ], **kwargs, ) -> list:
     async with async_session_maker() as session:
         # stmt = select(model).where(model.id == kwargs['id'])
-        stmt = select(model).filter_by(**kwargs)
+        stmt = select(model)
+
+        # # Применяем joinedload
+        # if joinedload_names:
+        #     for name in joinedload_names:
+        #         if isinstance(name, str):
+        #             # Если передано строковое имя, преобразуем его в атрибут модели
+        #             attr = getattr(model, name, None)
+        #             if attr is not None:
+        #                 stmt = stmt.options(joinedload(attr))
+        #         else:
+        #             # Если передан атрибут модели, используем его напрямую
+        #             stmt = stmt.options(joinedload(name))
+
+            #  stmt = stmt.options(joinedload(*joinedload_names))
+        # stmt = stmt.options(joinedload(RequestInfo.response_info))
+        stmt = stmt.filter_by(**kwargs)
         stmt = stmt.order_by(desc(model.id))
         res = await session.execute(stmt)
 
