@@ -5,6 +5,8 @@ from fastapi import Depends, FastAPI, Request, Response, status
 from contextlib import asynccontextmanager
 from datetime import datetime
 
+from fastapi.staticfiles import StaticFiles
+
 from fastapi_async_sql_profiler.models import (
     Items, QueryInfo, RequestInfo, init_db)
 from fastapi_async_sql_profiler.crud import add_db, add_one, clear_table_bd, filter_obj
@@ -31,13 +33,14 @@ async def lifespan(app: FastAPI):
     # init_db()
     # await init_db()
     # task = asyncio.create_task(create_items_table())
-    # await task 
+    # await task
 
     yield
     current_time = datetime.now().strftime("%H:%M:%S")
     print(f"✖️ Run on shutdown! {current_time}")
 
 app = FastAPI(lifespan=lifespan)
+# app.mount("/static", StaticFiles(directory="static"), name="static")
 
 SQL_PROFILER_PASS_ROUTE_STARTSWITH = [
     '/docs',

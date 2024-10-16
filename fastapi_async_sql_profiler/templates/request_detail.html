@@ -218,7 +218,7 @@ data={&amp;<span class="hljs-comment">#x27;client_order_id&amp;#x27;: &amp;#x27;
 content_type=<span class="hljs-string">'text/plain'</span>)</code></pre>
 
     </div>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+    
     <script>
 
         function formatAndHighlight(elementId) {
@@ -226,12 +226,12 @@ content_type=<span class="hljs-string">'text/plain'</span>)</code></pre>
             const jsonObj = JSON.parse(codeElement.textContent);
             const formattedJson = JSON.stringify(jsonObj, null, 2);
             codeElement.textContent = formattedJson;
-            hljs.highlightBlock(codeElement);
+            hljs.highlightElement(codeElement);
         }
         // Форматируем и подсвечиваем все JSON-блоки
         formatAndHighlight('jsonResponseBody');
 
-        hljs.initHighlightingOnLoad();
+        hljs.highlightAll();
     </script>
 </div>
 {% endblock %}

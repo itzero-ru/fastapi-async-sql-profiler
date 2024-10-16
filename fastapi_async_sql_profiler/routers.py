@@ -3,6 +3,7 @@ import math
 from pathlib import Path
 from fastapi import APIRouter, Request, Response, status
 from fastapi.responses import HTMLResponse, JSONResponse
+from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 
 from fastapi_async_sql_profiler.config import APP_ROUTER_PREFIX
@@ -17,7 +18,9 @@ from .pages import router as router_pages
 router = APIRouter(
     prefix=APP_ROUTER_PREFIX,
 )
-
+# router.mount("/static", StaticFiles(directory="static"), name="static")
+# static_files = StaticFiles(directory="static")
+# router.mount("/static", static_files, name="static")
 
 # Добавляем роуты из другого файла
 router.include_router(router_pages)
@@ -48,7 +51,8 @@ async def requests_show(request: Request):
 async def request_show(id: int, request: Request):
     """Get single request."""
 
-    request_query = await get_obj_by_id(RequestInfo, id)
+    request_query = await get_obj_by_id(
+        RequestInfo, id, joinedload_names=['response_info',])
     if not request_query:
         return Response(status_code=status.HTTP_404_NOT_FOUND)
     request_query_validated_data = RequestInfoDetail.model_validate(

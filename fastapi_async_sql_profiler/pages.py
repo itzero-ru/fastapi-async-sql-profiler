@@ -1,6 +1,7 @@
 from pathlib import Path
 from fastapi import APIRouter, Request, Response, status
 from fastapi.responses import HTMLResponse, JSONResponse
+from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 
 from fastapi_async_sql_profiler.crud import filter_obj, get_obj_by_id, get_requests_with_query_count
@@ -15,12 +16,18 @@ router = APIRouter(
     tags=["Pages"],
 )
 
+
 BASE_PATH = Path(__file__).resolve().parent
 templates = Jinja2Templates(directory=str(BASE_PATH / "templates"))
 print()
 print('BASE_PATH', BASE_PATH)
 print('templates', str(BASE_PATH / "templates"))
 print()
+
+# static_files = StaticFiles(directory="static")
+# router.mount("/static", static_files, name="static")
+# static_files = StaticFiles(directory=str(f"{BASE_PATH}/static"))
+# router.mount("/static", static_files, name="static")
 
 
 @router.get("/requests", response_class=HTMLResponse)
@@ -47,7 +54,8 @@ async def one_request(id: int, request: Request):
     """Get one request."""
     # r = await get_requests_with_query_count()
     # all_requests = await filter_obj(RequestInfo)
-    request_query = await get_obj_by_id(RequestInfo, id)
+    request_query = await get_obj_by_id(
+        RequestInfo, id, joinedload_names=['response_info',])
     if not request_query:
         return Response(status_code=status.HTTP_404_NOT_FOUND)
     # return all_requests
