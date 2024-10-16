@@ -32,13 +32,19 @@
         font-weight: bold;
         margin-top: 20px;
     }
+
     pre {
-        white-space: pre-wrap; /* css-3 */
-        white-space: -moz-pre-wrap; /* Mozilla, since 1999 */
+        white-space: pre-wrap;
+        /* css-3 */
+        white-space: -moz-pre-wrap;
+        /* Mozilla, since 1999 */
         /*noinspection CssInvalidElement*/
-        white-space: -pre-wrap; /* Opera 4-6 */
-        white-space: -o-pre-wrap; /* Opera 7 */
-        word-wrap: break-word; /* Internet Explorer 5.5+ */
+        white-space: -pre-wrap;
+        /* Opera 4-6 */
+        white-space: -o-pre-wrap;
+        /* Opera 7 */
+        word-wrap: break-word;
+        /* Internet Explorer 5.5+ */
     }
 
     code {
@@ -55,6 +61,7 @@
         background-color: white;
         width: 100%;
     }
+
     .headers td {
         padding-bottom: 5px;
         padding-left: 5px;
@@ -108,16 +115,16 @@
             <!-- {{request_query.headers}} -->
             <tbody>
                 {% if request_query.headers %}
-                    {% for key, val in request_query.headers.items() %}
-                        <tr>
-                            <td class="key">{{ key|upper }}</td>
-                            <td class="value">{{ val }}</td>
-                        </tr>
-                    {% endfor %}
+                {% for key, val in request_query.headers.items() %}
+                <tr>
+                    <td class="key">{{ key|upper }}</td>
+                    <td class="value">{{ val }}</td>
+                </tr>
+                {% endfor %}
                 {% else %}
-                    <tr>
-                        <td colspan="2">No headers found.</td>
-                    </tr>
+                <tr>
+                    <td colspan="2">No headers found.</td>
+                </tr>
                 {% endif %}
             </tbody>
         </table>
@@ -133,16 +140,16 @@
         <table class="headers">
             <tbody>
                 {% if response_info.headers %}
-                    {% for key, val in response_info.headers.items() %}
-                        <tr>
-                            <td class="key">{{ key|upper }}</td>
-                            <td class="value">{{ val }}</td>
-                        </tr>
-                    {% endfor %}
+                {% for key, val in response_info.headers.items() %}
+                <tr>
+                    <td class="key">{{ key|upper }}</td>
+                    <td class="value">{{ val }}</td>
+                </tr>
+                {% endfor %}
                 {% else %}
-                    <tr>
-                        <td colspan="2">No headers found.</td>
-                    </tr>
+                <tr>
+                    <td colspan="2">No headers found.</td>
+                </tr>
                 {% endif %}
             </tbody>
         </table>
@@ -187,7 +194,7 @@
 
 
 
-        <div class="heading">
+        <!-- <div class="heading">
             <div class="inner-heading">
                 Curl
             </div>
@@ -197,28 +204,16 @@
             Curl is a command-line utility for transferring data from servers. Paste the following into
             a terminal to repeat this request via command line.
         </div>
-        <pre
-            id="pre-curl"><code class=" hljs ">curl -X GET   http://loft.test/api/chronology/history_events?client_order_id=22733</code></pre>
+        <pre id="pre-curl2">
+            <code class=" hljs ">curl -X GET   http://loft.test/api/chronology/history_events?client_order_id=22733</code>
+        </pre>
+        <pre id="pre-curl">
+            <code class=" hljs ">curl -X GET   {{request_query.headers['referer']}}?{{request_query.query_params}}</code>
+        </pre> -->
 
-
-        <div class="heading">
-            <div class="inner-heading">
-                Django Test Client
-            </div>
-        </div>
-
-        <div class="description">
-            The following is working python code that makes use of the Django test client. It can be used to
-            replicate this request from within a Django unit test, or simply as standalone Python.
-        </div>
-        <pre id="pre-curl"><code class=" hljs python"><span class="hljs-keyword">from</span> django.test <span class="hljs-keyword">import</span> Client
-c = Client()
-response = c.get(path=<span class="hljs-string">'/api/chronology/history_events'</span>,
-data={&amp;<span class="hljs-comment">#x27;client_order_id&amp;#x27;: &amp;#x27;22733&amp;#x27;},</span>
-content_type=<span class="hljs-string">'text/plain'</span>)</code></pre>
 
     </div>
-    
+
     <script>
 
         function formatAndHighlight(elementId) {
