@@ -1,0 +1,106 @@
+{% extends 'base.html' %}
+
+{% block style %}
+<style>
+    .title-page{
+        text-align: center;
+        margin: 5px;
+    }
+    #request-summary {
+        margin: auto;
+        text-align: center;
+        width: 100%;
+    }
+
+    .item {
+        border: 0;
+    }
+
+    .item:hover {
+        background-color: initial;
+        color: initial;
+        cursor: initial;
+    }
+
+    /**/
+    #request-info {
+        width: 960px;
+        margin: auto auto 20px;
+    }
+
+    .heading {
+        width: 100%;
+        background-color: transparent;
+        height: 30px;
+        display: table;
+        font-weight: bold;
+        margin-top: 20px;
+    }
+
+    pre {
+        white-space: pre-wrap;
+        /* css-3 */
+        white-space: -moz-pre-wrap;
+        /* Mozilla, since 1999 */
+        /*noinspection CssInvalidElement*/
+        white-space: -pre-wrap;
+        /* Opera 4-6 */
+        white-space: -o-pre-wrap;
+        /* Opera 7 */
+        word-wrap: break-word;
+        /* Internet Explorer 5.5+ */
+    }
+
+    code {
+        font-family: Fantasque;
+        background-color: white !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        font-size: 14px;
+    }
+
+    .headers {
+        font-size: 14px;
+        font-family: Fantasque;
+        background-color: white;
+        width: 100%;
+    }
+
+    .headers td {
+        padding-bottom: 5px;
+        padding-left: 5px;
+    }
+</style>
+{% endblock %}
+
+{% block menu %}
+{% include 'inclusion/request_detail_menu.html' %}
+{% endblock %}
+
+{% block content %}
+<div id="content">
+
+
+<h5 class="title-page">SQL</h5>
+
+{% with request_query=request_query, response_info=response_info %}
+    {% include 'inclusion/request_summary_row.html' %}
+{% endwith %}
+
+
+    <script>
+
+        function formatAndHighlight(elementId) {
+            const codeElement = document.getElementById(elementId);
+            const jsonObj = JSON.parse(codeElement.textContent);
+            const formattedJson = JSON.stringify(jsonObj, null, 2);
+            codeElement.textContent = formattedJson;
+            hljs.highlightElement(codeElement);
+        }
+        // Форматируем и подсвечиваем все JSON-блоки
+        formatAndHighlight('jsonResponseBody');
+
+        hljs.highlightAll();
+    </script>
+</div>
+{% endblock %}

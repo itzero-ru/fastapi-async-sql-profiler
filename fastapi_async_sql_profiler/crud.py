@@ -50,7 +50,8 @@ async def get_obj_by_id(
                     stmt = stmt.options(joinedload(name))
 
         obj = await session.execute(stmt)
-        obj = obj.scalar_one()
+        # obj = obj.scalar_one()
+        obj = obj.scalar_one_or_none()
 
         return obj
 
