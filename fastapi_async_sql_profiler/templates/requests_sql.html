@@ -2,10 +2,11 @@
 
 {% block style %}
 <style>
-    .title-page{
+    .title-page {
         text-align: center;
         margin: 5px;
     }
+
     #request-summary {
         margin: auto;
         text-align: center;
@@ -70,6 +71,29 @@
         padding-bottom: 5px;
         padding-left: 5px;
     }
+
+    th {
+        height: 40px;
+        padding-left: 20px;
+        padding-right: 20px;
+    }
+
+    .left-aligned {
+        text-align: left;
+    }
+
+    .right-aligned {
+        text-align: right;
+    }
+
+    tr {
+        height: 20px;
+    }
+    td {
+        padding: 5px;
+        padding-left: 20px;
+        padding-right: 20px;
+    }
 </style>
 {% endblock %}
 
@@ -81,22 +105,53 @@
 <div id="content">
 
 
-<h5 class="title-page">SQL</h5>
+    <h5 class="title-page">SQL</h5>
 
-{% with request_query=request_query, response_info=response_info %}
+    {% with request_query=request_query, response_info=response_info %}
     {% include 'inclusion/request_summary_row.html' %}
-{% endwith %}
+    {% endwith %}
 
-<table>
-    <thead></thead>
-    <tbody>
-        <tr>
-            <td>121234.23</td>
-            <td></td>
-        </tr>
+    <!-- <p>
+        {{ queries[0].query}}
+    </p>
+    <hr/>
+    <p>
+        {{ queries[1].query}}
+    </p>
 
-    </tbody>
-</table>
+    <p>
+        {{queries[0].get_tables_from_query}}
+    </p>
+    <hr/>
+    <p>q.start_time_relative = q.start_time - silk_request.start_time</p>
+    <p>q.start_time_relative = q.start_time - request_query.start_time</p> -->
+
+    <table>
+        <thead>
+            <tr>
+                <th class="left-aligned">At</th>
+                <th class="left-aligned">Action</th>
+                <th class="left-aligned">Tables</th>
+                <th class="left-aligned">Tables Two</th>
+                <th class="right-aligned">Num. Joins</th>
+                <th class="right-aligned">Execution Time (ms)</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!--  -->
+            {% for sql_query in queries %}
+            <tr>
+                <td class="left-aligned">{{sql_query.id}} +sql_query.start_time_relative</td>
+                <td class="left-aligned">{{ sql_query.first_keywords }}</td>
+                <td class="left-aligned"> {{ sql_query.get_tables_from_query | join(', ') }}</td>
+                <td class="left-aligned"> {{ sql_query.tables_involved }}</td>
+                <td class="right-aligned">{{ sql_query.num_joins }}</td>
+                <td class="right-aligned"> {{ '{:.6f}'.format(sql_query.time_taken) }}</td>
+            </tr>
+            {% endfor %}
+
+        </tbody>
+    </table>
 
 
     <script>

@@ -1,6 +1,6 @@
 from datetime import datetime
 from typing import List, Optional
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict
 
 
 class ItemFilter(BaseModel):
@@ -16,16 +16,14 @@ class ItemDetails(BaseModel):
     # chap: Optional[list[int]]
     # a_id: Optional[int]
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 
 class ItemAdd(BaseModel):
 
     body: str
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 
 class RequestInfoDetail(BaseModel):
@@ -43,8 +41,10 @@ class RequestInfoDetail(BaseModel):
     # headers: Json[Any]
     headers: dict
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
+
+    # class ConfigDict:
+    #     from_attributes = True
 
 
 class QueryInfoDetail(BaseModel):
@@ -55,8 +55,7 @@ class QueryInfoDetail(BaseModel):
     # traceback: str
     request_id: int
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 
 class QueryInfoDetailListResponse(BaseModel):

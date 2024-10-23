@@ -30,6 +30,8 @@ async def lifespan(app: FastAPI):
     message = f'🚀 Run at startup! {current_time}'
     print(message)
     print('API docs: http://127.0.0.1:8000/docs')
+    task = asyncio.create_task(init_db(engine_async=engine))
+
     # init_db()
     # await init_db()
     # task = asyncio.create_task(create_items_table())
@@ -55,7 +57,11 @@ start_debug_server()
 
 
 app.include_router(router, prefix='', tags=['SQL Profiler'])
-task = asyncio.create_task(init_db(engine_async=engine))
+# task = asyncio.create_task(init_db(engine_async=engine))
+# task = asyncio.run(init_db(engine_async=engine))
+# loop = asyncio.get_running_loop()
+
+# await loop.create_task(init_db(engine_async=engine))
 
 
 @app.post("/")
@@ -94,3 +100,7 @@ async def get_items(
     # await add_one(Items, {'body': '11111'})
     # await add_one(Items, {'body': '22222'})
     return all
+
+if __name__ == "__main__":
+    task = asyncio.create_task(init_db(engine_async=engine))
+    # asyncio.run(main())

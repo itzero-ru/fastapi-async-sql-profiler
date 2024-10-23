@@ -5,7 +5,7 @@
         <div class="method"> {{response_info.status_code}} {{request_query.method}} </div>
         <div class="path"> {{request_query.path}} </div>
         <div> {{request_query.time_taken}} ms overall </div>
-        <div> {{request_query.time_spent_queries}} ms on queries </div>
+        <div> {{ '{:.2f}'.format(request_query.time_spent_queries) }} ms on queries </div>
         <div> {{request_query.total_queries}} queries</div>
     </div>
 </div>

@@ -51,12 +51,19 @@ async def requests_show(request: Request):
 async def request_show(id: int, request: Request):
     """Get single request."""
 
+    def convert_to_dict(orm_object):
+        return {
+            field: getattr(
+                orm_object, field) for field in orm_object.__dict__ if not field.startswith('_')}
+
     request_query = await get_obj_by_id(
         RequestInfo, id, joinedload_names=['response_info',])
     if not request_query:
         return Response(status_code=status.HTTP_404_NOT_FOUND)
     request_query_validated_data = RequestInfoDetail.model_validate(
         request_query)
+    # request_query_validated_data = RequestInfoDetail.from_orm(
+    #     request_query)
 
     query_detail = await filter_obj(QueryInfo, request_id=id)
     query_validated_data = [

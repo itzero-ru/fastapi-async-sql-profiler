@@ -23,11 +23,13 @@ class SessionHandler(object):
 
         self.query_objs = []
 
-    def _before_exec(self, conn, clause, multiparams, params):  # noqa: ARG002
+    def _before_exec(self, conn, clause, multiparams,
+                     params, execution_options):  # noqa: ARG002
         conn._sqltap_query_start_time = time.time()
 
     def _after_exec(self, conn, clause,
-                    multiparams, params, results):  # noqa: ARG002
+                    multiparams, params,
+                    execution_options, results):  # noqa: ARG002
 
         end_time = time.time()
         start_time = getattr(conn, '_sqltap_query_start_time', end_time)
