@@ -131,4 +131,17 @@ async def sql_query_detail(id: int, sql_id: int, request: Request):
         # "total_pages": total_pages,
         # "total_request_info": total_request_info,
     }
+
+    # Custom filter function
+    def spacify(value: str) -> str:
+        return value.replace(' ', '&nbsp;')
+
+    # Custom filter function
+    def linebreaksbr(value: str) -> str:
+        return value.replace('\n', '<br>')
+
+    # Register the custom filter with Jinja2
+    templates.env.filters['spacify'] = spacify
+    templates.env.filters['linebreaksbr'] = linebreaksbr
+
     return templates.TemplateResponse("query_sql_details.html", context)

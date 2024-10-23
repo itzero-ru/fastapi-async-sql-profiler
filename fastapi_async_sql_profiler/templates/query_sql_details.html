@@ -7,5 +7,20 @@
 {% block content %}
 <div id="content">
     <h1>query SQL details</h1>
+
+    <pre><code  id="querySql" class="language-sql hljs">{{query.formatted_query}}</code></pre>
+
+    <script>
+
+        function formatAndHighlight(elementId) {
+            const codeElement = document.getElementById(elementId);
+            
+            hljs.highlightElement(codeElement);
+        }
+        // Форматируем и подсвечиваем все JSON-блоки
+        formatAndHighlight('querySql');
+
+        hljs.highlightAll();
+    </script>
 </div>
 {% endblock %}

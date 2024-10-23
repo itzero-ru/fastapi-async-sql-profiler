@@ -67,6 +67,17 @@ class QueryInfo(Base):
         'middleware_requests.id'), nullable=False, index=True)
 
     @property
+    def formatted_query(self):
+        sql_result = sqlparse.format(
+            self.query,
+            reindent=True,
+            # keyword_case='upper',
+            # use_space_around_operators=True,
+            # indent_width=8,
+            )
+        return sql_result
+
+    @property
     def first_keywords(self):
         parsed_query = sqlparse.parse(self.query)
         keywords = []
