@@ -60,6 +60,10 @@
         font-size: 14px;
     }
 
+    table{
+        border-spacing: 0;
+    }
+
     .headers {
         font-size: 14px;
         font-family: Fantasque;
@@ -93,6 +97,12 @@
         padding: 5px;
         padding-left: 20px;
         padding-right: 20px;
+        
+    }
+    .td-line:hover{
+        background-color: rgb(51, 51, 68);
+        color: white;
+        cursor: pointer;
     }
 </style>
 {% endblock %}
@@ -140,7 +150,7 @@
         <tbody>
             <!--  -->
             {% for sql_query in queries %}
-            <tr>
+            <tr class="td-line" onclick="window.location='/'">
                 <td class="left-aligned">{{sql_query.id}} +sql_query.start_time_relative</td>
                 <td class="left-aligned">{{ sql_query.first_keywords }}</td>
                 <td class="left-aligned"> {{ sql_query.get_tables_from_query | join(', ') }}</td>

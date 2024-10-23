@@ -101,3 +101,34 @@ async def request_sql_list(id: int, request: Request):
         # "total_request_info": total_request_info,
     }
     return templates.TemplateResponse("requests_sql.html", context)
+
+
+@router.get("/request/{id}/sql/{sql_id}", response_class=HTMLResponse)
+async def sql_query_detail(id: int, sql_id: int, request: Request):
+
+    # request_query = await get_obj_by_id(
+    #     RequestInfo, id, joinedload_names=['response_info',])
+    # if not request_query:
+    #     return Response(status_code=status.HTTP_404_NOT_FOUND)
+
+    # request_query = await get_obj_by_id(
+    #     RequestInfo,
+    #     id,
+    #     joinedload_names=['response_info',]
+    # )
+
+    query = await get_obj_by_id(QueryInfo, sql_id)
+
+    # return all_requests
+    context = {
+        "request": request,
+        "query": query,
+        # "request_query": request_query,
+        # "response_info": request_query.response_info,
+        # "current_api": "all_request",
+        # "page": page,
+        # "limit": limit,
+        # "total_pages": total_pages,
+        # "total_request_info": total_request_info,
+    }
+    return templates.TemplateResponse("query_sql_details.html", context)
