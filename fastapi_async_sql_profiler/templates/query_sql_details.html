@@ -4,12 +4,136 @@
 {% include 'inclusion/query_sql_detail_menu.html' %}
 {% endblock %}
 
+{% block style %}
+<style>
+    .query-div{
+        text-align: center;
+        margin-bottom: 20px;
+    }
+    .query{
+        display: inline-block;
+    }
+    /*
+    code{
+        background-color: transparent !important;
+        font-size: 14px;
+        Zfont-family: monospace;
+    }
+
+    .hljs-link_label, .hljs-strong, .hljs-value, .hljs-string, .scss .hljs-value .hljs-string {
+        color: #d14 !important;
+
+    .hljs-number{
+        color: rgb(2, 167, 167);
+    }
+    .hljs-link_label,
+    .hljs-strong,
+    .hljs-value,
+    .hljs-string {
+        color: rgb(233, 17, 71);
+    }
+    .hljs {
+        display: block;
+        padding: 0.5em;
+        background: #eee;
+    }*/
+    /* Custom Style SQL*/
+    pre code.hljs {
+        display: block;
+        overflow-x: auto;
+        padding: 1em;
+
+        /*Zfont-family: monospace;*/
+    }
+
+    code.hljs {
+        padding: 3px 5px
+    }
+
+    .hljs {
+        background: #f3f3f3;
+        color: #444;
+        /*color: #da0000;*/
+    }
+
+    .hljs-comment {
+        color: #697070
+    }
+
+    .hljs-punctuation,.hljs-tag {
+        color: #444a
+    }
+
+    .hljs-tag .hljs-attr,.hljs-tag .hljs-name {
+        color: #444
+    }
+
+    .hljs-attribute,.hljs-doctag,.hljs-keyword,.hljs-meta .hljs-keyword,.hljs-name,.hljs-selector-tag {
+        font-weight: 700;
+
+        color: #000;
+    }
+
+    .hljs-deletion,.hljs-number,.hljs-quote,.hljs-selector-class,.hljs-selector-id,.hljs-string,.hljs-template-tag,.hljs-type {
+        color: #800
+    }
+
+    .hljs-section,.hljs-title {
+        color: #800;
+        font-weight: 700
+    }
+
+    .hljs-link,.hljs-operator,.hljs-regexp,.hljs-selector-attr,.hljs-selector-pseudo,.hljs-symbol,.hljs-template-variable,.hljs-variable {
+        color: #ab5656
+    }
+
+    .hljs-literal {
+        color: #695
+    }
+
+    .hljs-addition,.hljs-built_in,.hljs-bullet,.hljs-code {
+        color: #397300
+    }
+
+    .hljs-meta {
+        color: #1f7199
+    }
+
+    .hljs-meta .hljs-string {
+        color: #38a
+    }
+
+    .hljs-emphasis {
+        font-style: italic
+    }
+
+    .hljs-strong {
+        font-weight: 700
+    }
+    
+</style>
+{% endblock %}
+
 {% block content %}
 <div id="content">
     <h1>query SQL details</h1>
 
-    <pre><code  id="querySql" class="language-sql hljs">{{query.formatted_query}}</code></pre>
-
+    <div class="query-div">
+        <div class="query">
+            <pre><code  id="querySql" class="language-sql sql hljs">{{query.formatted_query}}</code></pre>
+        </div>
+        <div id="query-info-div">
+            <div id="time-taken-div">
+                <span class="numeric">{{ query.time_taken }}<span class="unit">ms</span></span>
+            </div>
+            <div id="num-joins-div">
+                <span class="numeric">{{ query.num_joins }}</span> joins
+            </div>
+        </div>
+    </div>
+    <pre><code id="queryExample" class="language-sql code-sql">
+        SELECT name, age FROM users WHERE city = 'New York' AND age = 11;
+        </code></pre>
     <script>
 
         function formatAndHighlight(elementId) {
@@ -19,8 +143,38 @@
         }
         // Форматируем и подсвечиваем все JSON-блоки
         formatAndHighlight('querySql');
+        formatAndHighlight('queryExample');
+        
 
-        hljs.highlightAll();
+        /*hljs.highlightAll();*/
+        function configureSpanFontColors(selector, okValue, badValue) {
+
+            document.querySelectorAll(selector).forEach(function(el) {
+                var val = parseFloat(el.textContent);
+                /*console.debug('val', val)*/
+                if (val < okValue) {
+                    el.classList.add('very-good-font-color');
+                }
+                else if (val < badValue) {
+                    el.classList.add('ok-font-color');
+                }
+                else {
+                    el.classList.add('very-bad-font-color');
+                }
+            });
+        }
+        
+        function configureFontColors() {
+            configureSpanFontColors('#time-taken-div .numeric', 200, 500);
+            configureSpanFontColors('#time-taken-queries-div .numeric', 50, 200);
+            configureSpanFontColors('#num-queries-div .numeric', 10, 50);
+        }
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            configureFontColors();
+            console.debug('DOM fully loaded and parsed');
+            /*console.debug(document.querySelectorAll('#time-taken-div .numeric'));*/
+        });
     </script>
 </div>
 {% endblock %}

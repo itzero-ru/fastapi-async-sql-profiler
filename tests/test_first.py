@@ -56,6 +56,8 @@ async def test_sql_parse():
     num_joins = q.num_joins
     tables_involved = q.tables_involved
     get_tables_from_query = q.get_tables_from_query
+    formatted_query = q.formatted_query
+    pprint(formatted_query)
     print('num_joins', num_joins)
     print('tables_involved', tables_involved)
     print('get_tables_from_query', get_tables_from_query)

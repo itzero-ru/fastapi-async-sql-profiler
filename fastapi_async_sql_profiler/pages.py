@@ -136,11 +136,15 @@ async def sql_query_detail(id: int, sql_id: int, request: Request):
     def spacify(value: str) -> str:
         return value.replace(' ', '&nbsp;')
 
+    # def select_spacify(value: str) -> str:
+    #     return value.replace('SELECT ', 'SELECT&nbsp;&nbsp;')
+
     # Custom filter function
     def linebreaksbr(value: str) -> str:
         return value.replace('\n', '<br>')
 
     # Register the custom filter with Jinja2
+    # templates.env.filters['select_spacify'] = select_spacify
     templates.env.filters['spacify'] = spacify
     templates.env.filters['linebreaksbr'] = linebreaksbr
 
