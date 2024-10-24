@@ -13,6 +13,9 @@
     .query{
         display: inline-block;
     }
+    #query-info-div div{
+        padding-top: 5px;
+    }
 
     /* Custom Style SQL*/
     pre code.hljs {
@@ -100,7 +103,7 @@
             <pre><code  id="querySql" class="language-sql sql hljs">{{query.formatted_query}}</code></pre>
         </div>
         <div id="query-info-div">
-            <div id="time-taken-div">
+            <div id="time-taken-queries-div">
                 <span class="numeric">{{ query.time_taken }}<span class="unit">ms</span></span>
             </div>
             <div id="num-joins-div">
@@ -108,6 +111,7 @@
             </div>
         </div>
     </div>
+
     <script>
 
         function formatAndHighlight(elementId) {
@@ -120,14 +124,7 @@
         formatAndHighlight('queryExample');
         
 
-        /*hljs.highlightAll();*/
-        
-        document.addEventListener('DOMContentLoaded', function() {
-            configureSpanFontColors('#time-taken-div .numeric', 200, 500);
-            configureSpanFontColors('#num-joins-div .numeric', 3, 5);
-            console.debug('DOM fully loaded and parsed');
-        });
-        
+        /*hljs.highlightAll();*/        
     </script>
 </div>
 {% endblock %}
