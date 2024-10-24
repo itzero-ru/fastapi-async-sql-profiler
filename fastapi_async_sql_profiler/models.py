@@ -67,6 +67,15 @@ class QueryInfo(Base):
         'middleware_requests.id'), nullable=False, index=True)
 
     @property
+    def formatted_traceback_list(self) -> list[str]:
+        res = self.traceback.split('\n')[::2]
+        return res
+
+    @property
+    def traceback_ln_only(self):
+        return '\n'.join(self.traceback.split('\n')[::2])
+
+    @property
     def formatted_query(self):
         sql_result = sqlparse.format(
             self.query,

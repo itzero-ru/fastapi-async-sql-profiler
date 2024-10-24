@@ -6,6 +6,25 @@
 
 {% block style %}
 <style>
+    #traceback{ 
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+    .heading{
+        margin-top: 20px;
+    }
+    .traceback-div{
+        /*display: table;
+        margin: 0 auto;*/
+        color: #397300;
+    }
+    .traceback-code{
+        font-size: 12px;
+    }
+    .traceback-line{
+        font-size: 12px;
+        font-family: monospace;
+    }
     .query-div{
         text-align: center;
         margin-bottom: 20px;
@@ -111,6 +130,27 @@
             </div>
         </div>
     </div>
+    <hr/>
+    
+    <div id="traceback">
+        <div class="heading">
+            <div class="inner-heading">
+                Traceback
+            </div>
+        </div>
+        <div class="description">
+            The following is a Python stack trace that leads to the execution of the above SQL query.
+        </div>
+        <div class="traceback-div">
+            {% for line in query.formatted_traceback_list %}
+            <!-- <p>{{line}}</p> -->
+                <div class="traceback-line">
+                    {{ line }}
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+    <hr/>
 
     <script>
 

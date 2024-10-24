@@ -138,6 +138,8 @@ async def sql_query_detail(id: int, sql_id: int, request: Request):
 
     # def select_spacify(value: str) -> str:
     #     return value.replace('SELECT ', 'SELECT&nbsp;&nbsp;')
+    def split_traceback(value: str) -> list[str]:
+        return value.split(' ', '&nbsp;')
 
     # Custom filter function
     def linebreaksbr(value: str) -> str:
