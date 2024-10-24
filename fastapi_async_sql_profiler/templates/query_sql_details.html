@@ -13,30 +13,7 @@
     .query{
         display: inline-block;
     }
-    /*
-    code{
-        background-color: transparent !important;
-        font-size: 14px;
-        Zfont-family: monospace;
-    }
 
-    .hljs-link_label, .hljs-strong, .hljs-value, .hljs-string, .scss .hljs-value .hljs-string {
-        color: #d14 !important;
-
-    .hljs-number{
-        color: rgb(2, 167, 167);
-    }
-    .hljs-link_label,
-    .hljs-strong,
-    .hljs-value,
-    .hljs-string {
-        color: rgb(233, 17, 71);
-    }
-    .hljs {
-        display: block;
-        padding: 0.5em;
-        background: #eee;
-    }*/
     /* Custom Style SQL*/
     pre code.hljs {
         display: block;
@@ -147,34 +124,13 @@
         
 
         /*hljs.highlightAll();*/
-        function configureSpanFontColors(selector, okValue, badValue) {
-
-            document.querySelectorAll(selector).forEach(function(el) {
-                var val = parseFloat(el.textContent);
-                /*console.debug('val', val)*/
-                if (val < okValue) {
-                    el.classList.add('very-good-font-color');
-                }
-                else if (val < badValue) {
-                    el.classList.add('ok-font-color');
-                }
-                else {
-                    el.classList.add('very-bad-font-color');
-                }
-            });
-        }
-        
-        function configureFontColors() {
-            configureSpanFontColors('#time-taken-div .numeric', 200, 500);
-            configureSpanFontColors('#time-taken-queries-div .numeric', 50, 200);
-            configureSpanFontColors('#num-queries-div .numeric', 10, 50);
-        }
         
         document.addEventListener('DOMContentLoaded', function() {
-            configureFontColors();
+            configureSpanFontColors('#time-taken-div .numeric', 200, 500);
+            configureSpanFontColors('#num-joins-div .numeric', 3, 5);
             console.debug('DOM fully loaded and parsed');
-            /*console.debug(document.querySelectorAll('#time-taken-div .numeric'));*/
         });
+        
     </script>
 </div>
 {% endblock %}

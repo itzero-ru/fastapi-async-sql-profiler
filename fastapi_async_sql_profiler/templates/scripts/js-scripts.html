@@ -1,0 +1,29 @@
+<script>
+  function configureSpanFontColors(selector, okValue, badValue) {
+
+    document.querySelectorAll(selector).forEach(function(el) {
+        var val = parseFloat(el.textContent);
+        /*console.debug('val', val)*/
+        if (val < okValue) {
+            el.classList.add('very-good-font-color');
+        }
+        else if (val < badValue) {
+            el.classList.add('ok-font-color');
+        }
+        else {
+            el.classList.add('very-bad-font-color');
+        }
+    });
+}
+
+function configureFontColors() {
+    configureSpanFontColors('#time-taken-div .numeric', 200, 500);
+    configureSpanFontColors('#time-taken-queries-div .numeric', 50, 200);
+    configureSpanFontColors('#num-queries-div .numeric', 10, 50);
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    configureFontColors();
+    console.debug('DOM fully loaded and parsed');
+});
+</script>
