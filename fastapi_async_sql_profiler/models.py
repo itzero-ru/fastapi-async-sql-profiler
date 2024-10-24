@@ -71,7 +71,7 @@ class QueryInfo(Base):
         sql_result = sqlparse.format(
             self.query,
             reindent=True,
-            keyword_case='upper',
+            # keyword_case='upper',
             # use_space_around_operators=True,
             # indent_width=8,
             # indent_width=1,
