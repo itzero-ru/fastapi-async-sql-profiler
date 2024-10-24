@@ -150,7 +150,7 @@
         <tbody>
             <!--  -->
             {% for sql_query in queries %}
-            <tr class="td-line" onclick="window.location='/'">
+            <tr class="td-line" onclick="window.location='/profiler/pages/request/{{request_query.id}}/sql/6'">
                 <td class="left-aligned">{{sql_query.id}} +sql_query.start_time_relative</td>
                 <td class="left-aligned">{{ sql_query.first_keywords }}</td>
                 <td class="left-aligned"> {{ sql_query.get_tables_from_query | join(', ') }}</td>
