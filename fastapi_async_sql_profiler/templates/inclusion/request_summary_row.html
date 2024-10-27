@@ -1,4 +1,3 @@
-{% if request_query.total_queries %}
 <div id="request-summary">
     <div class="item">
         <div class="start_time">{{ request_query.start_time.strftime('%d.%m.%Y, %H:%M:%S') }}.{{ '%03d' %
@@ -10,6 +9,3 @@
         <div> {{request_query.total_queries}} queries</div>
     </div>
 </div>
-{% else %}
-<div>ffesfse</div>
-{% endif %}
