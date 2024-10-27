@@ -9,7 +9,7 @@ from fastapi.templating import Jinja2Templates
 from fastapi_async_sql_profiler.config import APP_ROUTER_PREFIX
 from fastapi_async_sql_profiler.schemas import QueryInfoDetail, QueryInfoDetailListResponse, RequestInfoDetail
 
-from .models import Items, QueryInfo, RequestInfo
+from .models import Items, QueryInfo, RequestInfo, ResponseInfo
 from .crud import add_db, add_one, clear_table_bd, filter_obj, get_obj_by_id, get_requests_with_query_count
 
 from .pages import router as router_pages
@@ -31,9 +31,13 @@ async def destroy(request: Request, response: Response):
     """Clear DB."""
     # session.query(RequestInfo).delete()
     # session.query(QueryInfo).delete()
+    # session.query(Items).delete()
     # session.commit()
     await clear_table_bd(RequestInfo)
+    await clear_table_bd(ResponseInfo)
     await clear_table_bd(QueryInfo)
+    await clear_table_bd(Items)
+
     response.status_code = status.HTTP_200_OK
     return {"message": "Clear Db Successfully"}
 

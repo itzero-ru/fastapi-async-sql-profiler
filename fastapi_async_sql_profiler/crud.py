@@ -5,6 +5,7 @@ from sqlalchemy.orm import aliased
 from sqlalchemy.orm import joinedload
 from sqlalchemy.exc import SQLAlchemyError
 from fastapi_async_sql_profiler.models import QueryInfo, RequestInfo
+from sqlalchemy.ext.declarative import DeclarativeMeta
 
 
 async def add_one(model, data: dict) -> int:
@@ -87,16 +88,12 @@ async def filter_obj(
     #     return query.filter_by(**kwargs).all()
 
 
-async def clear_table_bd(model):
+async def clear_table_bd(model: DeclarativeMeta):
+    # In the future, add TRUNCATE
     async with async_session_maker() as session:
         async with session.begin():
             query = delete(model)
             await session.execute(query)
-        # bbb = await session.commit()
-        # query = delete(model)
-        # aaa = await session.execute(query)
-        # res = await session.commit()
-
         return
 
 
@@ -121,4 +118,3 @@ async def get_requests_with_query_count():
 
             # Возвращаем результат
             return result.scalars().all()
-

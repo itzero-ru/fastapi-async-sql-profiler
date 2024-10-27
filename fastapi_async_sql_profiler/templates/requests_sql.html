@@ -109,31 +109,19 @@
 {% endblock %}
 
 {% block menu %}
-{% include 'inclusion/request_detail_menu.html' %}
+{% include 'inclusion/query_list_menu.html' %}
 {% endblock %}
 
 {% block content %}
 <div id="content">
 
+    {% if queries %}
+
     {% with request_query=request_query, response_info=response_info %}
     {% include 'inclusion/request_summary_row.html' %}
     {% endwith %}
 
-    <!-- <p>
-        {{ queries[0].query}}
-    </p>
-    <hr/>
-    <p>
-        {{ queries[1].query}}
-    </p>
-
-    <p>
-        {{queries[0].get_tables_from_query}}
-    </p>
-    <hr/>
-    <p>q.start_time_relative = q.start_time - silk_request.start_time</p>
-    <p>q.start_time_relative = q.start_time - request_query.start_time</p> -->
-
+    
     <table>
         <thead>
             <tr>
@@ -160,7 +148,9 @@
 
         </tbody>
     </table>
-
+    {% else %}
+    <h2>Not queries</h2>
+    {% endif %}
 
     <script>
 
