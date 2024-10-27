@@ -62,6 +62,7 @@ class QueryInfo(Base):
     query = Column(Text, nullable=True)
     time_taken = Column(Float, nullable=True)
     traceback = Column(Text, nullable=True)
+    analysis = Column(Text, nullable=True)
 
     request_id = Column(Integer, ForeignKey(
         'middleware_requests.id'), nullable=False, index=True)
