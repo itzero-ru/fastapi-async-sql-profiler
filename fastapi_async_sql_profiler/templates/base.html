@@ -15,12 +15,16 @@
     {% block head %}{%endblock%}
     <title>Document</title>
     <style>
-        h1{
+        .txt-center {
+            text-align: center;
+        }
+        .root-title{
             padding: 10px 0;
             margin: 0;
             background-color: #191919;
             color: white;
             font-size: 25px;
+            text-align: center;
         }
         .very-good-font-color {
             /*color: #bac54b;*/
@@ -43,9 +47,6 @@
             color: #b9424f;
         }
 
-        h1 {
-            text-align: center;
-        }
 
         body {
             font-family: FiraSans, "Helvetica Neue", Arial, sans-serif;
@@ -220,7 +221,7 @@
 
 <body>
 
-    <h1>FASTAPI ASYNC SQL PROFILER</h1>
+    <div class="root-title">FASTAPI ASYNC SQL PROFILER</div>
 
     <!-- <nav>
         <ul>

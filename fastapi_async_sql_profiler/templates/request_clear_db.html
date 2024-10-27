@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+{% block menu %}
+{% include 'inclusion/clear_db_menu.html' %}
+{% endblock %}
+
+{% block filter %}
+{% include 'inclusion/root_filter.html' %}
+{% endblock %}
+
+{% block style %}
+<style>
+.result-clear-db{
+    font-size: 25px;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div id="content">
+    <p class="result-clear-db txt-center">{{status}}</p>
+</div>
+{% endblock %}

@@ -4,8 +4,8 @@ from fastapi.responses import HTMLResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 
-from fastapi_async_sql_profiler.crud import filter_obj, get_obj_by_id, get_requests_with_query_count
-from fastapi_async_sql_profiler.models import QueryInfo, RequestInfo
+from fastapi_async_sql_profiler.crud import clear_table_bd, filter_obj, get_obj_by_id, get_requests_with_query_count
+from fastapi_async_sql_profiler.models import Items, QueryInfo, RequestInfo, ResponseInfo
 
 # from .models import Items, QueryInfo, RequestInfo
 # from .crud import add_db, add_one, clear_table_bd, filter_obj, get_obj_by_id
@@ -151,3 +151,18 @@ async def sql_query_detail(id: int, sql_id: int, request: Request):
     templates.env.filters['linebreaksbr'] = linebreaksbr
 
     return templates.TemplateResponse("query_sql_details.html", context)
+
+
+@router.get('/clear_db', response_class=HTMLResponse)
+async def clear_db(request: Request):
+    """Clear DB."""
+    await clear_table_bd(RequestInfo)
+    await clear_table_bd(ResponseInfo)
+    await clear_table_bd(QueryInfo)
+    await clear_table_bd(Items)
+
+    context = {
+        "request": request,
+        "status": 'Deletion completed',
+    }
+    return templates.TemplateResponse("request_clear_db.html", context)
