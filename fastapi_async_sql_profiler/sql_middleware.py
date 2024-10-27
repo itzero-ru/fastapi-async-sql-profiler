@@ -45,11 +45,26 @@ class SessionHandler(object):
             text = clause
         stack = traceback.extract_stack()
         stack_string = ''.join(traceback.format_list(stack))
+
+        # #  Getting the request plan TODO: only for PostgreSQL
+        # plan_string = ''
+        # if isinstance(clause, sqlalchemy.sql.selectable.Select):
+        #     try:
+
+        #         q = 'EXPLAIN SELECT *  FROM middleware_requests'
+        #         # q = 'EXPLAIN QUERY  PLAN SELECT *  FROM middleware_requests'
+        #         plan = conn.execute(sqlalchemy.text(q)).fetchall()
+        #         plan_string = "\n".join([str(row) for row in plan])
+        #         print(plan_string)
+        #     except Exception as e:
+        #         plan_string = f"Failed to get query plan: {str(e)}"
+
         d = {
             "start_time": start_time,
             "end_time": end_time,
             "text": text,
             "stack": stack_string,
+            # "plan": plan_string,
         }
         self.query_objs.append(d)
 
