@@ -47,3 +47,6 @@ dmypy.json
 
 #
 *.sqlite
+
+#
+.DS_Store
