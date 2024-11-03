@@ -59,24 +59,28 @@ async def get_obj_by_id(
 
 async def filter_obj(
     model,
-    joinedload_names: list = ['response_info', ], **kwargs, ) -> list:
+    joinedload_names: list = None,
+    # joinedload_names: list = ['response_info', ],
+    **kwargs,
+) -> list:
     async with async_session_maker() as session:
         # stmt = select(model).where(model.id == kwargs['id'])
         stmt = select(model)
 
-        # # Применяем joinedload
-        # if joinedload_names:
-        #     for name in joinedload_names:
-        #         if isinstance(name, str):
-        #             # Если передано строковое имя, преобразуем его в атрибут модели
-        #             attr = getattr(model, name, None)
-        #             if attr is not None:
-        #                 stmt = stmt.options(joinedload(attr))
-        #         else:
-        #             # Если передан атрибут модели, используем его напрямую
-        #             stmt = stmt.options(joinedload(name))
+        # Применяем joinedload
+        if joinedload_names:
+            for name in joinedload_names:
+                if isinstance(name, str):
+                    # Если передано строковое имя,
+                    #  преобразуем его в атрибут модели
+                    attr = getattr(model, name, None)
+                    if attr is not None:
+                        stmt = stmt.options(joinedload(attr))
+                else:
+                    # Если передан атрибут модели, используем его напрямую
+                    stmt = stmt.options(joinedload(name))
 
-            #  stmt = stmt.options(joinedload(*joinedload_names))
+        # stmt = stmt.options(joinedload(*joinedload_names))
         # stmt = stmt.options(joinedload(RequestInfo.response_info))
         stmt = stmt.filter_by(**kwargs)
         stmt = stmt.order_by(desc(model.id))

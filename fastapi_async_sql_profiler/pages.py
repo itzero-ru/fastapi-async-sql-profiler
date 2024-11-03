@@ -34,7 +34,8 @@ print()
 async def all_request(request: Request):
     """Get all request."""
     # r = await get_requests_with_query_count()
-    all_requests = await filter_obj(RequestInfo)
+    all_requests = await filter_obj(
+        RequestInfo, joinedload_names=['response_info',])
     # return all_requests
     context = {
         "request": request,

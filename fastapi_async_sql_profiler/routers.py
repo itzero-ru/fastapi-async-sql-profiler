@@ -46,7 +46,8 @@ async def destroy(request: Request, response: Response):
 async def requests_show(request: Request):
     """Get all requests."""
 
-    all_requests = await filter_obj(RequestInfo)
+    all_requests = await filter_obj(
+        RequestInfo, joinedload_names=['response_info',])
     # r = await get_requests_with_query_count()
     return all_requests
 

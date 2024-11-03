@@ -49,7 +49,8 @@ class ResponseInfo(Base):
 
     # Add a foreign key that references RequestInfo
     request_info_id = Column(
-        Integer, ForeignKey('middleware_requests.id'), nullable=False)
+        Integer, ForeignKey('middleware_requests.id'),
+        nullable=False, unique=True)
     request_info = relationship(
         RequestInfo, back_populates="response_info",
         uselist=False)
