@@ -91,8 +91,9 @@ async def request_show(id: int, request: Request):
 
 
 @router.post("/111")
-async def post_item():
+async def post_item(request: Request, response: Response):
 
     await add_one(Items, {'body': '44444'})
     await add_one(Items, {'body': '55555'})
+    response.status_code = status.HTTP_201_CREATED
     return {"Hello": "World"}
