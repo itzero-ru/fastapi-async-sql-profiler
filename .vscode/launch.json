@@ -25,7 +25,7 @@
             },
             "pathMappings": [
                 {
-                    "localRoot": "${workspaceFolder}", //"/home/set/projects/loft_project/new.loft.ug/backend", // "${workspaceFolder}",
+                    "localRoot": "${workspaceFolder}",
                     "remoteRoot": "./"
                 }
             ]

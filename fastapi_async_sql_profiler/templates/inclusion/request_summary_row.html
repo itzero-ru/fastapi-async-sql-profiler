@@ -4,8 +4,8 @@
             (request_query.start_time.microsecond // 1000) }} </div>
         <div class="method"> {{response_info.status_code}} {{request_query.method}} </div>
         <div class="path"> {{request_query.path}} </div>
-        <div> {{request_query.time_taken}} ms overall </div>
-        <div> {{ '{:.2f}'.format(request_query.time_spent_queries) }} ms on queries </div>
-        <div> {{request_query.total_queries}} queries</div>
+        <div id="time-taken-div"> <span class="numeric">{{request_query.time_taken}}</span> ms overall </div>
+        <div id="time-taken-queries-div"> <span class="numeric">{{ '{:.2f}'.format(request_query.time_spent_queries) }}</span> ms on queries </div>
+        <div id="num-queries-div"><span class="numeric">{{request_query.total_queries}}</span> queries</div>
     </div>
 </div>
