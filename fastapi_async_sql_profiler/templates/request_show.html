@@ -18,9 +18,13 @@
             <div class="method"><span>{{request.response_info.status_code}}</span> {{request.method}}</div>
             <div class="path"> {{request.path}} </div>
             <div id="time-taken-div"> <span class="numeric">{{ '{:.0f}'.format(request.time_taken) }}</span> ms overall </div>
+            {% if request.time_spent_queries %}
             <div id="time-taken-queries-div"> <span class="numeric">{{ '{:.0f}'.format(request.time_spent_queries) }}</span> ms on queries </div>
+            {% else %}
+            <div id="time-taken-queries-div"> <span class="numeric">0</span> ms on queries </div>
+            {% endif %}
             <div id="num-queries-div"> <span class="numeric">{{request.total_queries}}</span> queries</div>
-            <!-- <div><button onclick="window.open('https://example.com')">Открыть новую страницу</button></div> -->
+            <!-- <div><button onclick="window.open('https://example.com')">Open new page</button></div> -->
         </a>
     {% endfor %}
     {% else %}
