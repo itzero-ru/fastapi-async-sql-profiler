@@ -17,7 +17,11 @@
             <div class="start_time">{{ request.start_time.strftime('%d.%m.%Y, %H:%M:%S') }}.{{ '%03d' % (request.start_time.microsecond // 1000) }} </div>
             <div class="method"><span>{{request.response_info.status_code}}</span> {{request.method}}</div>
             <div class="path"> {{request.path}} </div>
+            {% if request.time_taken %}
             <div id="time-taken-div"> <span class="numeric">{{ '{:.0f}'.format(request.time_taken) }}</span> ms overall </div>
+            {% else %}
+            <div id="time-taken-div"> <span class="numeric">{{request.time_taken }}</span> ms overall </div>
+            {% endif %}
             {% if request.time_spent_queries %}
             <div id="time-taken-queries-div"> <span class="numeric">{{ '{:.0f}'.format(request.time_spent_queries) }}</span> ms on queries </div>
             {% else %}

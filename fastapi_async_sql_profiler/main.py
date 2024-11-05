@@ -47,6 +47,7 @@ app = FastAPI(lifespan=lifespan)
 SQL_PROFILER_PASS_ROUTE_STARTSWITH = [
     '/docs',
     '/openapi.json',
+    '/profiler/requests'
 ]
 app.add_middleware(
     SQLProfilerMiddleware, engine=engine,

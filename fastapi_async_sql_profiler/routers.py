@@ -47,9 +47,13 @@ async def requests_show(request: Request):
     """Get all requests."""
 
     all_requests = await filter_obj(
-        RequestInfo, joinedload_names=['response_info',])
+        RequestInfo, joinedload_names=['response_info',],
+        exclude_fields=['body',],
+        # fields=['id', 'path', 'query_params', 'method'],
+    )
     # r = await get_requests_with_query_count()
     return all_requests
+# all_requests[2].response_info.raw_body
 
 
 @router.get("/request_detail/{id}")
