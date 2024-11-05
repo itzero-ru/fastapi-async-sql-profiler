@@ -8,6 +8,7 @@ from fastapi.templating import Jinja2Templates
 
 from fastapi_async_sql_profiler.config import APP_ROUTER_PREFIX
 from fastapi_async_sql_profiler.schemas import QueryInfoDetail, QueryInfoDetailListResponse, RequestInfoDetail
+from fastapi_async_sql_profiler.services import get_request_info_list
 
 from .models import Items, QueryInfo, RequestInfo, ResponseInfo
 from .crud import add_db, add_one, clear_table_bd, filter_obj, get_obj_by_id, get_requests_with_query_count
@@ -46,11 +47,13 @@ async def destroy(request: Request, response: Response):
 async def requests_show(request: Request):
     """Get all requests."""
 
-    all_requests = await filter_obj(
-        RequestInfo, joinedload_names=['response_info',],
-        exclude_fields=['body',],
-        # fields=['id', 'path', 'query_params', 'method'],
-    )
+    # all_requests = await filter_obj(
+    #     RequestInfo, joinedload_names=['response_info',],
+    #     exclude_fields=['body',],
+    #     # fields=['id', 'path', 'query_params', 'method'],
+    # )
+
+    all_requests = await get_request_info_list()
     # r = await get_requests_with_query_count()
     return all_requests
 # all_requests[2].response_info.raw_body
