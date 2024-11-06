@@ -1,14 +1,37 @@
 from sqlalchemy import desc, insert, select, update, delete
-from fastapi_async_sql_profiler.database import Base, async_session_maker
+from fastapi_async_sql_profiler.database import Base, async_session_maker, get_async_session
 from sqlalchemy import func
 from sqlalchemy.orm import aliased
 from sqlalchemy.orm import joinedload, load_only
 
 from fastapi_async_sql_profiler.models import RequestInfo, ResponseInfo
+from fastapi_async_sql_profiler.repository import RequestInfoRepository
+
+
+class RequestInfoService:
+    def __init__(self, request_info_repository):
+        self.request_info_repository = request_info_repository
+
+    def get_request_info_all(self):
+        return self.request_info_repository.get_all()
+
+    def create(self, request_info_data):
+        # business logic
+        return self.request_info_repository.create(request_info_data)
 
 
 async def get_request_info_list(filters: dict = {}):
     """Get all RequestInfo"""
+
+    # session = get_async_session
+    # repo = RequestInfoRepository(session)
+    # result = await repo.get_all()
+    # return result
+
+    async with async_session_maker() as session:
+        repo = RequestInfoRepository(session)
+        result = await repo.get_all()
+        return result
 
     async with async_session_maker() as session:
         # stmt = select(model).where(model.id == kwargs['id'])
