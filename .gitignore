@@ -50,3 +50,6 @@ dmypy.json
 
 #
 .DS_Store
+
+# IDE
+.idea

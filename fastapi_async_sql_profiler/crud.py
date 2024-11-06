@@ -38,16 +38,16 @@ async def get_obj_by_id(
         # obj = await session.get(model, id)
         stmt = select(model).where(model.id == id)
 
-        # Применяем joinedload
+        # joinedload
         if joinedload_names:
             for name in joinedload_names:
                 if isinstance(name, str):
-                    # Если передано строковое имя, преобразуем его в атрибут модели
+                    # String attribute name
                     attr = getattr(model, name, None)
                     if attr is not None:
                         stmt = stmt.options(joinedload(attr))
                 else:
-                    # Если передан атрибут модели, используем его напрямую
+                    # Attribute model obj
                     stmt = stmt.options(joinedload(name))
 
         obj = await session.execute(stmt)
@@ -76,17 +76,14 @@ async def filter_obj(
             stmt = select(model)
         # stmt = select(model)
 
-        # Применяем joinedload
+        # joinedload
         if joinedload_names:
             for name in joinedload_names:
                 if isinstance(name, str):
-                    # Если передано строковое имя,
-                    #  преобразуем его в атрибут модели
                     attr = getattr(model, name, None)
                     if attr is not None:
                         stmt = stmt.options(joinedload(attr))
                 else:
-                    # Если передан атрибут модели, используем его напрямую
                     stmt = stmt.options(joinedload(name))
 
         # stmt = stmt.options(joinedload(*joinedload_names))
