@@ -8,12 +8,12 @@ from fastapi.templating import Jinja2Templates
 from fastapi_async_sql_profiler.database import async_session_maker
 
 from fastapi_async_sql_profiler.config import APP_ROUTER_PREFIX
-from fastapi_async_sql_profiler.dependencies import get_request_info_service
+from fastapi_async_sql_profiler.dependencies import get_query_info_service, get_request_info_service
 from fastapi_async_sql_profiler.repository import RequestInfoRepository
 from fastapi_async_sql_profiler.schemas.query_info_schema import QueryInfoDetail
 from fastapi_async_sql_profiler.schemas.request_info_schema import RequestInfoDetail
 from fastapi_async_sql_profiler.schemas.response_info_schema import ResponseInfoDetail
-from fastapi_async_sql_profiler.services import RequestInfoService
+from fastapi_async_sql_profiler.services import QueryInfoService, RequestInfoService
 
 from .models import Items, QueryInfo, RequestInfo, ResponseInfo
 from .crud import add_db, add_one, clear_table_bd, filter_obj, get_obj_by_id, get_requests_with_query_count
@@ -66,6 +66,8 @@ async def request_show(
     # response_model_exclude_none=True,
     request_info_service: RequestInfoService = Depends(
         get_request_info_service),
+    query_info_service: QueryInfoService = Depends(
+        get_query_info_service),
 ):
     """Get single request."""
 
@@ -77,6 +79,7 @@ async def request_show(
     # request_query = await get_obj_by_id(
     #     RequestInfo, id, joinedload_names=['response_info',])
     request_query = await request_info_service.get_request_info_by_id(id)
+
     if not request_query:
         return Response(status_code=status.HTTP_404_NOT_FOUND)
     request_query_validated_data = RequestInfoDetail.model_validate(
@@ -84,12 +87,11 @@ async def request_show(
     # request_query_validated_data = RequestInfoDetail.from_orm(
     #     request_query)
 
-    query_detail = await filter_obj(QueryInfo, request_id=id)
+    query_detail = await query_info_service.get_query_info_all(request_id=id)
+    # query_detail = await filter_obj(QueryInfo, request_id=id)
     query_validated_data = [
         QueryInfoDetail.model_validate(item) for item in query_detail]
-
     # return {'ok': {'request': request_query_validated_data, 'query': query_validated_data}}
-
     sum_on_query = 0
     for query_details in query_detail:
         sum_on_query = sum_on_query + query_details.time_taken

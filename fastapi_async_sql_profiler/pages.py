@@ -57,19 +57,23 @@ async def all_request(
 
 
 @router.get("/request/{id}", response_class=HTMLResponse)
-async def one_request(id: int, request: Request):
+async def one_request(
+    id: int, request: Request,
+    request_info_service: RequestInfoService = Depends(
+        get_request_info_service),
+):
     """Get one request."""
-    # r = await get_requests_with_query_count()
-    # all_requests = await filter_obj(RequestInfo)
-    request_query = await get_obj_by_id(
-        RequestInfo, id, joinedload_names=['response_info',])
-    if not request_query:
+
+    request_info = await request_info_service.get_request_info_by_id(id)
+    # request_info = await get_obj_by_id(
+    #     RequestInfo, id, joinedload_names=['response_info',])
+    if not request_info:
         return Response(status_code=status.HTTP_404_NOT_FOUND)
     # return all_requests
     context = {
         "request": request,
-        "request_query": request_query,
-        "response_info": request_query.response_info,
+        "request_query": request_info,
+        "response_info": request_info.response_info,
         "current_api": "all_request",
         # "page": page,
         # "limit": limit,

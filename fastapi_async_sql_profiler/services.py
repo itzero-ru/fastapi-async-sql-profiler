@@ -9,12 +9,26 @@ class RequestInfoService:
         return self.request_info_repository.get_by_id(id)
 
     def get_request_info_all(self):
-        return self.request_info_repository.get_all()
+        return self.request_info_repository.list()
 
     def create(self, request_info_data):
         # business logic
         return self.request_info_repository.create(request_info_data)
 
+
+class QueryInfoService:
+    def __init__(self, query_info_repository: AbstractRepository):
+        self.query_info_repository = query_info_repository
+
+    def get_query_info_by_id(self, id):
+        return self.query_info_repository.get_by_id(id)
+
+    def get_query_info_all(self, **filters):
+        return self.query_info_repository.list(**filters)
+
+    def create(self, query_info_data):
+        # business logic
+        return self.query_info_repository.create(query_info_data)
 
 # async def get_request_info_list(filter: dict = {}):
 #     """Get all RequestInfo"""
