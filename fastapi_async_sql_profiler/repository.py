@@ -114,7 +114,5 @@ class QueryInfoRepository(AbstractRepository):
     async def get_by_id(self, id):
 
         stmt = select(self.model).where(self.model.id == id)
-        stmt = stmt.options(
-            joinedload(QueryInfo.response_info))
         result = await self.session.execute(stmt)
         return result.scalar_one_or_none()

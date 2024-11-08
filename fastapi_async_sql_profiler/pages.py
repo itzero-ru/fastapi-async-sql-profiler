@@ -1,16 +1,15 @@
 from pathlib import Path
 from fastapi import APIRouter, Depends, Request, Response, status
-from fastapi.responses import HTMLResponse, JSONResponse
-from fastapi.staticfiles import StaticFiles
+from fastapi.responses import (
+    HTMLResponse,
+    # JSONResponse
+)
 from fastapi.templating import Jinja2Templates
 
-from fastapi_async_sql_profiler.crud import clear_table_bd, filter_obj, get_obj_by_id, get_requests_with_query_count
+from fastapi_async_sql_profiler.crud import clear_table_bd
 from fastapi_async_sql_profiler.dependencies import get_query_info_service, get_request_info_service
 from fastapi_async_sql_profiler.models import Items, QueryInfo, RequestInfo, ResponseInfo
 from fastapi_async_sql_profiler.services import QueryInfoService, RequestInfoService
-
-# from .models import Items, QueryInfo, RequestInfo
-# from .crud import add_db, add_one, clear_table_bd, filter_obj, get_obj_by_id
 
 
 router = APIRouter(
@@ -39,7 +38,6 @@ async def all_request(
         get_request_info_service),
 ):
     """Get all request."""
-    # r = await get_requests_with_query_count()
 
     all_requests = await request_info_service.get_request_info_all()
 
@@ -113,22 +111,14 @@ async def request_sql_list(
 
 
 @router.get("/request/{id}/sql/{sql_id}", response_class=HTMLResponse)
-async def sql_query_detail(id: int, sql_id: int, request: Request):
+async def sql_query_detail(
+    id: int, sql_id: int, request: Request,
+    query_info_service: QueryInfoService = Depends(
+        get_query_info_service),
+):
 
-    # request_query = await get_obj_by_id(
-    #     RequestInfo, id, joinedload_names=['response_info',])
-    # if not request_query:
-    #     return Response(status_code=status.HTTP_404_NOT_FOUND)
+    query = await query_info_service.get_query_info_by_id(sql_id)
 
-    # request_query = await get_obj_by_id(
-    #     RequestInfo,
-    #     id,
-    #     joinedload_names=['response_info',]
-    # )
-
-    query = await get_obj_by_id(QueryInfo, sql_id)
-
-    # return all_requests
     context = {
         "request": request,
         "query": query,
