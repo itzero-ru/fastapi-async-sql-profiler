@@ -1,13 +1,3 @@
-from sqlalchemy import desc, insert, select, update, delete
-from fastapi_async_sql_profiler.database import Base, async_session_maker, get_async_session
-from sqlalchemy import func
-from sqlalchemy.orm import aliased
-from sqlalchemy.orm import joinedload, load_only
-
-from fastapi_async_sql_profiler.models import RequestInfo, ResponseInfo
-from fastapi_async_sql_profiler.repository import RequestInfoRepository
-
-
 class RequestInfoService:
     def __init__(self, request_info_repository):
         self.request_info_repository = request_info_repository
