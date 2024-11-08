@@ -5,9 +5,9 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 
 from fastapi_async_sql_profiler.crud import clear_table_bd, filter_obj, get_obj_by_id, get_requests_with_query_count
-from fastapi_async_sql_profiler.dependencies import get_request_info_service
+from fastapi_async_sql_profiler.dependencies import get_query_info_service, get_request_info_service
 from fastapi_async_sql_profiler.models import Items, QueryInfo, RequestInfo, ResponseInfo
-from fastapi_async_sql_profiler.services import RequestInfoService
+from fastapi_async_sql_profiler.services import QueryInfoService, RequestInfoService
 
 # from .models import Items, QueryInfo, RequestInfo
 # from .crud import add_db, add_one, clear_table_bd, filter_obj, get_obj_by_id
@@ -84,27 +84,25 @@ async def one_request(
 
 
 @router.get("/request/{id}/sql", response_class=HTMLResponse)
-async def request_sql_list(id: int, request: Request):
+async def request_sql_list(
+    id: int, request: Request,
+    request_info_service: RequestInfoService = Depends(
+        get_request_info_service),
+    query_info_service: QueryInfoService = Depends(
+        get_query_info_service),
+):
 
-    # request_query = await get_obj_by_id(
-    #     RequestInfo, id, joinedload_names=['response_info',])
-    # if not request_query:
-    #     return Response(status_code=status.HTTP_404_NOT_FOUND)
+    request_info = await request_info_service.get_request_info_by_id(id)
+    if not request_info:
+        return Response(status_code=status.HTTP_404_NOT_FOUND)
 
-    request_query = await get_obj_by_id(
-        RequestInfo,
-        id,
-        joinedload_names=['response_info',]
-    )
+    queries = await query_info_service.get_query_info_all(request_id=id)
 
-    queries = await filter_obj(QueryInfo, request_id=id)
-
-    # return all_requests
     context = {
         "request": request,
         "queries": queries,
-        "request_query": request_query,
-        "response_info": request_query.response_info,
+        "request_query": request_info,
+        "response_info": request_info.response_info,
         # "current_api": "all_request",
         # "page": page,
         # "limit": limit,
