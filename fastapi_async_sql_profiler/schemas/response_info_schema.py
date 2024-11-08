@@ -1,4 +1,7 @@
+# from __future__ import annotations
 from pydantic import BaseModel, ConfigDict
+
+# from fastapi_async_sql_profiler.schemas.request_info_schema import RequestInfoDetail
 
 
 class ResponseInfoDetail(BaseModel):
@@ -10,7 +13,7 @@ class ResponseInfoDetail(BaseModel):
 
     # # Add a foreign key that references RequestInfo
     request_info_id: str | int
-    # request_info: RequestInfoDetail
+    # request_info: 'RequestInfoDetail'
     # request_info = relationship(
     #     RequestInfo, back_populates="response_info",
     #     uselist=False)
