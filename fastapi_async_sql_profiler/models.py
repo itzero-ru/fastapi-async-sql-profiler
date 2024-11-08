@@ -163,9 +163,9 @@ class QueryInfo(Base):
                     # tables.add(next_token_from.get_real_name())
                 # if from_seen and token.ttype is sqlparse.tokens.Name:
                 # # if from_seen and token.ttype is sqlparse.tokens.Keyword:
-                #     # tables.add(token.get_real_name())  # Добавляем имя таблицы
-                #     tables.append(token._get_repr_name())  # Добавляем имя таблицы
-                #     tables.append(token._get_repr_value())  # Добавляем имя таблицы
+                #     # tables.add(token.get_real_name())  # add table name
+                #     tables.append(token._get_repr_name())  # add table name
+                #     tables.append(token._get_repr_value())  # add table name
                 # if token.ttype is sqlparse.tokens.Keyword and (
                 #     token.value.upper() in [
                 #         'JOIN', 'INNER JOIN', 'LEFT JOIN',
@@ -179,7 +179,7 @@ class QueryInfo(Base):
                     id_next_token, next_token = statement.token_next(
                         statement.token_index(token))
 
-                    # tables.append(next_token.value)  # Добавляем имя таблицы
+                    # tables.append(next_token.value)  # add table name
                     # tables.add(next_token.normalized)
                     # tables.add(next_token._get_repr_value())
                     # a = next_token.get_real_name()

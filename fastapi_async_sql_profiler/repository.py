@@ -7,11 +7,12 @@ from sqlalchemy.orm import joinedload, load_only
 
 class RequestInfoRepository:
 
+    model = RequestInfo
+
     def __init__(self, session: AsyncSession):
         self.session = session
 
     async def get_all(self, filters: dict = {}):
-        model = RequestInfo
 
         request_load_fields = (
             RequestInfo.id,
@@ -27,7 +28,7 @@ class RequestInfoRepository:
             RequestInfo.time_spent_queries,
             RequestInfo.headers,
         )
-        stmt = select(model).options(load_only(*request_load_fields))
+        stmt = select(self.model).options(load_only(*request_load_fields))
 
         # JOIN
         response_load_fields = (
@@ -42,14 +43,39 @@ class RequestInfoRepository:
         # print(stmt)
 
         stmt = stmt.filter_by(**filters)
-        stmt = stmt.order_by(desc(model.id))
+        stmt = stmt.order_by(desc(self.model.id))
         res = await self.session.execute(stmt)
 
         return res.scalars().all()
         # return result.scalars().all()
 
-    async def get(self, **filters):
-        pass
+    async def find(self, **filters):
+        ...
+
+    async def get_by_id(self, id):
+
+        stmt = select(self.model).where(self.model.id == id)
+        result = await self.session.execute(stmt)
+        return result.scalar_one_or_none()
+
+        # self.db_session.query(UserModel).filter(UserModel.id == user_id).first()
+        request_load_fields = (
+            RequestInfo.id,
+            RequestInfo.path,
+            RequestInfo.query_params,
+            # RequestInfo.raw_body,
+            # RequestInfo.body,
+            RequestInfo.method,
+            RequestInfo.start_time,
+            RequestInfo.end_time,
+            RequestInfo.time_taken,
+            RequestInfo.total_queries,
+            RequestInfo.time_spent_queries,
+            RequestInfo.headers,
+        )
+
+        stmt = select(self.model).options(load_only(*request_load_fields))
+        stmt = stmt.filter_by(**filters)
 
     # async def list(self):
     #     return self.session.query(RequestInfo).all()

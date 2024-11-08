@@ -13,7 +13,7 @@ from fastapi_async_sql_profiler.crud import add_db, add_one, clear_table_bd, fil
 
 from fastapi_async_sql_profiler.database import engine
 
-from fastapi_async_sql_profiler.schemas import ItemAdd, ItemDetails, ItemFilter
+from fastapi_async_sql_profiler.schemas.common_schemas import ItemAdd, ItemDetails, ItemFilter
 from fastapi_async_sql_profiler.sql_middleware import SQLProfilerMiddleware
 from fastapi_async_sql_profiler.start_debugger import start_debug_server
 
