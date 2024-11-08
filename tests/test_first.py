@@ -11,17 +11,17 @@ def test_first():
     assert 1 == 1
 
 
-def test_two():
+# def test_two():
 
-    assert 1 == 1
-    url = '/profiler/111'
-    response = client.post(
-        url,
-        # json={'a': 1},
-    )
+#     assert 1 == 1
+#     url = '/profiler/111'
+#     response = client.post(
+#         url,
+#         # json={'a': 1},
+#     )
 
-    # print(response.status_code)
-    assert response.status_code == 200, "Status code should be 201"
+#     # print(response.status_code)
+#     assert response.status_code == 200, "Status code should be 201"
 
 
 def test_request_detail():

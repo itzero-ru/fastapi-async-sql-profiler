@@ -5,9 +5,11 @@ from fastapi import APIRouter, Depends, Request, Response, status
 from fastapi.responses import HTMLResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
+from fastapi_async_sql_profiler.database import async_session_maker
 
 from fastapi_async_sql_profiler.config import APP_ROUTER_PREFIX
 from fastapi_async_sql_profiler.dependencies import get_request_info_service
+from fastapi_async_sql_profiler.repository import RequestInfoRepository
 from fastapi_async_sql_profiler.schemas.query_info_schema import QueryInfoDetail
 from fastapi_async_sql_profiler.schemas.request_info_schema import RequestInfoDetail
 from fastapi_async_sql_profiler.schemas.response_info_schema import ResponseInfoDetail
@@ -62,16 +64,19 @@ async def requests_show(
 async def request_show(
     id: int, request: Request,
     # response_model_exclude_none=True,
+    request_info_service: RequestInfoService = Depends(
+        get_request_info_service),
 ):
     """Get single request."""
 
-    def convert_to_dict(orm_object):
-        return {
-            field: getattr(
-                orm_object, field) for field in orm_object.__dict__ if not field.startswith('_')}
+    # def convert_to_dict(orm_object):
+    #     return {
+    #         field: getattr(
+    #             orm_object, field) for field in orm_object.__dict__ if not field.startswith('_')}
 
-    request_query = await get_obj_by_id(
-        RequestInfo, id, joinedload_names=['response_info',])
+    # request_query = await get_obj_by_id(
+    #     RequestInfo, id, joinedload_names=['response_info',])
+    request_query = await request_info_service.get_request_info_by_id(id)
     if not request_query:
         return Response(status_code=status.HTTP_404_NOT_FOUND)
     request_query_validated_data = RequestInfoDetail.model_validate(
@@ -115,13 +120,12 @@ async def request_one_show(
 ):
     """Get single request."""
 
-    def convert_to_dict(orm_object):
-        return {
-            field: getattr(
-                orm_object, field) for field in orm_object.__dict__ if not field.startswith('_')}
+    async with async_session_maker() as session:
+        service = RequestInfoService(RequestInfoRepository(session))
+        request_query = await service.get_request_info_by_id(id)
 
-    request_query = await get_obj_by_id(
-        RequestInfo, id, joinedload_names=['response_info',])
+    # request_query = await get_obj_by_id(
+    #     RequestInfo, id, joinedload_names=['response_info',])
     if not request_query:
         return Response(status_code=status.HTTP_404_NOT_FOUND)
     # return request_query

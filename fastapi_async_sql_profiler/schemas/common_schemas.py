@@ -1,6 +1,6 @@
 from typing import List, Optional, TypeVar, Generic
 from pydantic import BaseModel, ConfigDict
-from pydantic.generics import GenericModel
+# from pydantic.generics import GenericModel
 
 
 T = TypeVar('T')
@@ -34,7 +34,7 @@ class ResponseSchema(BaseModel):
     result: Optional[T] = None
 
 
-class PageResponse(GenericModel, Generic[T]):
+class PageResponse(BaseModel, Generic[T]):
     """ The response for a pagination query. """
 
     page_number: int

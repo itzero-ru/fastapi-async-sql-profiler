@@ -3,9 +3,23 @@ from fastapi_async_sql_profiler.models import RequestInfo, ResponseInfo
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import desc, insert, select, update, delete
 from sqlalchemy.orm import joinedload, load_only
+from abc import ABC, abstractmethod
 
 
-class RequestInfoRepository:
+class AbstractRepository(ABC):
+
+    model = None
+
+    @abstractmethod
+    async def get_by_id():
+        raise NotImplementedError
+
+    @abstractmethod
+    async def get_all():
+        raise NotImplementedError
+
+
+class RequestInfoRepository(AbstractRepository):
 
     model = RequestInfo
 
@@ -55,6 +69,8 @@ class RequestInfoRepository:
     async def get_by_id(self, id):
 
         stmt = select(self.model).where(self.model.id == id)
+        stmt = stmt.options(
+            joinedload(RequestInfo.response_info))
         result = await self.session.execute(stmt)
         return result.scalar_one_or_none()
 

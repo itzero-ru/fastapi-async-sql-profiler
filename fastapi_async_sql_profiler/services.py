@@ -1,6 +1,12 @@
+from fastapi_async_sql_profiler.repository import AbstractRepository
+
+
 class RequestInfoService:
-    def __init__(self, request_info_repository):
+    def __init__(self, request_info_repository: AbstractRepository):
         self.request_info_repository = request_info_repository
+
+    def get_request_info_by_id(self, id):
+        return self.request_info_repository.get_by_id(id)
 
     def get_request_info_all(self):
         return self.request_info_repository.get_all()
