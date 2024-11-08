@@ -60,7 +60,10 @@ async def requests_show(
 
 
 @router.get("/request_detail/{id}")
-async def request_show(id: int, request: Request):
+async def request_show(
+    id: int, request: Request,
+    # response_model_exclude_none=True,
+):
     """Get single request."""
 
     def convert_to_dict(orm_object):

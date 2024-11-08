@@ -1,6 +1,10 @@
 from datetime import datetime
-from typing import List, Optional
+from typing import List, Optional, TypeVar, Generic
 from pydantic import BaseModel, ConfigDict
+from pydantic.generics import GenericModel
+
+
+T = TypeVar('T')
 
 
 class ItemFilter(BaseModel):
@@ -60,3 +64,27 @@ class QueryInfoDetail(BaseModel):
 
 class QueryInfoDetailListResponse(BaseModel):
     query: List[QueryInfoDetail]
+
+
+class ResponseSchema(BaseModel):
+    detail: str
+    result: Optional[T] = None
+
+
+class PageResponse(GenericModel, Generic[T]):
+    """ The response for a pagination query. """
+
+    page_number: int
+    page_size: int
+    total_pages: int
+    total_record: int
+    content: List[T]
+
+
+class HttpErrorDetail(BaseModel):
+    status: str
+    title: str
+
+
+class HttpErrors(BaseModel):
+    errors: List[HttpErrorDetail]

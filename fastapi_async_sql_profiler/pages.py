@@ -1,12 +1,13 @@
 from pathlib import Path
-from fastapi import APIRouter, Request, Response, status
+from fastapi import APIRouter, Depends, Request, Response, status
 from fastapi.responses import HTMLResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 
 from fastapi_async_sql_profiler.crud import clear_table_bd, filter_obj, get_obj_by_id, get_requests_with_query_count
+from fastapi_async_sql_profiler.dependencies import get_request_info_service
 from fastapi_async_sql_profiler.models import Items, QueryInfo, RequestInfo, ResponseInfo
-from fastapi_async_sql_profiler.services import get_request_info_list
+from fastapi_async_sql_profiler.services import RequestInfoService, get_request_info_list
 
 # from .models import Items, QueryInfo, RequestInfo
 # from .crud import add_db, add_one, clear_table_bd, filter_obj, get_obj_by_id
@@ -32,11 +33,16 @@ print()
 
 
 @router.get("/requests", response_class=HTMLResponse)
-async def all_request(request: Request):
+async def all_request(
+    request: Request,
+    request_info_service: RequestInfoService = Depends(
+        get_request_info_service),
+):
     """Get all request."""
     # r = await get_requests_with_query_count()
 
-    all_requests = await get_request_info_list()
+    # all_requests = await get_request_info_list()
+    all_requests = await request_info_service.get_request_info_all()
 
     context = {
         "request": request,
