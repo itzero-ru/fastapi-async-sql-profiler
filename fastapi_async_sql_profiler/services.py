@@ -1,3 +1,4 @@
+from fastapi import HTTPException
 from fastapi_async_sql_profiler.repository import (
     # AbstractRepository,
     QueryInfoRepository, RequestInfoRepository)
@@ -10,8 +11,23 @@ class RequestInfoService:
     def get_request_info_by_id(self, id):
         return self.request_info_repository.get_by_id(id)
 
-    def get_request_info_all(self):
-        return self.request_info_repository.list()
+    async def get_request_info_all(self, page: int = 1, size: int = 3):
+        offset = (page-1) * size
+        limit = size
+
+        if offset < 0:
+            raise HTTPException(status_code=400, detail="Offset must be non-negative")
+        if size < 0:
+            raise HTTPException(status_code=400, detail="Size must be non-negative")
+
+        # count = await self.request_info_repository.count()
+        # print(count)
+
+        list_result = await self.request_info_repository.list(offset=offset, limit=limit)
+        return list_result
+
+    def count(self):
+        return self.request_info_repository.count()
 
     def create(self, request_info_data):
         # business logic

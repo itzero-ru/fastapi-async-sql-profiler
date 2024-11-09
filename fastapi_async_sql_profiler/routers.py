@@ -1,7 +1,8 @@
 import os
 import math
 from pathlib import Path
-from fastapi import APIRouter, Depends, Request, Response, status
+from typing import Annotated, Union
+from fastapi import APIRouter, Depends, Query, Request, Response, status
 from fastapi.responses import HTMLResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
@@ -10,8 +11,9 @@ from fastapi_async_sql_profiler.database import async_session_maker, clear_table
 from fastapi_async_sql_profiler.config import APP_ROUTER_PREFIX
 from fastapi_async_sql_profiler.dependencies import get_query_info_service, get_request_info_service
 from fastapi_async_sql_profiler.repository import RequestInfoRepository
+from fastapi_async_sql_profiler.schemas.common_schemas import PaginationMeta, PaginationResponse
 from fastapi_async_sql_profiler.schemas.query_info_schema import QueryInfoDetail
-from fastapi_async_sql_profiler.schemas.request_info_schema import RequestInfoDetail
+from fastapi_async_sql_profiler.schemas.request_info_schema import RequestInfoDetail, RequestInfoDetailForList, RequestInfoList
 from fastapi_async_sql_profiler.schemas.response_info_schema import ResponseInfoDetail
 from fastapi_async_sql_profiler.services import QueryInfoService, RequestInfoService
 
@@ -19,6 +21,9 @@ from .models import Items, QueryInfo, RequestInfo, ResponseInfo
 from .crud import add_db, add_one, filter_obj, get_obj_by_id, get_requests_with_query_count
 
 from .pages import router as router_pages
+
+#
+from fastapi import Header, HTTPException
 
 
 router = APIRouter(
@@ -53,11 +58,50 @@ async def requests_show(
     request: Request,
     request_info_service: RequestInfoService = Depends(
         get_request_info_service),
+    #
+    # user_agent: Annotated[Union[str, None], Header()] = None,
+    user_agent: str | None = Header(default=None),
+    authorization: str = Header(default=None),
+    # q: Annotated[Union[str, None], Query(max_length=50)] = None
+    page: int = Query(1, gt=0),
+    size: int = Query(10, gt=0)
 ):
     """Get all requests."""
 
-    all_requests = await request_info_service.get_request_info_all()
-    return all_requests
+    all_requests = await request_info_service.get_request_info_all(
+        page=page, size=size, )
+
+    total_records = await request_info_service.count()
+
+    # return all_requests
+    meta = {
+        "current_page": page,
+        "page_size": size,
+        "total_records": total_records,
+    }
+    aaa = PaginationMeta(
+        **meta,
+        # current_page=1,
+        # page_size=5,
+        # total_records=50,
+
+        # page=all_requests.page,
+        # size=all_requests.size,
+        # total=all_requests.total,
+        # pages=math.ceil(all_requests.total / all_requests.size),
+        # prev_page=all_requests.prev_page,
+        # next_page=all_requests.next_page,
+
+    )
+    # items_validated_data = RequestInfoDetail.model_validate(request_query)
+    items_validated_data = [
+        RequestInfoDetailForList.model_validate(item) for item in all_requests]
+    # pydantic_users = list(map(RequestInfoDetailForList.model_validate, all_requests))
+    # serialized_requests = RequestInfoDetailForList.model_validate(all_requests)
+    # a111 = RequestInfoDetailForList(all_requests)
+
+    aaa = PaginationResponse(data=items_validated_data, meta=aaa)
+    return aaa
 
 
 @router.get("/request_detail/{id}")

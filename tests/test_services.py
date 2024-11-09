@@ -13,3 +13,16 @@ async def test_get_request_info_by_id():
         print('@@@@@@@@@@@@')
         pprint(request_query)
         assert request_query.id == id
+
+
+async def test_get_request_info_all():
+
+    async with async_session_maker() as session:
+        service = RequestInfoService(RequestInfoRepository(session))
+        page = 0
+        size = 1
+        result = await service.get_request_info_all(page=page, size=size)
+        a = result.__len__()
+        pass
+        print('@@@@@@@@@@@@')
+        pprint(result)

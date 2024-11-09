@@ -1,5 +1,5 @@
 from typing import List, Optional, TypeVar, Generic
-from pydantic import BaseModel, ConfigDict
+from pydantic import BaseModel, ConfigDict, Field
 # from pydantic.generics import GenericModel
 
 
@@ -29,6 +29,16 @@ class ItemAdd(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 
 
+class HttpErrorDetail(BaseModel):
+    status: str
+    title: str
+
+
+class HttpErrors(BaseModel):
+    errors: List[HttpErrorDetail]
+
+
+
 class ResponseSchema(BaseModel):
     detail: str
     result: Optional[T] = None
@@ -44,10 +54,22 @@ class PageResponse(BaseModel, Generic[T]):
     content: List[T]
 
 
-class HttpErrorDetail(BaseModel):
-    status: str
-    title: str
+class PaginationMeta(BaseModel):
+
+    current_page: int = Field(..., description="Current page number", example=1)
+    page_size: int = Field(..., description="Number of entries per page", example=10)
+    total_records: int = Field(..., description="Total number of entries")
+
+    # total_pages: int
 
 
-class HttpErrors(BaseModel):
-    errors: List[HttpErrorDetail]
+class PaginationResponse(BaseModel, Generic[T]):
+    """ The response for a pagination query. """
+
+    meta: PaginationMeta
+    data: List[T]
+
+
+class PaginationOut(BaseModel, Generic[T]):
+    meta: PaginationMeta
+    data: List[T]
