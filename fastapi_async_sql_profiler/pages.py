@@ -1,5 +1,5 @@
 from pathlib import Path
-from fastapi import APIRouter, Depends, Request, Response, status
+from fastapi import APIRouter, Depends, Query, Request, Response, status
 from fastapi.responses import (
     HTMLResponse,
     # JSONResponse
@@ -9,6 +9,7 @@ from fastapi.templating import Jinja2Templates
 from fastapi_async_sql_profiler.database import clear_table_bd
 from fastapi_async_sql_profiler.dependencies import get_query_info_service, get_request_info_service
 from fastapi_async_sql_profiler.models import Items, QueryInfo, RequestInfo, ResponseInfo
+from fastapi_async_sql_profiler.schemas.common_schemas import PaginationMeta
 from fastapi_async_sql_profiler.services import QueryInfoService, RequestInfoService
 
 
@@ -35,15 +36,26 @@ print()
 async def all_request(
     request: Request,
     request_info_service: RequestInfoService = Depends(get_request_info_service),
+    page: int = Query(1, gt=0),
+    size: int = Query(10, gt=0),
 ):
     """Get all request."""
 
-    all_requests = await request_info_service.get_request_info_all()
+    all_requests = await request_info_service.get_request_info_all(page=page, size=size)
+    total_records = await request_info_service.count()
+
+    pagination = PaginationMeta(
+        current_page=page,
+        page_size=size,
+        total_records=total_records,
+    )
 
     context = {
         "request": request,
         "request_info": all_requests,
         "current_api": "all_request",
+        "pagination": pagination,
+
         # "page": page,
         # "limit": limit,
         # "total_pages": total_pages,

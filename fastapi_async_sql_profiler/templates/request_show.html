@@ -35,4 +35,10 @@
     <h2 class="txt-center">No requests in application</h2>
     {% endif %}
 </div>
+
+{% with pagination=pagination %}
+    {% include 'inclusion/pagination.html' %}
+{% endwith %}
+
 {% endblock %}
+
