@@ -60,8 +60,8 @@ async def requests_show(
         get_request_info_service),
     #
     # user_agent: Annotated[Union[str, None], Header()] = None,
-    user_agent: str | None = Header(default=None),
-    authorization: str = Header(default=None),
+    # user_agent: str | None = Header(default=None),
+    # authorization: str = Header(default=None),
     # q: Annotated[Union[str, None], Query(max_length=50)] = None
     page: int = Query(1, gt=0),
     size: int = Query(10, gt=0)
@@ -74,16 +74,12 @@ async def requests_show(
     total_records = await request_info_service.count()
 
     # return all_requests
-    meta = {
-        "current_page": page,
-        "page_size": size,
-        "total_records": total_records,
-    }
-    aaa = PaginationMeta(
-        **meta,
-        # current_page=1,
-        # page_size=5,
-        # total_records=50,
+
+    meta = PaginationMeta(
+        # 1**meta,
+        current_page=page,
+        page_size=size,
+        total_records=total_records,
 
         # page=all_requests.page,
         # size=all_requests.size,
@@ -93,15 +89,12 @@ async def requests_show(
         # next_page=all_requests.next_page,
 
     )
-    # items_validated_data = RequestInfoDetail.model_validate(request_query)
+
     items_validated_data = [
         RequestInfoDetailForList.model_validate(item) for item in all_requests]
-    # pydantic_users = list(map(RequestInfoDetailForList.model_validate, all_requests))
-    # serialized_requests = RequestInfoDetailForList.model_validate(all_requests)
-    # a111 = RequestInfoDetailForList(all_requests)
 
-    aaa = PaginationResponse(data=items_validated_data, meta=aaa)
-    return aaa
+    result = PaginationResponse(data=items_validated_data, meta=meta)
+    return result
 
 
 @router.get("/request_detail/{id}")

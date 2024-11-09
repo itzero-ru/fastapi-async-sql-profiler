@@ -67,6 +67,7 @@ class PaginationMeta(BaseModel):
             return 0
 
         total_pages = (self.total_records + self.page_size - 1) // self.page_size
+        # total_pages = math.ceil(self.total_records / self.page_size) # TODO: slow
         return total_pages
 
 
