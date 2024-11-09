@@ -68,8 +68,7 @@ async def requests_show(
 ):
     """Get all requests."""
 
-    all_requests = await request_info_service.get_request_info_all(
-        page=page, size=size, )
+    all_items = await request_info_service.get_request_info_all(page=page, size=size)
 
     total_records = await request_info_service.count()
 
@@ -91,7 +90,7 @@ async def requests_show(
     )
 
     items_validated_data = [
-        RequestInfoDetailForList.model_validate(item) for item in all_requests]
+        RequestInfoDetailForList.model_validate(item) for item in all_items]
 
     result = PaginationResponse(data=items_validated_data, meta=meta)
     return result
