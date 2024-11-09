@@ -1,15 +1,14 @@
 import asyncio
-from typing import Union
 
-from fastapi import Depends, FastAPI, Request, Response, status
+from fastapi import Depends, FastAPI
 from contextlib import asynccontextmanager
 from datetime import datetime
 
-from fastapi.staticfiles import StaticFiles
+# from fastapi.staticfiles import StaticFiles
 
 from fastapi_async_sql_profiler.models import (
-    Items, QueryInfo, RequestInfo, init_db)
-from fastapi_async_sql_profiler.crud import add_db, add_one, clear_table_bd, filter_obj
+    Items, init_db)
+from fastapi_async_sql_profiler.crud import add_db, add_one, filter_obj
 
 from fastapi_async_sql_profiler.database import engine
 

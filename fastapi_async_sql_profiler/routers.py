@@ -5,7 +5,7 @@ from fastapi import APIRouter, Depends, Request, Response, status
 from fastapi.responses import HTMLResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
-from fastapi_async_sql_profiler.database import async_session_maker
+from fastapi_async_sql_profiler.database import async_session_maker, clear_table_bd
 
 from fastapi_async_sql_profiler.config import APP_ROUTER_PREFIX
 from fastapi_async_sql_profiler.dependencies import get_query_info_service, get_request_info_service
@@ -16,7 +16,7 @@ from fastapi_async_sql_profiler.schemas.response_info_schema import ResponseInfo
 from fastapi_async_sql_profiler.services import QueryInfoService, RequestInfoService
 
 from .models import Items, QueryInfo, RequestInfo, ResponseInfo
-from .crud import add_db, add_one, clear_table_bd, filter_obj, get_obj_by_id, get_requests_with_query_count
+from .crud import add_db, add_one, filter_obj, get_obj_by_id, get_requests_with_query_count
 
 from .pages import router as router_pages
 

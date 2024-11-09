@@ -1,8 +1,8 @@
 # from typing import Optional
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine, delete
 from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker
 from sqlalchemy.orm import DeclarativeBase
-
+from sqlalchemy.ext.declarative import DeclarativeMeta
 from fastapi_async_sql_profiler.config import settings
 
 engine = create_async_engine(
@@ -34,6 +34,14 @@ async def get_async_session():
     async with async_session_maker() as session:
         yield session
 
+
+async def clear_table_bd(model: DeclarativeMeta):
+    # In the future, add TRUNCATE
+    async with async_session_maker() as session:
+        async with session.begin():
+            query = delete(model)
+            await session.execute(query)
+        return
 
 # def init_db():
 #     Base.metadata.create_all(engine_sync)

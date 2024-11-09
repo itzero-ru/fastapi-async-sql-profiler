@@ -6,7 +6,7 @@ from fastapi.responses import (
 )
 from fastapi.templating import Jinja2Templates
 
-from fastapi_async_sql_profiler.crud import clear_table_bd
+from fastapi_async_sql_profiler.database import clear_table_bd
 from fastapi_async_sql_profiler.dependencies import get_query_info_service, get_request_info_service
 from fastapi_async_sql_profiler.models import Items, QueryInfo, RequestInfo, ResponseInfo
 from fastapi_async_sql_profiler.services import QueryInfoService, RequestInfoService

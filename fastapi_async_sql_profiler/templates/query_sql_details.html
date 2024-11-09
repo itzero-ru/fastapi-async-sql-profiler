@@ -121,7 +121,7 @@
 {% block content %}
 <div id="content">
     <!-- <h1>query SQL details</h1> -->
-
+    {% if query %}
     <div class="query-div">
         <div class="query">
             <pre><code  id="querySql" class="language-sql sql hljs">{{query.formatted_query}}</code></pre>
@@ -135,7 +135,6 @@
             </div>
         </div>
     </div>
-    <!-- <hr/> -->
     
     <div id="traceback">
         <div class="heading">
@@ -156,6 +155,9 @@
         </div>
     </div>
     <!-- <hr/> -->
+    {% else %}
+    <h2 class="txt-center">No queries found in the application</h2>
+    {% endif %}
 
     <script>
 
