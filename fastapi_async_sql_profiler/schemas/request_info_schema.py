@@ -1,4 +1,5 @@
 from datetime import datetime
+from typing import Optional
 from pydantic import BaseModel, ConfigDict
 
 from fastapi_async_sql_profiler.schemas.response_info_schema import ResponseInfoDetail
@@ -13,13 +14,16 @@ class RequestInfoDetail(BaseModel):
     body: str
     method: str
     start_time: datetime
-    end_time: datetime
-    time_taken: float
-    total_queries: int
+    # end_time: datetime
+    end_time: Optional[datetime] = None
+    time_taken: Optional[float] = None
+    total_queries: Optional[int] = None
+    # total_queries: int
     # headers: Json[Any]
     headers: dict
 
-    response_info: ResponseInfoDetail
+    # response_info: ResponseInfoDetail
+    response_info: Optional[ResponseInfoDetail] = None
 
     model_config = ConfigDict(from_attributes=True)
 
