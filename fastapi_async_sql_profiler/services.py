@@ -1,8 +1,10 @@
-from fastapi_async_sql_profiler.repository import AbstractRepository
+from fastapi_async_sql_profiler.repository import (
+    # AbstractRepository,
+    QueryInfoRepository, RequestInfoRepository)
 
 
 class RequestInfoService:
-    def __init__(self, request_info_repository: AbstractRepository):
+    def __init__(self, request_info_repository: RequestInfoRepository):
         self.request_info_repository = request_info_repository
 
     def get_request_info_by_id(self, id):
@@ -17,7 +19,7 @@ class RequestInfoService:
 
 
 class QueryInfoService:
-    def __init__(self, query_info_repository: AbstractRepository):
+    def __init__(self, query_info_repository: QueryInfoRepository):
         self.query_info_repository = query_info_repository
 
     def get_query_info_by_id(self, id):
