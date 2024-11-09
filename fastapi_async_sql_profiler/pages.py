@@ -34,8 +34,7 @@ print()
 @router.get("/requests", response_class=HTMLResponse)
 async def all_request(
     request: Request,
-    request_info_service: RequestInfoService = Depends(
-        get_request_info_service),
+    request_info_service: RequestInfoService = Depends(get_request_info_service),
 ):
     """Get all request."""
 
@@ -57,8 +56,7 @@ async def all_request(
 @router.get("/request/{id}", response_class=HTMLResponse)
 async def one_request(
     id: int, request: Request,
-    request_info_service: RequestInfoService = Depends(
-        get_request_info_service),
+    request_info_service: RequestInfoService = Depends(get_request_info_service),
 ):
     """Get one request."""
 
@@ -84,10 +82,8 @@ async def one_request(
 @router.get("/request/{id}/sql", response_class=HTMLResponse)
 async def request_sql_list(
     id: int, request: Request,
-    request_info_service: RequestInfoService = Depends(
-        get_request_info_service),
-    query_info_service: QueryInfoService = Depends(
-        get_query_info_service),
+    request_info_service: RequestInfoService = Depends(get_request_info_service),
+    query_info_service: QueryInfoService = Depends(get_query_info_service),
 ):
 
     request_info = await request_info_service.get_request_info_by_id(id)
@@ -113,8 +109,7 @@ async def request_sql_list(
 @router.get("/request/{id}/sql/{sql_id}", response_class=HTMLResponse)
 async def sql_query_detail(
     id: int, sql_id: int, request: Request,
-    query_info_service: QueryInfoService = Depends(
-        get_query_info_service),
+    query_info_service: QueryInfoService = Depends(get_query_info_service),
 ):
 
     query = await query_info_service.get_query_info_by_id(sql_id)
