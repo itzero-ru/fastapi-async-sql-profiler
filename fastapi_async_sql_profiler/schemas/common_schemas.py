@@ -1,5 +1,5 @@
 from typing import List, Optional, TypeVar, Generic
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import BaseModel, ConfigDict, Field, computed_field
 # from pydantic.generics import GenericModel
 
 
@@ -60,7 +60,14 @@ class PaginationMeta(BaseModel):
     page_size: int = Field(..., description="Number of entries per page", example=10)
     total_records: int = Field(..., description="Total number of entries")
 
-    # total_pages: int
+    # @property
+    @computed_field
+    def total_pages(self) -> int:
+        if self.page_size <= 0:
+            return 0
+
+        total_pages = (self.total_records + self.page_size - 1) // self.page_size
+        return total_pages
 
 
 class PaginationResponse(BaseModel, Generic[T]):
