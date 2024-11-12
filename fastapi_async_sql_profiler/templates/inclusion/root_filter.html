@@ -58,11 +58,12 @@
         <div class="menu-item-outer">
             <div class="menu-item-inner">
                 <label>Order:
-                    <select name="order_dir" form="filter-form" onchange="this.form.submit();">
+                    <select name="order_by" form="filter-form" onchange="this.form.submit();">
 
-                        <option value="ASC">Ascending</option>
-
-                        <option value="DESC" selected="">Descending</option>
+                        {% for order_choice_name, order_choice_value in choices.order_by.items() %}
+                        <option value="{{order_choice_value}}" {% if order_by==order_choice_value %}selected{% endif %}>
+                            {{order_choice_name}}</option>
+                        {% endfor %}
 
                     </select>
                 </label>

@@ -1,7 +1,7 @@
 import os
 import math
 from pathlib import Path
-from typing import Annotated, Union
+from typing import Annotated, Literal, Union
 from fastapi import APIRouter, Depends, Query, Request, Response, status
 from fastapi.responses import HTMLResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
@@ -64,11 +64,21 @@ async def requests_show(
     # authorization: str = Header(default=None),
     # q: Annotated[Union[str, None], Query(max_length=50)] = None
     page: int = Query(1, gt=0),
-    size: int = Query(10, gt=0)
+    size: int = Query(10, gt=0),
+    order_by: Literal['ASC', 'DESC'] = 'DESC'
 ):
     """Get all requests."""
 
-    all_items = await request_info_service.get_request_info_all(page=page, size=size)
+    # order_dir = {
+    #     'ASC': {
+    #         'label': 'Ascending'
+    #     },
+    #     'DESC': {
+    #         'label': 'Descending'
+    #     }
+    # }
+
+    all_items = await request_info_service.get_request_info_all(page=page, size=size, order_by=order_by)
 
     total_records = await request_info_service.count()
 

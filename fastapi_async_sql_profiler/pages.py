@@ -1,4 +1,5 @@
 from pathlib import Path
+from typing import Literal
 from fastapi import APIRouter, Depends, Query, Request, Response, status
 from fastapi.responses import (
     HTMLResponse,
@@ -38,10 +39,11 @@ async def all_request(
     request_info_service: RequestInfoService = Depends(get_request_info_service),
     page: int = Query(1, gt=0),
     size: int = Query(10, gt=0),
+    order_by: Literal['ASC', 'DESC'] = 'DESC',
 ):
     """Get all request."""
 
-    all_requests = await request_info_service.get_request_info_all(page=page, size=size)
+    all_requests = await request_info_service.get_request_info_all(page=page, size=size, order_by=order_by)
     total_records = await request_info_service.count()
 
     pagination = PaginationMeta(
@@ -55,8 +57,10 @@ async def all_request(
         "request_info": all_requests,
         "current_api": "all_request",
         "pagination": pagination,
+        "order_by": order_by,
         "choices": {
             "page_size_options": [5, 10, 25, 50, 100, 200],
+            "order_by": {'Ascending': 'ASC', 'Descending': 'DESC'},
         },
 
         # "page": page,

@@ -1,7 +1,8 @@
 
+from typing import Literal
 from fastapi_async_sql_profiler.models import QueryInfo, RequestInfo, ResponseInfo
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy import desc, func, insert, select, update, delete
+from sqlalchemy import asc, desc, func, insert, select, update, delete
 from sqlalchemy.orm import joinedload, load_only
 from abc import ABC, abstractmethod
 
@@ -26,7 +27,10 @@ class RequestInfoRepository(AbstractRepository):
     def __init__(self, session: AsyncSession):
         self.session = session
 
-    async def list(self, offset: int = 0, limit: int = None, filters: dict = {}):
+    async def list(
+        self, offset: int = 0, limit: int = None, filters: dict = {},
+        order_by: Literal['ASC', 'DESC'] = 'ASC'
+    ):
 
         request_load_fields = (
             RequestInfo.id,
@@ -57,7 +61,15 @@ class RequestInfoRepository(AbstractRepository):
         # print(stmt)
 
         stmt = stmt.filter_by(**filters)
-        stmt = stmt.order_by(desc(self.model.id))
+
+        if order_by == 'ASC':
+            stmt = stmt.order_by(asc(self.model.id))
+        elif order_by == 'DESC':
+            stmt = stmt.order_by(desc(self.model.id))
+        else:
+            stmt = stmt.order_by(asc(self.model.id))
+
+        # stmt = stmt.order_by(desc(self.model.id))
 
         stmt = stmt.offset(offset)
         if limit:

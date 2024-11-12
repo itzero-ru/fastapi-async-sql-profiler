@@ -1,3 +1,4 @@
+from typing import Literal
 from fastapi import HTTPException
 from fastapi_async_sql_profiler.repository import (
     # AbstractRepository,
@@ -11,7 +12,7 @@ class RequestInfoService:
     def get_request_info_by_id(self, id):
         return self.request_info_repository.get_by_id(id)
 
-    async def get_request_info_all(self, page: int = 1, size: int = 3):
+    async def get_request_info_all(self, page: int = 1, size: int = 3, order_by: Literal['ASC', 'DESC'] = 'DESC'):
         offset = (page-1) * size
         limit = size
 
@@ -23,7 +24,7 @@ class RequestInfoService:
         # count = await self.request_info_repository.count()
         # print(count)
 
-        list_result = await self.request_info_repository.list(offset=offset, limit=limit)
+        list_result = await self.request_info_repository.list(offset=offset, limit=limit, order_by=order_by)
         return list_result
 
     def count(self):
