@@ -1,6 +1,7 @@
 <div id="filter" class="menu">
-
-    <form id="filter-form" action="." method="get"></form>
+    <form id="filter-form" action="./requests" method="get">
+        <!-- <button type="submit">Filter</button> -->
+    </form>
     <div class="menu-item ">
         <div class="menu-item-outer">
             <div class="menu-item-inner">
@@ -19,18 +20,13 @@
     <div class="menu-item ">
         <div class="menu-item-outer">
             <div class="menu-item-inner">
-                <label>Show:
-                    <select name="show" form="filter-form" onchange="this.form.submit();">
+                <label for="category">Show:
+                    <select id="category" name="size" form="filter-form" onchange="this.form.submit();">
 
-                        <option value="5">5</option>
-
-                        <option value="10">10</option>
-
-                        <option value="25" selected="">25</option>
-
-                        <option value="100">100</option>
-
-                        <option value="250">250</option>
+                        {% for size_option in choices.page_size_options %}
+                        <option value="{{size_option}}" {% if pagination.page_size==size_option %}selected{% endif %}>
+                            {{size_option}}</option>
+                        {% endfor %}
 
                     </select>
                 </label>

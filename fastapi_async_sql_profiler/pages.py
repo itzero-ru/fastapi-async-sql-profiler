@@ -55,6 +55,9 @@ async def all_request(
         "request_info": all_requests,
         "current_api": "all_request",
         "pagination": pagination,
+        "choices": {
+            "page_size_options": [5, 10, 25, 50, 100, 200],
+        },
 
         # "page": page,
         # "limit": limit,
