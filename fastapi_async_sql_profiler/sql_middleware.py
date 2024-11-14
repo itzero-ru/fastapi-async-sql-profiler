@@ -217,6 +217,9 @@ class SQLProfilerMiddleware(BaseHTTPMiddleware):
         else:
             raw_body = ''
             body = ''
+            # raw_body = await request.body()  # Сохраняем двоичные данные
+            # body = None  # Не декодируем тело для других типов данных
+
         request_path = request.url.path
         if (
             request_path == f'{APP_ROUTER_PREFIX}/all_request'
@@ -242,13 +245,20 @@ class SQLProfilerMiddleware(BaseHTTPMiddleware):
         if request_id:
             response_body = [section async for section in response.body_iterator]
             response_body = b"".join(response_body)
-            # print(f"Response body: {response_body.decode()}")
+
+            if 'application/json' in response.headers.get('Content-Type', ''):
+                # We decode only if it is JSON
+                response_body_decoded = response_body.decode('utf-8')
+            else:
+                # For binary data, just save it as it is
+                response_body_decoded = None
+
             await self.add_response(
                 request_id=request_id,
                 status_code=response.status_code,
                 headers=headers_dict_response,
                 raw_body=response_body,
-                body=response_body.decode(),
+                body=response_body_decoded,  # response_body.decode(),
             )
             # Воссоздаем response, так как мы уже прочитали его содержимое
             response = Response(

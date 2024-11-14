@@ -1,8 +1,11 @@
 import asyncio
+import os
 
 from fastapi import Depends, FastAPI
 from contextlib import asynccontextmanager
 from datetime import datetime
+
+# from fastapi.responses import FileResponse
 
 # from fastapi.staticfiles import StaticFiles
 
@@ -46,7 +49,7 @@ app = FastAPI(lifespan=lifespan)
 SQL_PROFILER_PASS_ROUTE_STARTSWITH = [
     '/docs',
     '/openapi.json',
-    '/profiler/requests'
+    # '/profiler/requests'
 ]
 app.add_middleware(
     SQLProfilerMiddleware, engine=engine,
@@ -100,6 +103,23 @@ async def get_items(
     # await add_one(Items, {'body': '11111'})
     # await add_one(Items, {'body': '22222'})
     return all
+
+
+# @app.get("/favicon.ico", include_in_schema=True)
+# async def favicon():
+#     file_path = os.path.abspath(os.path.dirname(__file__))
+
+#     file = "favicon.ico"
+#     file_absolute = f"fastapi_async_sql_profiler/{file}"
+#     current_directory = os.getcwd()
+#     print(current_directory)
+
+#     if os.path.exists(file_absolute):
+#         # return 'ok'
+#         return FileResponse(file_absolute)
+#     else:
+#         raise RuntimeError(f"File at path favicon.ico does not exist.")
+
 
 if __name__ == "__main__":
     task = asyncio.create_task(init_db(engine_async=engine))
