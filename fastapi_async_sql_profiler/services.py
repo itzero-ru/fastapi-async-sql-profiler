@@ -48,7 +48,7 @@ class SQLMiddlewareService:
 
     @classmethod
     async def get_record_in_db(
-        cls, *, model_type: RequestInfo | ResponseInfo | QueryInfo,
+        cls, *, model_type: type[RequestInfo] | type[ResponseInfo] | type[QueryInfo],
         id: str,
     ):
 
