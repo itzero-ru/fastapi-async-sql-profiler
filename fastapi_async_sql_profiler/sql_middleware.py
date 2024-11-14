@@ -8,9 +8,10 @@ import sqlalchemy.event
 
 from fastapi_async_sql_profiler.config import (
     APP_ROUTER_PREFIX, SQL_PROFILER_PASS_ROUTE_STARTSWITH)
-from fastapi_async_sql_profiler.crud import add_db, get_obj_by_id
+from fastapi_async_sql_profiler.crud import get_obj_by_id
 from fastapi_async_sql_profiler.models import (
     QueryInfo, RequestInfo, ResponseInfo)
+from fastapi_async_sql_profiler.services import SQLMiddlewareService
 
 
 class SessionHandler(object):
@@ -125,7 +126,8 @@ class SQLProfilerMiddleware(BaseHTTPMiddleware):
                                        datetime.timezone.utc),
                                    headers=headers_json)
 
-        await add_db(request_info)
+        # await add_db(request_info)
+        await SQLMiddlewareService.add_record_in_db(request_info)
         # session.add(request_info)
         # session.commit()
         # session.refresh(request_info)
@@ -147,7 +149,8 @@ class SQLProfilerMiddleware(BaseHTTPMiddleware):
             raw_body=raw_body,
             body=body, headers=headers,
         )
-        await add_db(response_info)
+        await SQLMiddlewareService.add_record_in_db(response_info)
+        # await add_db(response_info)
 
         return response_info
 
@@ -162,7 +165,8 @@ class SQLProfilerMiddleware(BaseHTTPMiddleware):
                 query_obj['text']),
                 request_id=request_id, time_taken=mstimetaken,
                 traceback=query_obj['stack'])
-            await add_db(query_data)
+            await SQLMiddlewareService.add_record_in_db(query_data)
+            # await add_db(query_data)
 
         print('all_query_time_taken', all_query_time_taken)
         end_time = datetime.datetime.now(datetime.timezone.utc)
@@ -182,7 +186,8 @@ class SQLProfilerMiddleware(BaseHTTPMiddleware):
         request_obj.total_queries = len(session_handler.query_objs)
         if all_query_time_taken:
             request_obj.time_spent_queries = all_query_time_taken
-        await add_db(request_obj)
+        await SQLMiddlewareService.add_record_in_db(request_obj)
+        # await add_db(request_obj)
 
     async def set_body(self, request: Request, body: bytes):
         async def receive():
