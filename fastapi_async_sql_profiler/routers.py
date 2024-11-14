@@ -80,7 +80,7 @@ async def requests_show(
     return result
 
 
-@router.get("/request_detail/{id}")
+@router.get("/requests/{id}")
 async def request_show(
     id: int, request: Request,
     # response_model_exclude_none=True,
@@ -119,7 +119,7 @@ async def request_show(
     return context
 
 
-@router.post("/111")
+@router.post("/test-item-request ")
 async def post_item(request: Request, response: Response):
 
     await add_one(Items, {'body': '44444'})
