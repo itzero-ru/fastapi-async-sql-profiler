@@ -1,8 +1,8 @@
 from typing import Literal
 from fastapi import HTTPException
-from fastapi_async_sql_profiler.models import QueryInfo, RequestInfo, ResponseInfo
+from fastapi_async_sql_profiler.models import Items, QueryInfo, RequestInfo, ResponseInfo
 from fastapi_async_sql_profiler.repository import (
-    QueryInfoRepository, RequestInfoRepository, ResponseInfoRepository)
+    ItemRepository, QueryInfoRepository, RequestInfoRepository, ResponseInfoRepository)
 from fastapi_async_sql_profiler.database import async_session_maker
 
 
@@ -70,10 +70,6 @@ class RequestInfoService:
     def count(self):
         return self.request_info_repository.count()
 
-    def create(self, request_info_data):
-        # business logic
-        return self.request_info_repository.create(request_info_data)
-
 
 class QueryInfoService:
     def __init__(self, query_info_repository: QueryInfoRepository):
@@ -85,9 +81,15 @@ class QueryInfoService:
     def get_query_info_all(self, **filters):
         return self.query_info_repository.list(**filters)
 
-    def create(self, query_info_data):
-        # business logic
-        return self.query_info_repository.create(query_info_data)
+
+class ItemService:
+    def __init__(self, item_repository: ItemRepository):
+        self.item_repository = item_repository
+
+    async def create(self, instance: Items):
+        # return self.item_repository.get_by_id(id)
+        result = await self.item_repository.add(instance)
+        return result
 
 # async def get_request_info_list(filter: dict = {}):
 #     """Get all RequestInfo"""

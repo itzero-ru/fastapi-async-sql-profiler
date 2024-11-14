@@ -1,7 +1,7 @@
 
 from typing import Literal
 from fastapi_async_sql_profiler.database import Base
-from fastapi_async_sql_profiler.models import QueryInfo, RequestInfo, ResponseInfo
+from fastapi_async_sql_profiler.models import Items, QueryInfo, RequestInfo, ResponseInfo
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import asc, desc, func, insert, select, update, delete
 from sqlalchemy.orm import joinedload, load_only
@@ -34,9 +34,15 @@ class BaseAddRepository(ABC):
     async def add(self, instance: Base) -> Base:
         # await self.session.refresh(instance)
         res = self.session.add(instance)
-        await self.session.flush()
+        # await self.session.flush()
         await self.session.commit()
         return instance
+
+    # async def create(self, data: Union[Base, dict]):
+    #     if isinstance(data, Base):
+    #         return await self.add(data)
+    #     else:
+    #         return await self.insert(self.model.__table__, data)
 
     # def save(self, instance) -> None:
     #     ...
@@ -166,3 +172,11 @@ class QueryInfoRepository(BaseReadRepository, BaseAddRepository):
 
     # async def find(self, **filters):
     #     ...
+
+
+class ItemRepository(BaseAddRepository):
+
+    model = Items
+
+    def __init__(self, session: AsyncSession):
+        self.session = session
