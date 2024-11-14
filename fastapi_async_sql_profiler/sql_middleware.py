@@ -125,7 +125,6 @@ class SQLProfilerMiddleware(BaseHTTPMiddleware):
                                        datetime.timezone.utc),
                                    headers=headers_json)
 
-        # await add_db(request_info)
         await SQLMiddlewareService.add_record_in_db(request_info)
         # session.add(request_info)
         # session.commit()
@@ -149,7 +148,6 @@ class SQLProfilerMiddleware(BaseHTTPMiddleware):
             body=body, headers=headers,
         )
         await SQLMiddlewareService.add_record_in_db(response_info)
-        # await add_db(response_info)
 
         return response_info
 
@@ -165,7 +163,6 @@ class SQLProfilerMiddleware(BaseHTTPMiddleware):
                 request_id=request_id, time_taken=mstimetaken,
                 traceback=query_obj['stack'])
             await SQLMiddlewareService.add_record_in_db(query_data)
-            # await add_db(query_data)
 
         print('all_query_time_taken', all_query_time_taken)
         end_time = datetime.datetime.now(datetime.timezone.utc)
@@ -187,7 +184,6 @@ class SQLProfilerMiddleware(BaseHTTPMiddleware):
         if all_query_time_taken:
             request_obj.time_spent_queries = all_query_time_taken
         await SQLMiddlewareService.add_record_in_db(request_obj)
-        # await add_db(request_obj)
 
     async def set_body(self, request: Request, body: bytes):
         async def receive():
@@ -233,7 +229,7 @@ class SQLProfilerMiddleware(BaseHTTPMiddleware):
         else:
             request_data = await self.add_request(request, raw_body, body)
             request_id = request_data.id
-            # Not support async engine to SQLAlchemy
+            # TODO: Not support async engine to SQLAlchemy
             session_handler = SessionHandler(self.engine.sync_engine)
             session_handler.start()
             response = await call_next(request)

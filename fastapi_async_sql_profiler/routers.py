@@ -4,7 +4,7 @@ from fastapi_async_sql_profiler.database import clear_table_bd
 
 from fastapi_async_sql_profiler.config import APP_ROUTER_PREFIX
 from fastapi_async_sql_profiler.dependencies import get_item_service, get_query_info_service, get_request_info_service
-from fastapi_async_sql_profiler.schemas.common_schemas import PaginationMeta, PaginationResponse
+from fastapi_async_sql_profiler.schemas.common_schemas import ItemAdd, PaginationMeta, PaginationResponse
 from fastapi_async_sql_profiler.schemas.query_info_schema import QueryInfoDetail
 from fastapi_async_sql_profiler.schemas.request_info_schema import RequestInfoDetail, RequestInfoDetailForList
 from fastapi_async_sql_profiler.services import ItemService, QueryInfoService, RequestInfoService
@@ -119,19 +119,29 @@ async def request_show(
     return context
 
 
-@router.post("/test-item-request")
-async def post_item(
+@router.post("/test-items-request")
+async def post_items(
     request: Request, response: Response,
     item_service: ItemService = Depends(
         get_item_service),
 ):
-
     result = [
         _ := await item_service.create(Items(body='1')),
         _ := await item_service.create(Items(body='2')),
     ]
-
     # await add_one(Items, {'body': '44444'})
     # await add_one(Items, {'body': '55555'})
     response.status_code = status.HTTP_201_CREATED
     return result
+
+
+@router.post("/test-add-item-request")
+async def add_one_item(
+    item: ItemAdd,
+    item_service: ItemService = Depends(
+        get_item_service),
+):
+    item_dict = item.model_dump()
+    item = await item_service.create(Items(**item_dict))
+
+    return item
