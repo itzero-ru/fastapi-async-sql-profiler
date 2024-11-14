@@ -8,7 +8,6 @@ import sqlalchemy.event
 
 from fastapi_async_sql_profiler.config import (
     APP_ROUTER_PREFIX, SQL_PROFILER_PASS_ROUTE_STARTSWITH)
-from fastapi_async_sql_profiler.crud import get_obj_by_id
 from fastapi_async_sql_profiler.models import (
     QueryInfo, RequestInfo, ResponseInfo)
 from fastapi_async_sql_profiler.services import SQLMiddlewareService
@@ -171,7 +170,8 @@ class SQLProfilerMiddleware(BaseHTTPMiddleware):
         print('all_query_time_taken', all_query_time_taken)
         end_time = datetime.datetime.now(datetime.timezone.utc)
 
-        request_obj = await get_obj_by_id(RequestInfo, request_id)
+        # request_obj = await get_obj_by_id(RequestInfo, request_id)
+        request_obj = await SQLMiddlewareService.get_record_in_db(id=request_id, model_type=RequestInfo)
 
         request_obj_start_time = request_obj.start_time
 

@@ -22,22 +22,40 @@ from fastapi_async_sql_profiler.database import Base, async_session_maker
 
 class SQLMiddlewareService:
 
+    repository_map: dict[type, type] = {
+        RequestInfo: RequestInfoRepository,
+        ResponseInfo: ResponseInfoRepository,
+        QueryInfo: QueryInfoRepository
+    }
+
+    @classmethod
+    def __get_repository_for_model(cls, model):
+
+        model_type = model if isinstance(model, type) else type(model)
+        repository = cls.repository_map.get(model_type)
+        if repository is None:
+            raise ValueError("Unsupported model type", model_type)
+        return repository
+
     @classmethod
     async def add_record_in_db(cls, instance: RequestInfo | ResponseInfo | QueryInfo):
 
-        repository = None
-
-        if isinstance(instance, RequestInfo):
-            repository = RequestInfoRepository
-        elif isinstance(instance, ResponseInfo):
-            repository = ResponseInfoRepository
-        elif isinstance(instance, QueryInfo):
-            repository = QueryInfoRepository
-        else:
-            raise ValueError("instance must be RequestInfo or ResponseInfo or QueryInfo")
+        repository = cls.__get_repository_for_model(instance)
 
         async with async_session_maker() as session:
             result = await repository(session).add(instance)
+            return result
+
+    @classmethod
+    async def get_record_in_db(
+        cls, *, model_type: RequestInfo | ResponseInfo | QueryInfo,
+        id: str,
+    ):
+
+        repository = cls.__get_repository_for_model(model_type)
+
+        async with async_session_maker() as session:
+            result = await repository(session).get_by_id(id)
             return result
 
 
