@@ -24,28 +24,21 @@ router = APIRouter(
 @router.get("/favicon.ico", include_in_schema=True)
 async def favicon():
     file_path = os.path.abspath(os.path.dirname(__file__))
-
     file = "favicon.ico"
-    file_absolute = f"fastapi_async_sql_profiler/{file}"
-    current_directory = os.getcwd()
-    directory_name = os.path.basename(current_directory)
-    print('current_directory -->', current_directory)
-    print('directory_name -->', directory_name)
+    # file_absolute = f"fastapi_async_sql_profiler/{file}"
+    # current_directory = os.getcwd()
+    # directory_name = os.path.basename(current_directory)
+    # print('current_directory -->', current_directory)
+    # print('directory_name -->', directory_name)
+    file_absolute = os.path.join(file_path, file)
 
     if os.path.exists(file_absolute):
-        # return 'ok'
         return FileResponse(file_absolute)
     elif os.path.exists(file):
         return FileResponse(file)
-
     else:
-        raise RuntimeError(f"File at path favicon.ico does not exist.")
-# @router.get("/favicon.ico", include_in_schema=True)
-# async def favicon():
-#     return FileResponse("favicon.ico")
-# router.mount("/static", StaticFiles(directory="static"), name="static")
-# static_files = StaticFiles(directory="static")
-# router.mount("/static", static_files, name="static")
+        raise RuntimeError("File at path favicon.ico does not exist.")
+
 
 # Adding routes from another file
 router.include_router(router_pages, include_in_schema=False)
