@@ -105,22 +105,6 @@ async def get_items(
     return all
 
 
-# @app.get("/favicon.ico", include_in_schema=True)
-# async def favicon():
-#     file_path = os.path.abspath(os.path.dirname(__file__))
-
-#     file = "favicon.ico"
-#     file_absolute = f"fastapi_async_sql_profiler/{file}"
-#     current_directory = os.getcwd()
-#     print(current_directory)
-
-#     if os.path.exists(file_absolute):
-#         # return 'ok'
-#         return FileResponse(file_absolute)
-#     else:
-#         raise RuntimeError(f"File at path favicon.ico does not exist.")
-
-
 if __name__ == "__main__":
     task = asyncio.create_task(init_db(engine_async=engine))
     # asyncio.run(main())
