@@ -35,8 +35,6 @@ class SessionHandler(object):
         start_time = getattr(conn, '_sqltap_query_start_time', end_time)
 
         try:
-            # text = clause.bindparams(**params).compile(
-            #     dialect=conn.engine.dialect)
             text = clause.compile(
                 dialect=conn.engine.dialect,
                 compile_kwargs={"literal_binds": True}  # add params value
@@ -126,21 +124,12 @@ class SQLProfilerMiddleware(BaseHTTPMiddleware):
                                    headers=headers_json)
 
         await SQLMiddlewareService.add_record_in_db(request_info)
-        # session.add(request_info)
-        # session.commit()
-        # session.refresh(request_info)
+
         return request_info
 
     async def add_response(self, *, request_id: int,
                            status_code: int, headers, raw_body, body):
 
-        # method = request.method
-        # path = request.url.path
-        # query_params = str(request.query_params)
-        # headers_json = dict(request.headers)
-        # body_list = list(body)
-        # data = json.loads(body)
-        # data_json = json.dumps(data)
         response_info = ResponseInfo(
             request_info_id=request_id,
             status_code=status_code,
@@ -217,8 +206,8 @@ class SQLProfilerMiddleware(BaseHTTPMiddleware):
         else:
             raw_body = ''
             body = ''
-            # raw_body = await request.body()  # Сохраняем двоичные данные
-            # body = None  # Не декодируем тело для других типов данных
+            # raw_body = await request.body()  # Saving binary data
+            # body = None  # We do not decode the body for other data types
 
         request_path = request.url.path
         if (
@@ -238,9 +227,8 @@ class SQLProfilerMiddleware(BaseHTTPMiddleware):
             response = await call_next(request)
             session_handler.stop()
             await self.store(session_handler, request_id)
-        # Логируем или выводим информацию о response
+
         headers_dict_response = dict(response.headers)
-        print("Response headers:", headers_dict_response)
 
         if request_id:
             response_body = [section async for section in response.body_iterator]
@@ -260,56 +248,8 @@ class SQLProfilerMiddleware(BaseHTTPMiddleware):
                 raw_body=response_body,
                 body=response_body_decoded,  # response_body.decode(),
             )
-            # Воссоздаем response, так как мы уже прочитали его содержимое
+            # Recreating the response, since we have already read its contents
             response = Response(
                 content=response_body, status_code=response.status_code,
                 headers=dict(response.headers), media_type=response.media_type)
         return response
-
-# class SQLProfilerMiddleware2(BaseHTTPMiddleware):
-#     def __init__(self, app: FastAPI):
-#         super().__init__(app)
-#         self.queries = []
-
-#     def add_request(self, request, raw_body, body):
-
-#         method = request.method
-#         path = request.url.path
-#         query_params = str(request.query_params)
-#         headers_json = dict(request.headers)
-#         request_info = {}
-#         return request_info
-
-#     async def dispatch(self, request: Request, call_next):
-
-#         # Генерация уникального идентификатора для запроса
-#         request_id = str(uuid.uuid4())
-#         # Сохранение идентификатора в состоянии запроса
-#         request.state.request_id = request_id
-#         raw_body = await request.body()
-#         body = raw_body.decode()
-#         request_data = self.add_request(request, raw_body, body)
-#         self.queries = queries
-#         start_time = time.time()
-
-#         response = await call_next(request)
-
-#         duration = time.time() - start_time
-#         response.headers["X-Process-Time"] = str(duration)
-
-#         if self.queries:
-#             response.headers["X-Query-Count"] = str(len(self.queries))
-#             response.headers["X-Query-Time"] = str(
-#                 sum(q["duration"] for q in self.queries))
-
-#         return response
-
-#     def log_query(self, statement, parameters, duration):
-#         # self.queries
-#         queries.append({
-#             "statement": str(statement),
-#             "parameters": parameters,
-#             "duration": duration
-#         })
-
-#         print(self.queries)
