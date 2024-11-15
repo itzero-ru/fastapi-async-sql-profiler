@@ -160,6 +160,7 @@ class QueryInfoRepository(BaseReadRepository, BaseAddRepository):
             QueryInfo.traceback,
             QueryInfo.analysis,
             QueryInfo.request_id,
+            QueryInfo.start_time,
         )
 
         stmt = stmt.options(load_only(*load_fields))

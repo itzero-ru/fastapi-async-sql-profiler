@@ -124,10 +124,11 @@
     <table>
         <thead>
             <tr>
-                <th class="left-aligned">At</th>
+                <th class="left-aligned">id</th>
+                <th class="left-aligned" title="query.start_time - request.start_time">At</th>
                 <th class="left-aligned">Action</th>
                 <th class="left-aligned">Tables</th>
-                <th class="left-aligned">Tables Two</th>
+                <!-- <th class="left-aligned">Tables Two</th> -->
                 <th class="right-aligned">Num. Joins</th>
                 <th class="right-aligned">Execution Time (ms)</th>
             </tr>
@@ -136,10 +137,11 @@
             <!--  -->
             {% for sql_query in queries %}
             <tr class="td-line" onclick="window.location='/profiler/pages/request/{{request_query.id}}/sql/{{sql_query.id}}'">
-                <td class="left-aligned">{{sql_query.id}} +sql_query.start_time_relative</td>
+                <td class="left-aligned">{{sql_query.id}}</td>
+                <td class="left-aligned">+{{sql_query.start_time - request_query.start_time}}</td>
                 <td class="left-aligned">{{ sql_query.first_keywords }}</td>
                 <td class="left-aligned"> {{ sql_query.get_tables_from_query | join(', ') }}</td>
-                <td class="left-aligned"> {{ sql_query.tables_involved }}</td>
+                <!-- <td class="left-aligned"> {{ sql_query.tables_involved }}</td> -->
                 <td class="right-aligned">{{ sql_query.num_joins }}</td>
                 <td class="right-aligned"> {{ '{:.6f}'.format(sql_query.time_taken) }}</td>
             </tr>

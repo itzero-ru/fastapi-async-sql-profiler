@@ -63,6 +63,7 @@ class QueryInfo(Base):
     id = Column(Integer, primary_key=True, index=True)
     query = Column(Text, nullable=True)
     time_taken = Column(Float, nullable=True)
+    start_time = Column(DateTime(timezone=True), nullable=True)
     traceback = Column(Text, nullable=True)
     analysis = Column(Text, nullable=True)
 

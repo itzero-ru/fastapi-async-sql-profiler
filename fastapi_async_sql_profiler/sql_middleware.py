@@ -33,6 +33,8 @@ class SessionHandler(object):
 
         end_time = time.time()
         start_time = getattr(conn, '_sqltap_query_start_time', end_time)
+        #
+        start_time = datetime.datetime.fromtimestamp(start_time, tz=datetime.timezone.utc)
 
         try:
             text = clause.compile(
@@ -144,11 +146,13 @@ class SQLProfilerMiddleware(BaseHTTPMiddleware):
 
         all_query_time_taken = 0
         for query_obj in session_handler.query_objs:
-            time_taken = query_obj['end_time'] - query_obj['start_time']
+            time_taken = query_obj['end_time'] - query_obj['start_time'].timestamp()
             mstimetaken = round(time_taken*1000, 3)
             all_query_time_taken += mstimetaken
-            query_data = QueryInfo(query=str(
-                query_obj['text']),
+            # TODO: add start_time for query
+            query_data = QueryInfo(
+                query=str(query_obj['text']),
+                start_time=query_obj['start_time'],
                 request_id=request_id, time_taken=mstimetaken,
                 traceback=query_obj['stack'])
             await SQLMiddlewareService.add_record_in_db(query_data)
@@ -178,7 +182,7 @@ class SQLProfilerMiddleware(BaseHTTPMiddleware):
         async def receive():
             return {"type": "http.request", "body": body}
         """
-        File "/Users/set/projects/audio-books/backend/.venv/lib/python3.11/
+        File "/.venv/lib/python3.11/
         site-packages/starlette/middleware/base.py",
         line 58, in wrapped_receive
 
