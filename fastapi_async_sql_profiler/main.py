@@ -59,7 +59,7 @@ app.add_middleware(
 start_debug_server()
 
 
-app.include_router(router, prefix='', tags=['SQL Profiler'])
+app.include_router(router, prefix='')
 # task = asyncio.create_task(init_db(engine_async=engine))
 # task = asyncio.run(init_db(engine_async=engine))
 # loop = asyncio.get_running_loop()

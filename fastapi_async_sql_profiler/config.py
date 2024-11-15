@@ -24,6 +24,7 @@ ADMIN_PANEL_PASSWORD = str(
 APP_ROUTER_PREFIX = '/profiler'
 
 SQL_PROFILER_PASS_ROUTE_STARTSWITH = [
+    f'{APP_ROUTER_PREFIX}/drop_db_tables',
     f'{APP_ROUTER_PREFIX}/request',
     f'{APP_ROUTER_PREFIX}/favicon',
     f'{APP_ROUTER_PREFIX}/clear_db',
@@ -53,4 +54,4 @@ class Settings(BaseModel):
 
 
 settings = Settings(
-    DB_ECHO=True, PROJECT_NAME="SQL Profiler", VERSION="0.0.1", DEBUG=True)
+    DB_ECHO=True, PROJECT_NAME="FASP SQL Profiler", VERSION="0.0.1", DEBUG=True)

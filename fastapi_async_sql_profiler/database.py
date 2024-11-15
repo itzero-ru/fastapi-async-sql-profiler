@@ -43,5 +43,7 @@ async def clear_table_bd(model: DeclarativeMeta):
             await session.execute(query)
         return
 
-# def init_db():
-#     Base.metadata.create_all(engine_sync)
+
+async def drop_table_bd(model: DeclarativeMeta):
+    async with engine.begin() as conn:
+        await conn.run_sync(model.__table__.drop)

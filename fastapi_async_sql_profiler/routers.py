@@ -2,8 +2,8 @@ import os
 from typing import Literal
 from fastapi import APIRouter, Depends, Query, Request, Response, status
 from fastapi.responses import FileResponse
-from fastapi_async_sql_profiler.database import clear_table_bd
-
+from fastapi_async_sql_profiler.database import clear_table_bd, drop_table_bd
+from fastapi_async_sql_profiler.config import settings
 from fastapi_async_sql_profiler.config import APP_ROUTER_PREFIX
 from fastapi_async_sql_profiler.dependencies import get_item_service, get_query_info_service, get_request_info_service
 from fastapi_async_sql_profiler.schemas.common_schemas import ItemAdd, PaginationMeta, PaginationResponse
@@ -18,6 +18,7 @@ from .pages import router as router_pages
 
 router = APIRouter(
     prefix=APP_ROUTER_PREFIX,
+    tags=[settings.PROJECT_NAME]
 )
 
 
@@ -58,6 +59,18 @@ async def destroy(request: Request, response: Response):
 
     response.status_code = status.HTTP_200_OK
     return {"message": "Clear Db Successfully"}
+
+
+@router.delete('/drop_db_tables')
+async def drop_db_tables(request: Request, response: Response):
+    """Remove all tables DB."""
+    await drop_table_bd(Items)
+    await drop_table_bd(RequestInfo)
+    await drop_table_bd(ResponseInfo)
+    await drop_table_bd(QueryInfo)
+
+    response.status_code = status.HTTP_200_OK
+    return {"message": "Drop Db Successfully"}
 
 
 @router.get("/requests")

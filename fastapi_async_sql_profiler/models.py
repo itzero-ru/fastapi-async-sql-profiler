@@ -13,7 +13,7 @@ from sqlalchemy.ext.asyncio import AsyncEngine
 
 
 class Items(Base):
-    __tablename__ = 'items'
+    __tablename__ = 'middleware_items'
 
     id = Column(Integer, primary_key=True, index=True)
     body = Column(Text, default='')
@@ -127,7 +127,6 @@ class QueryInfo(Base):
         tables = []
 
         for idx, component in enumerate(components):
-            # TODO: If django uses aliases on column names they will be falsely
             # identified as tables...
             if component.lower() == 'from' or component.lower() == 'join' or component.lower() == 'as':
                 try:
@@ -203,6 +202,6 @@ async def init_db(*, engine_async: AsyncEngine):
         await conn.run_sync(Items.__table__.create, checkfirst=True)
         await conn.run_sync(RequestInfo.__table__.create, checkfirst=True)
         await conn.run_sync(QueryInfo.__table__.create, checkfirst=True)
-        await conn.run_sync(ResponseInfo.__table__.create, checkfirst=True) 
+        await conn.run_sync(ResponseInfo.__table__.create, checkfirst=True)
 
 # task = asyncio.create_task(init_db())
