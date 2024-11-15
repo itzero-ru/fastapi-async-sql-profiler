@@ -49,8 +49,8 @@ class SessionHandler(object):
         # if isinstance(clause, sqlalchemy.sql.selectable.Select):
         #     try:
 
-        #         q = 'EXPLAIN SELECT *  FROM middleware_requests'
-        #         # q = 'EXPLAIN QUERY  PLAN SELECT *  FROM middleware_requests'
+        #         q = 'EXPLAIN SELECT *  FROM fasp_requests'
+        #         # q = 'EXPLAIN QUERY  PLAN SELECT *  FROM fasp_requests'
         #         plan = conn.execute(sqlalchemy.text(q)).fetchall()
         #         plan_string = "\n".join([str(row) for row in plan])
         #         print(plan_string)

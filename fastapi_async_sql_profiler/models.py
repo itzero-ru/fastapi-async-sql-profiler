@@ -13,14 +13,15 @@ from sqlalchemy.ext.asyncio import AsyncEngine
 
 
 class Items(Base):
-    __tablename__ = 'middleware_items'
+    # __tablename__ = 'middleware_items'
+    __tablename__ = 'fasp_items'
 
     id = Column(Integer, primary_key=True, index=True)
     body = Column(Text, default='')
 
 
 class RequestInfo(Base):
-    __tablename__ = 'middleware_requests'
+    __tablename__ = 'fasp_requests'
 
     id = Column(Integer, primary_key=True, index=True)
     path = Column(String(200))
@@ -40,7 +41,7 @@ class RequestInfo(Base):
 
 
 class ResponseInfo(Base):
-    __tablename__ = 'middleware_response'
+    __tablename__ = 'fasp_response'
     id = Column(Integer, primary_key=True, index=True)
     status_code = Column(Integer, nullable=True)
     raw_body = Column(Text, default='')
@@ -49,7 +50,7 @@ class ResponseInfo(Base):
 
     # Add a foreign key that references RequestInfo
     request_info_id = Column(
-        Integer, ForeignKey('middleware_requests.id'),
+        Integer, ForeignKey('fasp_requests.id'),
         nullable=False, unique=True)
     request_info = relationship(
         RequestInfo, back_populates="response_info",
@@ -58,7 +59,7 @@ class ResponseInfo(Base):
 
 
 class QueryInfo(Base):
-    __tablename__ = 'middleware_query'
+    __tablename__ = 'fasp_query'
     id = Column(Integer, primary_key=True, index=True)
     query = Column(Text, nullable=True)
     time_taken = Column(Float, nullable=True)
@@ -66,7 +67,7 @@ class QueryInfo(Base):
     analysis = Column(Text, nullable=True)
 
     request_id = Column(Integer, ForeignKey(
-        'middleware_requests.id'), nullable=False, index=True)
+        'fasp_requests.id'), nullable=False, index=True)
 
     @property
     def formatted_traceback_list(self) -> list[str]:
