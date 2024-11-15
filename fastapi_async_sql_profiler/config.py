@@ -25,9 +25,10 @@ APP_ROUTER_PREFIX = '/profiler'
 
 SQL_PROFILER_PASS_ROUTE_STARTSWITH = [
     f'{APP_ROUTER_PREFIX}/drop_db_tables',
+    f'{APP_ROUTER_PREFIX}/recreate_db_tables',
+    f'{APP_ROUTER_PREFIX}/clear_db',
     f'{APP_ROUTER_PREFIX}/request',
     f'{APP_ROUTER_PREFIX}/favicon',
-    f'{APP_ROUTER_PREFIX}/clear_db',
     f'{APP_ROUTER_PREFIX}/pages',
     # '/docs',
     # '/openapi.json',

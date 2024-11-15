@@ -46,4 +46,9 @@ async def clear_table_bd(model: DeclarativeMeta):
 
 async def drop_table_bd(model: DeclarativeMeta):
     async with engine.begin() as conn:
-        await conn.run_sync(model.__table__.drop)
+        await conn.run_sync(model.__table__.drop, checkfirst=True)
+
+
+async def create_table_bd(model: DeclarativeMeta):
+    async with engine.begin() as conn:
+        await conn.run_sync(model.__table__.create, checkfirst=True)
