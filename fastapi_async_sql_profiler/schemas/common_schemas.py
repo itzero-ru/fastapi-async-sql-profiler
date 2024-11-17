@@ -38,8 +38,7 @@ class HttpErrors(BaseModel):
     errors: List[HttpErrorDetail]
 
 
-
-class ResponseSchema(BaseModel):
+class ResponseSchema(BaseModel, Generic[T]):
     detail: str
     result: Optional[T] = None
 
