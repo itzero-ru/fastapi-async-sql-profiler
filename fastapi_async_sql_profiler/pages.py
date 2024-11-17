@@ -149,11 +149,6 @@ async def sql_query_detail(
     def spacify(value: str) -> str:
         return value.replace(' ', '&nbsp;')
 
-    # def select_spacify(value: str) -> str:
-    #     return value.replace('SELECT ', 'SELECT&nbsp;&nbsp;')
-    def split_traceback(value: str) -> list[str]:
-        return value.split(' ', '&nbsp;')
-
     # Custom filter function
     def linebreaksbr(value: str) -> str:
         return value.replace('\n', '<br>')

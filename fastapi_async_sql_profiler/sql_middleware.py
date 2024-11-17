@@ -109,7 +109,7 @@ class SQLProfilerMiddleware(BaseHTTPMiddleware):
         self.app = app
         self.engine = engine
         self.dispatch_func = self.dispatch
-        self.queries = []
+        self.queries: list = []
         self.skip_route_startswith = skip_route_startswith
 
     async def add_request(self, request, raw_body, body):

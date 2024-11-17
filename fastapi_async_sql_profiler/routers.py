@@ -126,7 +126,7 @@ async def requests_show(
     items_validated_data = [
         RequestInfoDetailForList.model_validate(item) for item in all_items]
 
-    result = PaginationResponse(data=items_validated_data, meta=meta)
+    result: PaginationResponse = PaginationResponse(data=items_validated_data, meta=meta)
     return result
 
 

@@ -1,3 +1,4 @@
+from typing import Sequence
 from sqlalchemy import desc, insert, select, update, delete
 from fastapi_async_sql_profiler.database import Base, async_session_maker
 from sqlalchemy import func
@@ -16,22 +17,22 @@ async def add_one(model, data: dict) -> int:
         return res.scalar_one()
 
 
-async def add_db(model) -> Base:
+async def add_db(model: Base) -> Base:
     try:
         async with async_session_maker() as session:
-            res = session.add(model)
+            session.add(model)
             await session.flush()
             await session.commit()
             return model
     except SQLAlchemyError as e:
         # Log the error or handle it as appropriate for your application
         print(f"An error occurred: {e}")
-        return None
+        raise SQLAlchemyError(e)
 
 
 async def get_obj_by_id(
     model, id: int,
-    joinedload_names: list = None,
+    joinedload_names: list | None = None,
 ) -> RequestInfo:
     async with async_session_maker() as session:
         # obj = await session.get(model, id)
@@ -58,8 +59,8 @@ async def get_obj_by_id(
 
 async def filter_obj(
     model,
-    joinedload_names: list = None,
-    exclude_fields: list = None,
+    joinedload_names: list | None = None,
+    exclude_fields: list | None = None,
     # joinedload_names: list = ['response_info', ],
     **kwargs,
 ) -> list:
@@ -68,9 +69,9 @@ async def filter_obj(
 
         all_fields = set(column.key for column in model.__table__.columns)
         if exclude_fields:
-            fields_to_load = all_fields - set(exclude_fields)
-            fields_to_load = [getattr(model, f) for f in fields_to_load]
-            stmt = select(model).options(load_only(*fields_to_load))
+            fields_to_load: set = all_fields - set(exclude_fields)
+            model_fields_to_load: list = [getattr(model, f) for f in fields_to_load]
+            stmt = select(model).options(load_only(*model_fields_to_load))
         else:
             stmt = select(model)
         # stmt = select(model)
