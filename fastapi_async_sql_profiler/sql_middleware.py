@@ -236,11 +236,11 @@ class SQLProfilerMiddleware(BaseHTTPMiddleware):
 
         if request_id:
             response_body = [section async for section in response.body_iterator]
-            response_body = b"".join(response_body)
+            response_body_bytes: bytes = b"".join(response_body)
 
             if 'application/json' in response.headers.get('Content-Type', ''):
                 # We decode only if it is JSON
-                response_body_decoded = response_body.decode('utf-8')
+                response_body_decoded = response_body_bytes.decode('utf-8')
             else:
                 # For binary data, just save it as it is
                 response_body_decoded = None
@@ -249,11 +249,11 @@ class SQLProfilerMiddleware(BaseHTTPMiddleware):
                 request_id=request_id,
                 status_code=response.status_code,
                 headers=headers_dict_response,
-                raw_body=response_body,
+                raw_body=response_body_bytes,
                 body=response_body_decoded,  # response_body.decode(),
             )
             # Recreating the response, since we have already read its contents
             response = Response(
-                content=response_body, status_code=response.status_code,
+                content=response_body_bytes, status_code=response.status_code,
                 headers=dict(response.headers), media_type=response.media_type)
         return response

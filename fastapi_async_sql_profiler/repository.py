@@ -10,8 +10,8 @@ from abc import ABC, abstractmethod
 
 class BaseReadRepository(ABC):
 
-    model = None
-    session = None
+    model: type[Base]
+    session: AsyncSession
 
     async def get_by_id(self, id):
         stmt = select(self.model).where(self.model.id == id)
@@ -19,7 +19,7 @@ class BaseReadRepository(ABC):
         return result.scalar_one_or_none()
 
     @abstractmethod
-    async def list():
+    async def list(self):
         raise NotImplementedError
 
     # async def find(self, **filters):
@@ -28,12 +28,12 @@ class BaseReadRepository(ABC):
 
 class BaseAddRepository(ABC):
 
-    model = None
-    session = None
+    model: type[Base]
+    session: AsyncSession
 
     async def add(self, instance: Base) -> Base:
         # await self.session.refresh(instance)
-        res = self.session.add(instance)
+        self.session.add(instance)
         # await self.session.flush()
         await self.session.commit()
         return instance
@@ -50,23 +50,23 @@ class BaseAddRepository(ABC):
 
 class BaseDeleteRepository(ABC):
 
-    model = None
-    session = None
+    model: type[Base]
+    session: AsyncSession
 
     @abstractmethod
-    async def remove():
+    async def remove(self):
         raise NotImplementedError
 
 
 class RequestInfoRepository(BaseReadRepository, BaseAddRepository):
 
-    model = RequestInfo
+    model: type[RequestInfo] = RequestInfo
 
     def __init__(self, session: AsyncSession):
         self.session = session
 
     async def list(
-        self, offset: int = 0, limit: int = None, filters: dict = {},
+        self, offset: int = 0, limit: int | None = None, filters: dict = {},
         order_by: Literal['ASC', 'DESC'] = 'ASC'
     ):
 
