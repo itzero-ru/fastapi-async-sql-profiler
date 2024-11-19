@@ -2,6 +2,7 @@
 from typing import Literal
 from fastapi_async_sql_profiler.database import Base
 from fastapi_async_sql_profiler.models import Items, QueryInfo, RequestInfo, ResponseInfo
+from fastapi_async_sql_profiler.types import RequestInfoOrderField
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import Column, asc, desc, func, insert, select, update, delete
 from sqlalchemy.orm import joinedload, load_only
@@ -74,7 +75,7 @@ class RequestInfoRepository(BaseReadRepository, BaseAddRepository):
 
     async def list(
         self, offset: int = 0, limit: int | None = None, filters: dict = {},
-        field_order_by: Literal['id', 'total_queries', 'time_spent_queries'] = 'id',
+        field_order_by: RequestInfoOrderField = 'id',
         order_by: Literal['ASC', 'DESC'] = 'ASC'
     ):
 

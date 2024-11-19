@@ -10,6 +10,7 @@ from fastapi_async_sql_profiler.schemas.common_schemas import ItemAdd, Paginatio
 from fastapi_async_sql_profiler.schemas.query_info_schema import QueryInfoDetail
 from fastapi_async_sql_profiler.schemas.request_info_schema import RequestInfoDetail, RequestInfoDetailForList
 from fastapi_async_sql_profiler.services import ItemService, QueryInfoService, RequestInfoService
+from fastapi_async_sql_profiler.types import RequestInfoOrderField
 from .models import Items, QueryInfo, RequestInfo, ResponseInfo
 from .crud import add_one
 from .pages import router as router_pages
@@ -99,7 +100,7 @@ async def requests_show(
     page: int = Query(1, gt=0),
     size: int = Query(10, gt=0),
     order_by: Literal['ASC', 'DESC'] = 'DESC',
-    field_order_by: Literal['id', 'total_queries', 'time_spent_queries'] = 'id',
+    field_order_by: RequestInfoOrderField = 'id',
 ):
     """Get all requests."""
 

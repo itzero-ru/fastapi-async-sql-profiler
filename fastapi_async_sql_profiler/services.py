@@ -4,6 +4,7 @@ from fastapi_async_sql_profiler.models import Items, QueryInfo, RequestInfo, Res
 from fastapi_async_sql_profiler.repository import (
     ItemRepository, QueryInfoRepository, RequestInfoRepository, ResponseInfoRepository)
 from fastapi_async_sql_profiler.database import async_session_maker
+from fastapi_async_sql_profiler.types import RequestInfoOrderField
 
 
 class SQLMiddlewareService:
@@ -54,7 +55,7 @@ class RequestInfoService:
 
     async def get_request_info_all(
         self, page: int = 1, size: int = 3,
-        field_order_by: Literal['id', 'total_queries', 'time_spent_queries'] = 'id',
+        field_order_by: RequestInfoOrderField = 'id',
         order_by: Literal['ASC', 'DESC'] = 'DESC'
     ):
         offset = (page-1) * size
