@@ -3,9 +3,16 @@ from typing import Literal
 from fastapi_async_sql_profiler.database import Base
 from fastapi_async_sql_profiler.models import Items, QueryInfo, RequestInfo, ResponseInfo
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy import asc, desc, func, insert, select, update, delete
+from sqlalchemy import Column, asc, desc, func, insert, select, update, delete
 from sqlalchemy.orm import joinedload, load_only
 from abc import ABC, abstractmethod
+
+
+def _sort(stmt, field_column: Column, order_by: Literal['ASC', 'DESC']):
+    order_func = asc if order_by == "ASC" else desc
+    # order_attr = getattr(self.model, field_order_by)
+    stmt = stmt.order_by(order_func(field_column))
+    return stmt
 
 
 class BaseReadRepository(ABC):
@@ -67,6 +74,7 @@ class RequestInfoRepository(BaseReadRepository, BaseAddRepository):
 
     async def list(
         self, offset: int = 0, limit: int | None = None, filters: dict = {},
+        field_order_by: Literal['id', 'total_queries', 'time_spent_queries'] = 'id',
         order_by: Literal['ASC', 'DESC'] = 'ASC'
     ):
 
@@ -100,12 +108,8 @@ class RequestInfoRepository(BaseReadRepository, BaseAddRepository):
 
         stmt = stmt.filter_by(**filters)
 
-        if order_by == 'ASC':
-            stmt = stmt.order_by(asc(self.model.id))
-        elif order_by == 'DESC':
-            stmt = stmt.order_by(desc(self.model.id))
-        else:
-            stmt = stmt.order_by(asc(self.model.id))
+        attr_field_sort = getattr(self.model, field_order_by)
+        stmt = _sort(stmt, attr_field_sort, order_by)
 
         # stmt = stmt.order_by(desc(self.model.id))
 

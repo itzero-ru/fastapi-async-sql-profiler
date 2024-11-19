@@ -98,11 +98,13 @@ async def requests_show(
         get_request_info_service),
     page: int = Query(1, gt=0),
     size: int = Query(10, gt=0),
-    order_by: Literal['ASC', 'DESC'] = 'DESC'
+    order_by: Literal['ASC', 'DESC'] = 'DESC',
+    field_order_by: Literal['id', 'total_queries', 'time_spent_queries'] = 'id',
 ):
     """Get all requests."""
 
-    all_items = await request_info_service.get_request_info_all(page=page, size=size, order_by=order_by)
+    all_items = await request_info_service.get_request_info_all(
+        page=page, size=size, field_order_by=field_order_by, order_by=order_by)
 
     total_records = await request_info_service.count()
 

@@ -52,7 +52,11 @@ class RequestInfoService:
     def get_request_info_by_id(self, id):
         return self.request_info_repository.get_by_id(id)
 
-    async def get_request_info_all(self, page: int = 1, size: int = 3, order_by: Literal['ASC', 'DESC'] = 'DESC'):
+    async def get_request_info_all(
+        self, page: int = 1, size: int = 3,
+        field_order_by: Literal['id', 'total_queries', 'time_spent_queries'] = 'id',
+        order_by: Literal['ASC', 'DESC'] = 'DESC'
+    ):
         offset = (page-1) * size
         limit = size
 
@@ -64,7 +68,8 @@ class RequestInfoService:
         # count = await self.request_info_repository.count()
         # print(count)
 
-        list_result = await self.request_info_repository.list(offset=offset, limit=limit, order_by=order_by)
+        list_result = await self.request_info_repository.list(
+            offset=offset, limit=limit, field_order_by=field_order_by, order_by=order_by)
         return list_result
 
     def count(self):
