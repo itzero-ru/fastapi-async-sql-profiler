@@ -100,7 +100,7 @@ async def requests_show(
     page: int = Query(1, gt=0),
     size: int = Query(10, gt=0),
     order_by: Literal['ASC', 'DESC'] = 'DESC',
-    field_order_by: RequestInfoOrderField = 'id',
+    field_order_by: RequestInfoOrderField = 'start_time',
 ):
     """Get all requests."""
 

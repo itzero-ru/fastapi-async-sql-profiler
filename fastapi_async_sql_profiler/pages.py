@@ -12,6 +12,7 @@ from fastapi_async_sql_profiler.dependencies import get_query_info_service, get_
 from fastapi_async_sql_profiler.models import Items, QueryInfo, RequestInfo, ResponseInfo
 from fastapi_async_sql_profiler.schemas.common_schemas import PaginationMeta
 from fastapi_async_sql_profiler.services import QueryInfoService, RequestInfoService
+from fastapi_async_sql_profiler.types import RequestInfoOrderField
 
 
 router = APIRouter(
@@ -40,10 +41,15 @@ async def all_request(
     page: int = Query(1, gt=0),
     size: int = Query(10, gt=0),
     order_by: Literal['ASC', 'DESC'] = 'DESC',
+    field_order_by: RequestInfoOrderField = 'start_time',
 ):
     """Get all request."""
 
-    all_requests = await request_info_service.get_request_info_all(page=page, size=size, order_by=order_by)
+    all_requests = await request_info_service.get_request_info_all(
+        page=page, size=size,
+        field_order_by=field_order_by,
+        order_by=order_by,
+    )
     total_records = await request_info_service.count()
 
     pagination = PaginationMeta(
@@ -58,9 +64,16 @@ async def all_request(
         "current_api": "all_request",
         "pagination": pagination,
         "order_by": order_by,
+        "field_order_by": field_order_by,
         "choices": {
             "page_size_options": [5, 10, 25, 50, 100, 200],
             "order_by": {'Ascending': 'ASC', 'Descending': 'DESC'},
+            "field_order_by": {
+                'Recent': 'start_time',
+                'Num. Queries': 'total_queries',
+                'Time': 'time_taken',
+                'Time on queries': 'time_spent_queries',
+            },
         },
 
         # "page": page,

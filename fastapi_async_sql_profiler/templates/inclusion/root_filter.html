@@ -33,7 +33,7 @@
             </div>
         </div>
     </div>
-    <div class="menu-item">
+    <!-- <div class="menu-item">
         <div class="menu-item-outer">
             <div class="menu-item-inner">
                 <label>Order:
@@ -53,10 +53,20 @@
                 </label>
             </div>
         </div>
-    </div>
+    </div> -->
     <div class="menu-item">
         <div class="menu-item-outer">
             <div class="menu-item-inner">
+                <label>Order Field:
+                    <select name="field_order_by" form="filter-form" onchange="this.form.submit();">
+
+                        {% for order_choice_name, order_choice_value in choices.field_order_by.items() %}
+                        <option value="{{order_choice_value}}" {% if field_order_by==order_choice_value %}selected{% endif %}>
+                            {{order_choice_name}}</option>
+                        {% endfor %}
+
+                    </select>
+                </label>
                 <label>Order:
                     <select name="order_by" form="filter-form" onchange="this.form.submit();">
 
