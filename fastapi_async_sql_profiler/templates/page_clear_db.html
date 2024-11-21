@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+
+{% block style %}
+<style>
+    .title-page {
+        text-align: center;
+        margin: 5px;
+    }
+
+    #request-summary {
+        margin: auto;
+        text-align: center;
+        width: 100%;
+    }
+
+    .button {
+        border: 1px solid;
+        padding: 5px;
+        display: inline-block;
+        border-radius: 5px;
+    }
+
+    .button:hover {
+        background-color: rgb(235, 235, 235);
+        cursor: pointer;
+    }
+
+    .btn-list {
+        text-align: center;
+    }
+</style>
+{% endblock %}
+
+{% block menu %}
+{% include 'inclusion/clear_db_menu.html' %}
+{% endblock %}
+
+{% block content %}
+<div id="content">
+
+    <br />
+    <div class="btn-list">
+        <div class="button">
+            <a href="/profiler/pages/clear_db/">
+                <div class="">
+                    <!-- <div class="">Clear DB</div> -->
+                    <div class="">Delete all records</div>
+
+                </div>
+            </a>
+        </div>
+
+        <!-- <div class="button">
+            <a href="/profiler/pages/page_clear_db/">
+                <div class="">
+                    <div class="">button2</div>
+                </div>
+            </a>
+        </div> -->
+
+    </div>
+
+
+</div>
+{% endblock %}

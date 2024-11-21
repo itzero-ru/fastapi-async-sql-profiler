@@ -187,4 +187,15 @@ async def clear_db(request: Request):
         "request": request,
         "status": 'Deletion completed',
     }
-    return templates.TemplateResponse("request_clear_db.html", context)
+    return templates.TemplateResponse("response_clear_db.html", context)
+
+
+@router.get('/page_clear_db', response_class=HTMLResponse)
+async def page_clear_db(request: Request):
+    """Clear DB."""
+
+    context = {
+        "request": request,
+        # "status": 'Deletion completed',
+    }
+    return templates.TemplateResponse("page_clear_db.html", context)
