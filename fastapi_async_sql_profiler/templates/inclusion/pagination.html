@@ -2,7 +2,7 @@
 
     <div class="current" style="text-align: center;">
         {% if pagination.current_page > 1 %}
-            <a class="item" href="/profiler/pages/requests?page={{pagination.current_page - 1 }}" target="_parent">PREVIOUS</a>
+            <a class="item" href="/profiler/pages/requests?page={{pagination.current_page - 1 }}&{{pagination.query_params}}" target="_parent">PREVIOUS</a>
         {% else %}
             <a class="item" style="cursor: not-allowed; opacity: 0.6;">PREVIOUS</a>
         {%endif%}
@@ -10,7 +10,7 @@
         <span>Page {{pagination.current_page}} of {{pagination.total_pages}}.</span>
         <!--  -->
         {% if pagination.current_page < pagination.total_pages %}
-        <a class="item" href="/profiler/pages/requests?page={{pagination.current_page + 1 }}" target="_blank">NEXT</a>
+        <a class="item" href="/profiler/pages/requests?page={{pagination.current_page + 1 }}&{{pagination.query_params}}" target="_blank">NEXT</a>
         {% else %}
             <a class="item" style="cursor: not-allowed; opacity: 0.6;">NEXT</a>
         {%endif%}

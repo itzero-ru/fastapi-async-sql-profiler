@@ -1,10 +1,20 @@
 from typing import Literal
-from fastapi import HTTPException
+from fastapi import HTTPException, Request
 from fastapi_async_sql_profiler.models import Items, QueryInfo, RequestInfo, ResponseInfo
 from fastapi_async_sql_profiler.repository import (
     ItemRepository, QueryInfoRepository, RequestInfoRepository, ResponseInfoRepository)
 from fastapi_async_sql_profiler.database import async_session_maker
 from fastapi_async_sql_profiler.types import RequestInfoOrderField
+
+
+def get_query_params_for_pagination(request: Request) -> str:
+    query_params = request.query_params
+    # for key, value in query_params.items():
+    #     if key == "page":
+    #         continue
+
+    query_string = "&".join([f"{key}={value}" for key, value in query_params.items() if key != "page"])
+    return query_string
 
 
 class SQLMiddlewareService:

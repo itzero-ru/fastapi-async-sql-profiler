@@ -9,7 +9,7 @@ from fastapi_async_sql_profiler.dependencies import get_item_service, get_query_
 from fastapi_async_sql_profiler.schemas.common_schemas import ItemAdd, PaginationMeta, PaginationResponse
 from fastapi_async_sql_profiler.schemas.query_info_schema import QueryInfoDetail
 from fastapi_async_sql_profiler.schemas.request_info_schema import RequestInfoDetail, RequestInfoDetailForList
-from fastapi_async_sql_profiler.services import ItemService, QueryInfoService, RequestInfoService
+from fastapi_async_sql_profiler.services import ItemService, QueryInfoService, RequestInfoService, get_query_params_for_pagination
 from fastapi_async_sql_profiler.types import RequestInfoOrderField
 from .models import Items, QueryInfo, RequestInfo, ResponseInfo
 from .crud import add_one
@@ -109,13 +109,12 @@ async def requests_show(
 
     total_records = await request_info_service.count()
 
-    # return all_requests
-
     meta = PaginationMeta(
         # 1**meta,
         current_page=page,
         page_size=size,
         total_records=total_records,
+        query_params=get_query_params_for_pagination(request),
 
         # page=all_requests.page,
         # size=all_requests.size,

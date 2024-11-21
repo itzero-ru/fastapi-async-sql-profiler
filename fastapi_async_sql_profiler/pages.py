@@ -11,7 +11,7 @@ from fastapi_async_sql_profiler.database import clear_table_bd
 from fastapi_async_sql_profiler.dependencies import get_query_info_service, get_request_info_service
 from fastapi_async_sql_profiler.models import Items, QueryInfo, RequestInfo, ResponseInfo
 from fastapi_async_sql_profiler.schemas.common_schemas import PaginationMeta
-from fastapi_async_sql_profiler.services import QueryInfoService, RequestInfoService
+from fastapi_async_sql_profiler.services import QueryInfoService, RequestInfoService, get_query_params_for_pagination
 from fastapi_async_sql_profiler.types import RequestInfoOrderField
 
 
@@ -56,6 +56,7 @@ async def all_request(
         current_page=page,
         page_size=size,
         total_records=total_records,
+        query_params=get_query_params_for_pagination(request),
     )
 
     context = {
