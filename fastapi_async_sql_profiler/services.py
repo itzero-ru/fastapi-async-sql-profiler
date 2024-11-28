@@ -4,7 +4,7 @@ from fastapi_async_sql_profiler.models import Items, QueryInfo, RequestInfo, Res
 from fastapi_async_sql_profiler.repository import (
     ItemRepository, QueryInfoRepository, RequestInfoRepository, ResponseInfoRepository)
 from fastapi_async_sql_profiler.database import async_session_maker
-from fastapi_async_sql_profiler.types import RequestInfoOrderField
+from fastapi_async_sql_profiler.custom_types import RequestInfoOrderField
 
 
 def get_query_params_for_pagination(request: Request) -> str:

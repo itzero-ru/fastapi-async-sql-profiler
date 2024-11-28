@@ -55,3 +55,4 @@ dmypy.json
 .idea
 
 faviconOLD.ico
+data/*

@@ -10,7 +10,7 @@ from fastapi_async_sql_profiler.schemas.common_schemas import ItemAdd, Paginatio
 from fastapi_async_sql_profiler.schemas.query_info_schema import QueryInfoDetail
 from fastapi_async_sql_profiler.schemas.request_info_schema import RequestInfoDetail, RequestInfoDetailForList
 from fastapi_async_sql_profiler.services import ItemService, QueryInfoService, RequestInfoService, get_query_params_for_pagination
-from fastapi_async_sql_profiler.types import RequestInfoOrderField
+from fastapi_async_sql_profiler.custom_types import RequestInfoOrderField
 from .models import Items, QueryInfo, RequestInfo, ResponseInfo
 from .crud import add_one
 from .pages import router as router_pages

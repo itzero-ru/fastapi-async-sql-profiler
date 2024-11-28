@@ -207,6 +207,7 @@ class SQLProfilerMiddleware(BaseHTTPMiddleware):
         elif "application/json" in content_type:
             raw_body = await request.body()
             body = raw_body.decode()
+            raw_body = str(raw_body)
         else:
             raw_body = ''
             body = ''
@@ -243,13 +244,15 @@ class SQLProfilerMiddleware(BaseHTTPMiddleware):
                 response_body_decoded = response_body_bytes.decode('utf-8')
             else:
                 # For binary data, just save it as it is
-                response_body_decoded = None
+                # response_body_decoded = None
+                response_body_decoded = ''
 
             await self.add_response(
                 request_id=request_id,
                 status_code=response.status_code,
                 headers=headers_dict_response,
-                raw_body=response_body_bytes,
+                # raw_body=response_body_bytes,
+                raw_body=response_body_decoded,
                 body=response_body_decoded,  # response_body.decode(),
             )
             # Recreating the response, since we have already read its contents

@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "fastapi_async_sql_profiler"
-version = "0.1.3.11"
+version = "0.1.3.12"
 description = "fastapi async sqlalchemy profiler"
 authors = ["itzero-ru <paw100d@gmail.com>"]
 license = "MIT"
@@ -12,6 +12,8 @@ sqlalchemy = {extras = ["asyncio"], version = ">=2.0.16"}
 fastapi = ">=0.115.0"
 jinja2 = ">=3.1.4"
 sqlparse = "^0.5.1"
+asyncpg = "^0.30.0"
+psycopg2-binary = "^2.9.10"
 
 [tool.poetry.group.dev.dependencies]
 uvicorn = {extras = ["standard"], version = ">=0.31.0"}

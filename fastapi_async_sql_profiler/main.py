@@ -20,6 +20,7 @@ from fastapi_async_sql_profiler.sql_middleware import SQLProfilerMiddleware
 from fastapi_async_sql_profiler.start_debugger import start_debug_server
 
 from fastapi_async_sql_profiler.routers import router
+from fastapi_async_sql_profiler.config import settings
 
 
 @asynccontextmanager
@@ -38,6 +39,7 @@ async def lifespan(app: FastAPI):
     # await init_db()
     # task = asyncio.create_task(create_items_table())
     # await task
+    # print('DATABASE_URL -->', settings.DATABASE_URL)
 
     yield
     current_time = datetime.now().strftime("%H:%M:%S")
@@ -69,6 +71,7 @@ app.include_router(router, prefix='')
 
 @app.post("/")
 async def post_item():
+    print('DATABASE_URL -->', settings.DATABASE_URL)
 
     await add_one(Items, {'body': '11111'})
     await add_one(Items, {'body': '22222'})

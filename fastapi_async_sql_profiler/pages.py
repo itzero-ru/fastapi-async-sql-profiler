@@ -12,7 +12,7 @@ from fastapi_async_sql_profiler.dependencies import get_query_info_service, get_
 from fastapi_async_sql_profiler.models import Items, QueryInfo, RequestInfo, ResponseInfo
 from fastapi_async_sql_profiler.schemas.common_schemas import PaginationMeta
 from fastapi_async_sql_profiler.services import QueryInfoService, RequestInfoService, get_query_params_for_pagination
-from fastapi_async_sql_profiler.types import RequestInfoOrderField
+from fastapi_async_sql_profiler.custom_types import RequestInfoOrderField
 
 
 router = APIRouter(
