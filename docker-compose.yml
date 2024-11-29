@@ -3,7 +3,6 @@ services:
   backend:
     build:
       dockerfile: dev.Dockerfile
-      #context: ./fastapi_async_sql_profiler
     command: uvicorn fastapi_async_sql_profiler.main:app --reload --host 0.0.0.0 --port 80
     #command: bash -c "while true; do sleep 1000; done"
     container_name: fasp_backend
@@ -15,7 +14,6 @@ services:
     restart: unless-stopped
     volumes:
       - .:/app/:delegated # enable hot code reload in debug mode
-      #- ./data/backend/downloads:/data/downloads
       - ./data/backend/logs:/data/logs
     depends_on:
       postgres:
@@ -26,7 +24,6 @@ services:
 
   postgres:
     restart: unless-stopped
-    #image: postgis/postgis:12-3.1
     image: postgres:14-alpine
     container_name: fasp_postgres
     environment:
