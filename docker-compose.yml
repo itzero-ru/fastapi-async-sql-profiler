@@ -41,6 +41,6 @@ services:
       - ./data/dumps:/mnt:rw
     healthcheck:
       test: ["CMD", "pg_isready", "-U", "test"]
-      interval: 10s
-      timeout: 5s
+      interval: 3s
+      timeout: 2s
       retries: 5
