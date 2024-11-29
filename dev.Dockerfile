@@ -1,5 +1,6 @@
 # Используем официальный образ Python
-FROM python:3.11
+FROM python:3.12
+# FROM python:3.13.0
 
 #RUN apt-get update && apt-get install -y build-essential
 # RUN apt-get update && apt-get install -y build-essential
