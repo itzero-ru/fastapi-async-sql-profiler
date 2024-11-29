@@ -18,7 +18,8 @@ services:
       #- ./data/backend/downloads:/data/downloads
       - ./data/backend/logs:/data/logs
     depends_on:
-      - postgres
+      postgres:
+        condition: service_healthy
     ports:
       - 80:80
       - 3001:3001
@@ -38,3 +39,8 @@ services:
     volumes:
       - ./data/pgdata:/var/lib/postgresql/data:rw
       - ./data/dumps:/mnt:rw
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "test"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
