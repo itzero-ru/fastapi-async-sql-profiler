@@ -106,13 +106,10 @@ class SessionHandler(object):
 
 class SQLProfilerMiddleware(BaseHTTPMiddleware):
 
-    def __init__(self, app, engine: AsyncEngine | None = None, skip_route_startswith: list = []) -> None:
+    def __init__(self, app, engine: AsyncEngine, skip_route_startswith: list = []) -> None:
 
         self.app = app
-        if engine:
-            self.engine = engine
-        else:
-            self.engine = default_engine
+        self.engine = engine
         self.dispatch_func = self.dispatch
         self.queries: list = []
         self.skip_route_startswith = skip_route_startswith

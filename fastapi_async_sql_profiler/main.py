@@ -15,10 +15,9 @@ from fastapi_async_sql_profiler.start_debugger import start_debug_server
 
 
 from fastapi_async_sql_profiler.config import settings
-# from fastapi_async_sql_profiler.database import engine as profiler_engine
+from fastapi_async_sql_profiler.database import engine
 from fastapi_async_sql_profiler import SQLProfilerMiddleware
 from fastapi_async_sql_profiler import profiler_router
-from fastapi_async_sql_profiler import profiler_engine
 from fastapi_async_sql_profiler import init_db
 
 
@@ -50,6 +49,7 @@ SQL_PROFILER_PASS_ROUTE_STARTSWITH = [
 
 app.add_middleware(
     SQLProfilerMiddleware,
+    engine=engine,
     skip_route_startswith=SQL_PROFILER_PASS_ROUTE_STARTSWITH,
 )
 app.include_router(profiler_router, prefix='')
