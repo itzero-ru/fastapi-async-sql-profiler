@@ -7,11 +7,10 @@ from fastapi.responses import (
 )
 from fastapi.templating import Jinja2Templates
 
-from fastapi_async_sql_profiler.database import clear_table_bd
 from fastapi_async_sql_profiler.dependencies import get_query_info_service, get_request_info_service
-from fastapi_async_sql_profiler.models import Items, QueryInfo, RequestInfo, ResponseInfo
 from fastapi_async_sql_profiler.schemas.common_schemas import PaginationMeta
-from fastapi_async_sql_profiler.services import QueryInfoService, RequestInfoService, get_query_params_for_pagination
+from fastapi_async_sql_profiler.services import (
+    ProfilerDBService, QueryInfoService, RequestInfoService, get_query_params_for_pagination)
 from fastapi_async_sql_profiler.custom_types import RequestInfoOrderField
 
 
@@ -178,10 +177,7 @@ async def sql_query_detail(
 @router.get('/clear_db', response_class=HTMLResponse)
 async def clear_db(request: Request):
     """Clear DB."""
-    await clear_table_bd(Items)
-    await clear_table_bd(QueryInfo)
-    await clear_table_bd(ResponseInfo)
-    await clear_table_bd(RequestInfo)
+    await ProfilerDBService.clear_all_tables()
 
     context = {
         "request": request,

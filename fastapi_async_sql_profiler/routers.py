@@ -2,17 +2,16 @@ import os
 from typing import Literal
 from fastapi import APIRouter, Depends, Query, Request, Response, status
 from fastapi.responses import FileResponse
-from fastapi_async_sql_profiler.database import clear_table_bd, create_table_bd, drop_table_bd
 from fastapi_async_sql_profiler.config import settings
 from fastapi_async_sql_profiler.config import APP_ROUTER_PREFIX
 from fastapi_async_sql_profiler.dependencies import get_item_service, get_query_info_service, get_request_info_service
 from fastapi_async_sql_profiler.schemas.common_schemas import ItemAdd, PaginationMeta, PaginationResponse
 from fastapi_async_sql_profiler.schemas.query_info_schema import QueryInfoDetail
 from fastapi_async_sql_profiler.schemas.request_info_schema import RequestInfoDetail, RequestInfoDetailForList
-from fastapi_async_sql_profiler.services import ItemService, QueryInfoService, RequestInfoService, get_query_params_for_pagination
+from fastapi_async_sql_profiler.services import (
+    ItemService, ProfilerDBService, QueryInfoService, RequestInfoService, get_query_params_for_pagination)
 from fastapi_async_sql_profiler.custom_types import RequestInfoOrderField
-from .models import Items, QueryInfo, RequestInfo, ResponseInfo
-from .crud import add_one
+from .models import Items
 from .pages import router as router_pages
 # from fastapi import Header, HTTPException
 
@@ -49,14 +48,7 @@ router.include_router(router_pages, include_in_schema=False)
 @router.delete('/clear_db')
 async def destroy(request: Request, response: Response):
     """Clear DB."""
-    # session.query(RequestInfo).delete()
-    # session.query(QueryInfo).delete()
-    # session.query(Items).delete()
-    # session.commit()
-    await clear_table_bd(RequestInfo)
-    await clear_table_bd(ResponseInfo)
-    await clear_table_bd(QueryInfo)
-    await clear_table_bd(Items)
+    await ProfilerDBService.clear_all_tables()
 
     response.status_code = status.HTTP_200_OK
     return {"message": "Clear Db Successfully"}
@@ -65,10 +57,7 @@ async def destroy(request: Request, response: Response):
 @router.delete('/drop_db_tables')
 async def drop_db_tables(request: Request, response: Response):
     """Remove all tables DB."""
-    await drop_table_bd(Items)
-    await drop_table_bd(RequestInfo)
-    await drop_table_bd(ResponseInfo)
-    await drop_table_bd(QueryInfo)
+    await ProfilerDBService.drop_all_tables()
 
     response.status_code = status.HTTP_200_OK
     return {"message": "Drop Db Successfully"}
@@ -78,15 +67,8 @@ async def drop_db_tables(request: Request, response: Response):
 async def recreate_db_tables(request: Request, response: Response):
     """Recreate all tables DB."""
     # Drop
-    await drop_table_bd(Items)
-    await drop_table_bd(RequestInfo)
-    await drop_table_bd(ResponseInfo)
-    await drop_table_bd(QueryInfo)
-    # Create
-    await create_table_bd(Items)
-    await create_table_bd(RequestInfo)
-    await create_table_bd(ResponseInfo)
-    await create_table_bd(QueryInfo)
+    await ProfilerDBService.drop_all_tables()
+    await ProfilerDBService.create_all_tables()
 
     response.status_code = status.HTTP_200_OK
     return {"message": "Recreate Db Successfully"}

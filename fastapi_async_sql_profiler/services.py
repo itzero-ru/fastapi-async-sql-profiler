@@ -3,7 +3,8 @@ from fastapi import HTTPException, Request
 from fastapi_async_sql_profiler.models import Items, QueryInfo, RequestInfo, ResponseInfo
 from fastapi_async_sql_profiler.repository import (
     ItemRepository, QueryInfoRepository, RequestInfoRepository, ResponseInfoRepository)
-from fastapi_async_sql_profiler.database import async_session_maker
+from fastapi_async_sql_profiler.database import (
+    async_session_maker, clear_table_bd, create_table_bd, drop_table_bd)
 from fastapi_async_sql_profiler.custom_types import RequestInfoOrderField
 
 
@@ -15,6 +16,30 @@ def get_query_params_for_pagination(request: Request) -> str:
 
     query_string = "&".join([f"{key}={value}" for key, value in query_params.items() if key != "page"])
     return query_string
+
+
+class ProfilerDBService:
+
+    @staticmethod
+    async def clear_all_tables():
+        await clear_table_bd(Items)
+        await clear_table_bd(QueryInfo)
+        await clear_table_bd(ResponseInfo)
+        await clear_table_bd(RequestInfo)
+
+    @staticmethod
+    async def drop_all_tables():
+        await drop_table_bd(QueryInfo)
+        await drop_table_bd(ResponseInfo)
+        await drop_table_bd(Items)
+        await drop_table_bd(RequestInfo)
+
+    @staticmethod
+    async def create_all_tables():
+        await create_table_bd(Items)
+        await create_table_bd(RequestInfo)
+        await create_table_bd(ResponseInfo)
+        await create_table_bd(QueryInfo)
 
 
 class SQLMiddlewareService:

@@ -190,13 +190,6 @@ class QueryInfo(Base):
                     #     tables.add(next_token.get_real_name())
 
         return list(tables)
-# Base.metadata.create_all(bind=engine_sync)
-# def init_db():
-#     # Base.metadata.create_all(engine_sync)
-#     # Items.metadata.create_all(engine_sync)
-#     Items.__table__.create(engine_sync, checkfirst=True)
-#     RequestInfo.__table__.create(engine_sync, checkfirst=True)
-#     QueryInfo.__table__.create(engine_sync, checkfirst=True)
 
 
 async def init_db(*, engine_async: AsyncEngine | None = None):
