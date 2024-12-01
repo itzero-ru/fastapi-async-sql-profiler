@@ -178,10 +178,10 @@ async def sql_query_detail(
 @router.get('/clear_db', response_class=HTMLResponse)
 async def clear_db(request: Request):
     """Clear DB."""
-    await clear_table_bd(RequestInfo)
-    await clear_table_bd(ResponseInfo)
-    await clear_table_bd(QueryInfo)
     await clear_table_bd(Items)
+    await clear_table_bd(QueryInfo)
+    await clear_table_bd(ResponseInfo)
+    await clear_table_bd(RequestInfo)
 
     context = {
         "request": request,
