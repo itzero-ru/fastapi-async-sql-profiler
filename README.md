@@ -37,3 +37,7 @@ app.add_middleware(
 ## Endpoints
 Please paste the following endpoints in the browser to see the results.
 1. `/profiler/pages/requests`: Displays all captured requests with pagination support.
+
+    ![](https://github.com/itzero-ru/fastapi-async-sql-profiler/blob/main/docs/images/request.png)
+
+
