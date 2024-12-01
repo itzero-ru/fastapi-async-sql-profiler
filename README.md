@@ -1,6 +1,9 @@
 # fastapi-async-sql-profiler
 
-1. Add it to your file main.py
+1. Install
+```pip install fastapi-async-sql-profiler```
+
+2. Add it to your file main.py
 
 ```
 from fastapi_async_sql_profiler import SQLProfilerMiddleware
