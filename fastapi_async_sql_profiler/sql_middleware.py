@@ -11,6 +11,8 @@ from fastapi_async_sql_profiler.config import (
 from fastapi_async_sql_profiler.models import (
     QueryInfo, RequestInfo, ResponseInfo)
 from fastapi_async_sql_profiler.services import SQLMiddlewareService
+from sqlalchemy.ext.asyncio import AsyncEngine
+from fastapi_async_sql_profiler.database import engine as default_engine
 
 
 class SessionHandler(object):
@@ -104,10 +106,13 @@ class SessionHandler(object):
 
 class SQLProfilerMiddleware(BaseHTTPMiddleware):
 
-    def __init__(self, app, engine, skip_route_startswith: list = []) -> None:
+    def __init__(self, app, engine: AsyncEngine | None = None, skip_route_startswith: list = []) -> None:
 
         self.app = app
-        self.engine = engine
+        if engine:
+            self.engine = engine
+        else:
+            self.engine = default_engine
         self.dispatch_func = self.dispatch
         self.queries: list = []
         self.skip_route_startswith = skip_route_startswith

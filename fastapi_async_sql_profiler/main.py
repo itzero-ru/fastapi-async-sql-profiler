@@ -1,26 +1,25 @@
 import asyncio
-import os
 
 from fastapi import Depends, FastAPI
 from contextlib import asynccontextmanager
 from datetime import datetime
 
-# from fastapi.responses import FileResponse
-
-# from fastapi.staticfiles import StaticFiles
-
-from fastapi_async_sql_profiler.models import (
-    Items, init_db)
+from fastapi_async_sql_profiler.models import Items
 from fastapi_async_sql_profiler.crud import add_db, add_one, filter_obj
 
-from fastapi_async_sql_profiler.database import engine
+# from fastapi_async_sql_profiler.database import engine
 
 from fastapi_async_sql_profiler.schemas.common_schemas import ItemAdd, ItemDetails, ItemFilter
-from fastapi_async_sql_profiler.sql_middleware import SQLProfilerMiddleware
+
 from fastapi_async_sql_profiler.start_debugger import start_debug_server
 
-from fastapi_async_sql_profiler.routers import router
+
 from fastapi_async_sql_profiler.config import settings
+# from fastapi_async_sql_profiler.database import engine as profiler_engine
+from fastapi_async_sql_profiler import SQLProfilerMiddleware
+from fastapi_async_sql_profiler import profiler_router
+from fastapi_async_sql_profiler import profiler_engine
+from fastapi_async_sql_profiler import init_db
 
 
 @asynccontextmanager
@@ -33,14 +32,6 @@ async def lifespan(app: FastAPI):
     message = f'🚀 Run at startup! {current_time}'
     print(message)
     print('API docs: http://127.0.0.1:8000/docs')
-    task = asyncio.create_task(init_db(engine_async=engine))
-
-    # init_db()
-    # await init_db()
-    # task = asyncio.create_task(create_items_table())
-    # await task
-    # print('DATABASE_URL -->', settings.DATABASE_URL)
-
     yield
     current_time = datetime.now().strftime("%H:%M:%S")
     print(f"✖️ Run on shutdown! {current_time}")
@@ -48,20 +39,24 @@ async def lifespan(app: FastAPI):
 app = FastAPI(lifespan=lifespan)
 # app.mount("/static", StaticFiles(directory="static"), name="static")
 
+# include profiler
+
+task = asyncio.create_task(init_db())
 SQL_PROFILER_PASS_ROUTE_STARTSWITH = [
     '/docs',
     '/openapi.json',
     # '/profiler/requests'
 ]
+
 app.add_middleware(
-    SQLProfilerMiddleware, engine=engine,
+    SQLProfilerMiddleware,
     skip_route_startswith=SQL_PROFILER_PASS_ROUTE_STARTSWITH,
 )
+app.include_router(profiler_router, prefix='')
+#
 
 start_debug_server()
 
-
-app.include_router(router, prefix='')
 # task = asyncio.create_task(init_db(engine_async=engine))
 # task = asyncio.run(init_db(engine_async=engine))
 # loop = asyncio.get_running_loop()
