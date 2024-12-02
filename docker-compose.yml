@@ -7,7 +7,7 @@ services:
     #command: bash -c "while true; do sleep 1000; done"
     container_name: fasp_backend
     environment:
-      - POSTGRES_DB=fasp_bd
+      - POSTGRES_DB={POSTGRES_DB_NAME}
       - POSTGRES_HOST=fasp_postgres
       - POSTGRES_USER=${POSTGRES_USER}
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
