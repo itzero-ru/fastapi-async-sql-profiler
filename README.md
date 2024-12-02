@@ -52,3 +52,6 @@ Please paste the following endpoints in the browser to see the results.
 
     ![](https://github.com/itzero-ru/fastapi-async-sql-profiler/blob/main/docs/images/query_detail.png)
 
+## Contributing
+
+Contributions are welcome! If you find a bug or have suggestions for improvements, please open an issue or submit a pull request.
