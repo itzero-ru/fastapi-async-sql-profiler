@@ -1,3 +1,5 @@
+![PyPI - Version](https://img.shields.io/pypi/v/fastapi-async-sql-profiler)
+
 # fastapi-async-sql-profiler
 
 ## Installation
