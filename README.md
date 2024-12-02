@@ -1,4 +1,4 @@
-![PyPI - Version](https://img.shields.io/pypi/v/fastapi-async-sql-profiler)(https://pypi.org/project/fastapi_async_sql_profiler)
+[![PyPI - Version](https://img.shields.io/pypi/v/fastapi-async-sql-profiler)](https://pypi.org/project/fastapi_async_sql_profiler)
 
 ![Static Badge](https://img.shields.io/badge/python-3.10_%7C_3.12_%7C_3.13-blue?logo=python&labelColor=white)
 
