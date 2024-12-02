@@ -138,12 +138,35 @@ class RequestInfoRepository(BaseReadRepository, BaseAddRepository):
         return result.scalar_one()
 
 
-class ResponseInfoRepository(BaseAddRepository):
+class ResponseInfoRepository(BaseReadRepository, BaseAddRepository):
 
     model = ResponseInfo
 
     def __init__(self, session: AsyncSession):
         self.session = session
+
+    async def list(self, **filters):
+
+        stmt = select(self.model)
+
+        # JOIN
+        load_fields = (
+            ResponseInfo.id,
+            ResponseInfo.status_code,
+            ResponseInfo.raw_body,
+            ResponseInfo.body,
+            ResponseInfo.headers,
+            ResponseInfo.request_info_id,
+            ResponseInfo.start_time,
+        )
+
+        stmt = stmt.options(load_only(*load_fields))
+
+        stmt = stmt.filter_by(**filters)
+        stmt = stmt.order_by(desc(self.model.id))
+        res = await self.session.execute(stmt)
+
+        return res.scalars().all()
 
 
 class QueryInfoRepository(BaseReadRepository, BaseAddRepository):

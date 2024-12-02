@@ -12,8 +12,8 @@ from fastapi_async_sql_profiler.database import Base
 from fastapi_async_sql_profiler.main import app
 
 engine_test = create_async_engine(
-    # settings.DATABASE_URL,
-    'sqlite+aiosqlite:///test_sql_profiler.sqlite'
+    settings.DATABASE_URL,
+    # 'sqlite+aiosqlite:///test_sql_profiler.sqlite'
     # echo=True,
     # "sqlite+aiosqlite:///db.sqlite"
 )
@@ -42,7 +42,7 @@ async def prepare_database():
 
     async with engine_test.begin() as conn:
         print('Deleting tables in the test database')
-        # await conn.run_sync(Base.metadata.drop_all)
+        await conn.run_sync(Base.metadata.drop_all)
 
 
 # SETUP
@@ -56,7 +56,7 @@ async def prepare_database():
 client = TestClient(app)
 
 
-@pytest.fixture(scope='session')
+@pytest.fixture(scope='session', )
 async def ac() -> AsyncGenerator[AsyncClient, None]:
     # async with AsyncClient(app=app, base_url='http://test') as ac:
     async with AsyncClient(base_url='http://test') as ac:

@@ -1,6 +1,6 @@
 import asyncio
 
-from fastapi import Depends, FastAPI
+from fastapi import Depends, FastAPI, Response, status
 from contextlib import asynccontextmanager
 from datetime import datetime
 
@@ -83,16 +83,19 @@ async def post_item():
     response_model=ItemDetails,
 )
 async def add_item(
+    response: Response,
     item: ItemAdd,
     # limit: int = 10,
     # desc: bool = True,
-    filters: ItemFilter = Depends()
+    filters: ItemFilter = Depends(),
     # session: Annotated[AsyncSession, Depends(get_async_session)]
 ):
     item_dict = item.model_dump()
     # item = await add_one(Items, item_dict)
     item_a = Items(**item_dict)
     item = await add_db(item_a)
+
+    response.status_code = status.HTTP_201_CREATED
 
     return item
 
