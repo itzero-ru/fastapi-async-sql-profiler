@@ -35,13 +35,13 @@ async_session_maker = async_sessionmaker(
 @pytest.fixture(scope='session', autouse=True)
 async def prepare_database():
     async with engine_test.begin() as conn:
-        print('Создание таблиц в тестовой базе данных')
+        print('Creating tables in a test database')
         await conn.run_sync(Base.metadata.create_all)
 
     yield
 
     async with engine_test.begin() as conn:
-        print('Удаление таблиц в тестовой базе данных')
+        print('Deleting tables in the test database')
         # await conn.run_sync(Base.metadata.drop_all)
 
 
