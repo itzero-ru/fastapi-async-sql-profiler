@@ -40,4 +40,15 @@ Please paste the following endpoints in the browser to see the results.
 
     ![](https://github.com/itzero-ru/fastapi-async-sql-profiler/blob/main/docs/images/request.png)
 
+2. `/profiler/pages/request/{id}`: Detailed information about a specific request identified by its ID.
+
+    ![](https://github.com/itzero-ru/fastapi-async-sql-profiler/blob/main/docs/images/request_detail.png)
+
+3. `/profiler/pages/request/{id}/sql`: Queries related to a specific request identified by its ID.
+
+    ![](https://github.com/itzero-ru/fastapi-async-sql-profiler/blob/main/docs/images/query.png)
+
+4. `/profiler/pages/request/{id}/sql/{id}`: Details of a specific query identified by its ID.
+
+    ![](https://github.com/itzero-ru/fastapi-async-sql-profiler/blob/main/docs/images/query_detail.png)
 
