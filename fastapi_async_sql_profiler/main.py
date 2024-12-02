@@ -40,7 +40,12 @@ app = FastAPI(lifespan=lifespan)
 
 # include profiler
 
-task = asyncio.create_task(init_db())
+# task = asyncio.create_task(init_db())
+# loop = asyncio.get_running_loop()
+# task = loop.create_task(init_db())
+task = asyncio.ensure_future(init_db())
+
+
 SQL_PROFILER_PASS_ROUTE_STARTSWITH = [
     '/docs',
     '/openapi.json',
@@ -104,5 +109,6 @@ async def get_items(
 
 
 if __name__ == "__main__":
-    task = asyncio.create_task(init_db(engine_async=engine))
+    ...
+    # task = asyncio.create_task(init_db(engine_async=engine))
     # asyncio.run(main())

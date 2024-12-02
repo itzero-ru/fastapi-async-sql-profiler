@@ -12,8 +12,8 @@ from fastapi_async_sql_profiler.database import Base
 from fastapi_async_sql_profiler.main import app
 
 engine_test = create_async_engine(
-    settings.DATABASE_URL,
-    # 'sqlite+aiosqlite:///test_sql_profiler.sqlite'
+    # settings.DATABASE_URL,
+    'sqlite+aiosqlite:///test_sql_profiler.sqlite'
     # echo=True,
     # "sqlite+aiosqlite:///db.sqlite"
 )

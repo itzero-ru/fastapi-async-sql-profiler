@@ -55,8 +55,8 @@ class PageResponse(BaseModel, Generic[T]):
 
 class PaginationMeta(BaseModel):
 
-    current_page: int = Field(..., description="Current page number", example=1)
-    page_size: int = Field(..., description="Number of entries per page", example=10)
+    current_page: int = Field(..., description="Current page number", json_schema_extra={"example": 1})
+    page_size: int = Field(..., description="Number of entries per page", json_schema_extra={"example": 10})
     total_records: int = Field(..., description="Total number of entries")
     query_params: str = Field(..., description="Query params")
 

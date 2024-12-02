@@ -11,6 +11,18 @@ def test_first():
     assert 1 == 1
 
 
+def test_requests_endpoint():
+
+    url = '/profiler/requests'
+    response = client.get(
+        url,
+        # json={'a': 1},
+    )
+    print(response)
+    pprint(response.text)
+
+    assert response.status_code == 200, "Status code should be 201"
+
 # def test_two():
 
 #     assert 1 == 1
