@@ -159,7 +159,7 @@ class SQLProfilerMiddleware(BaseHTTPMiddleware):
                 traceback=query_obj['stack'])
             await SQLMiddlewareService.add_record_in_db(query_data)
 
-        print('all_query_time_taken', all_query_time_taken)
+        # print('all_query_time_taken', all_query_time_taken)
         end_time = datetime.datetime.now(datetime.timezone.utc)
 
         # request_obj = await get_obj_by_id(RequestInfo, request_id)
