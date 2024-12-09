@@ -12,7 +12,6 @@ from fastapi_async_sql_profiler.models import (
     QueryInfo, RequestInfo, ResponseInfo)
 from fastapi_async_sql_profiler.services import SQLMiddlewareService
 from sqlalchemy.ext.asyncio import AsyncEngine
-from fastapi_async_sql_profiler.database import engine as default_engine
 
 
 class SessionHandler(object):
