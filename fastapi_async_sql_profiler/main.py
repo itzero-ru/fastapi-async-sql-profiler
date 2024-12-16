@@ -1,12 +1,13 @@
 import asyncio
 
-from fastapi import Depends, FastAPI, Response, status
+from fastapi import Depends, FastAPI, Response, Request, status
 from contextlib import asynccontextmanager
 from datetime import datetime
 
 from fastapi_async_sql_profiler.models import Items
 from fastapi_async_sql_profiler.crud import add_db, add_one, filter_obj
-
+from fastapi_async_sql_profiler.services import ItemService
+from fastapi_async_sql_profiler.dependencies import get_item_service
 # from fastapi_async_sql_profiler.database import engine
 
 from fastapi_async_sql_profiler.schemas.common_schemas import ItemAdd, ItemDetails, ItemFilter
@@ -18,6 +19,7 @@ from fastapi_async_sql_profiler.config import settings
 from fastapi_async_sql_profiler.database import engine
 from fastapi_async_sql_profiler import SQLProfilerMiddleware
 from fastapi_async_sql_profiler import profiler_router
+from pprint import pprint
 from fastapi_async_sql_profiler import init_db
 
 
@@ -60,7 +62,7 @@ app.add_middleware(
 app.include_router(profiler_router, prefix='')
 #
 
-start_debug_server()
+# start_debug_server()
 
 # task = asyncio.create_task(init_db(engine_async=engine))
 # task = asyncio.run(init_db(engine_async=engine))
@@ -69,46 +71,39 @@ start_debug_server()
 # await loop.create_task(init_db(engine_async=engine))
 
 
-@app.post("/")
-async def post_item():
-    print('DATABASE_URL -->', settings.DATABASE_URL)
-
-    await add_one(Items, {'body': '11111'})
-    await add_one(Items, {'body': '22222'})
-    return {"Hello": "World"}
-
-
-@app.post(
-    "/item",
-    response_model=ItemDetails,
-)
-async def add_item(
-    response: Response,
-    item: ItemAdd,
-    # limit: int = 10,
-    # desc: bool = True,
-    filters: ItemFilter = Depends(),
-    # session: Annotated[AsyncSession, Depends(get_async_session)]
-):
-    item_dict = item.model_dump()
-    # item = await add_one(Items, item_dict)
-    item_a = Items(**item_dict)
-    item = await add_db(item_a)
-
-    response.status_code = status.HTTP_201_CREATED
-
-    return item
-
-
 @app.get("/items")
 async def get_items(
     filters: ItemFilter = Depends(),
 ):
-
     all = await filter_obj(Items, body='string')
-    # await add_one(Items, {'body': '11111'})
-    # await add_one(Items, {'body': '22222'})
     return all
+
+
+@app.post(
+    "/insert_item",
+    # response_model=ItemDetails,
+)
+async def insert_item(
+    response: Response,
+    item: ItemAdd,
+):
+    item_dict = item.model_dump()
+    item_id = await add_one(Items, item_dict)
+    response.status_code = status.HTTP_201_CREATED
+
+    return item_id
+
+
+@app.post("/test-add-item-request")
+async def add_one_item(
+    item: ItemAdd,
+    item_service: ItemService = Depends(
+        get_item_service),
+):
+    item_dict = item.model_dump()
+    item = await item_service.create(Items(**item_dict))
+
+    return item
 
 
 if __name__ == "__main__":
