@@ -41,7 +41,7 @@ async def test_post_items_profiler():
 
     post_body = {'body': 'first_item'}
     body_field_db = '{"body":"first_item"}'
-    url = '/item'
+    url = '/insert_item'
 
     response = client.post(
         url,
